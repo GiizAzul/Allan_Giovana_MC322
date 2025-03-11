@@ -21,4 +21,12 @@ public class Robo {
         System.out.println(formated);
     }
 
+    public int getPosicaoX() {
+        return this.posicaoX;
+    }
+
+    public int getPosicaoY() {
+        return this.posicaoY;
+    }
+
 }
