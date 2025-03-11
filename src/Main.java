@@ -1,5 +1,5 @@
 public class Main{
-    public static void Main(String[] args){
+    public static void main(String[] args) {
         Ambiente ambiente = new Ambiente(50,50);
         Robo geraldo = new Robo("Geraldo", 20,20);
 
