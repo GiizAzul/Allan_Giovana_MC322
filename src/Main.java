@@ -1,5 +1,5 @@
 public class Main{
-    public static void main(String[] args) {
+    public static void main(String[] args) { 
         System.out.println("Criando ambiente de tamanho Largura=50 e Altura=50");
         Ambiente ambiente = new Ambiente(50,50);
         System.out.println("Criando Robô Geraldo na posição X=20 Y=20");
