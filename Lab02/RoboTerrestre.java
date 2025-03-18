@@ -7,10 +7,8 @@ public class RoboTerrestre extends Robo {
     }
 
     public void mover(int deltaX, int deltaY, int vel){
-        System.out.println("Aqui");
-        if (vel <= this.velocidadeMaxima){
-            this.posicaoX += deltaX;
-            this.posicaoY += deltaY;
+            if (vel <= this.velocidadeMaxima){
+            super.mover(deltaX, deltaY);
         }
     }
 }

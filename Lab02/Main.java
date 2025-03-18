@@ -6,7 +6,7 @@ public class Main{
         RoboTerrestre geraldo = new RoboTerrestre("Geraldo", "Norte", 20, 20, 50);
 
         System.out.println("Movendo Geraldo em deltaX=40 deltaY=10");
-        geraldo.mover(40, 10, 70);
+        geraldo.mover(40, 10, 30);
         boolean resultado = ambiente.dentroDosLimites(geraldo.getPosicaoX(), geraldo.getPosicaoY());
         System.out.print("Dentro do limite? ");
         if (resultado) {

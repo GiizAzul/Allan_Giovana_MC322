@@ -2,8 +2,8 @@ public class Robo {
     //propriedades
     private String nome;
     private String direcao;
-    protected int posicaoX;
-    protected int posicaoY;
+    private int posicaoX;
+    private int posicaoY;
 
     public Robo(String nome, String direcao, int posicaoX, int posicaoY) { //constructor q inicializa nome e posição do robo
         this.nome = nome;
@@ -12,7 +12,7 @@ public class Robo {
         this.posicaoY = posicaoY;
     }
 
-    public void moverr(int deltaX, int deltaY) { //método para mover o robo
+    public void mover(int deltaX, int deltaY) { //método para mover o robo
         this.posicaoX += deltaX;
         this.posicaoY += deltaY;
     }
