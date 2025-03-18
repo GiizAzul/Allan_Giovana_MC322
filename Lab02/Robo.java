@@ -1,11 +1,13 @@
 public class Robo {
     //propriedades
     private String nome;
+    private String direcao;
     private int posicaoX;
     private int posicaoY;
 
-    public Robo(String nome, int posicaoX, int posicaoY) { //constructor q inicializa nome e posição do robo
+    public Robo(String nome, String direcao, int posicaoX, int posicaoY) { //constructor q inicializa nome e posição do robo
         this.nome = nome;
+        this.direcao = direcao;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
     }
