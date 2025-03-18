@@ -12,10 +12,16 @@ public class RoboAereo extends Robo {
 
     public void subir(int metros) {
         this.altitude += metros;
+        if (this.altitude>this.altitudeMaxima){
+            this.altitude=this.altitudeMaxima;
+        }
     }
 
     public void descer(int metros) {
         this.altitude -= metros;
+        if (this.altitude < 0){
+            this.altitude=0;
+        }
     }
 
 }
