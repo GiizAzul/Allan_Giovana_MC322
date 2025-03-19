@@ -1,6 +1,6 @@
 public class Robo {
     //propriedades
-    private String nome;
+    protected String nome;
     private String direcao;
     private int posicaoX;
     private int posicaoY;
@@ -13,23 +13,23 @@ public class Robo {
     }
 
     public void mover(int deltaX, int deltaY) { //método para mover o robo
-        this.posicaoX += deltaX;
-        this.posicaoY += deltaY;
+        posicaoX += deltaX;
+        posicaoY += deltaY;
     }
 
     public void exibirPosicao() { //método para imprimir posição
         String text = "Nome: %s X:%d Y:%d";
-        String formated = String.format(text, this.nome, this.posicaoX, this.posicaoY);
+        String formated = String.format(text, nome, posicaoX, posicaoY);
         System.out.println(formated);
         // idealmente, só métodos da classe Main imprimem no terminal
     }
 
     public int getPosicaoX() { //método para retornar posição x
-        return this.posicaoX;
+        return posicaoX;
     }
 
     public int getPosicaoY() { //método para retornar posição x
-        return this.posicaoY;
+        return posicaoY;
     }
 
 }
