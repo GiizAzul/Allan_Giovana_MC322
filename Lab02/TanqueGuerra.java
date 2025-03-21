@@ -17,19 +17,23 @@ public class TanqueGuerra extends RoboTerrestre {
     }
 
     public String atirar(int alvoX, int alvoY, int nTiros) {
-        // Verifica se alvo está no alcance
-        if (municaoAtual < nTiros) {
-            return "Munição insuficiente";
+        if (operando){
+            if (municaoAtual < nTiros) {
+                return "Munição insuficiente";
+            }
+    
+            int dX = getPosicaoX() - alvoX;
+            int dY = getPosicaoY() - alvoY;
+    
+            if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(alcance,2)) {
+                municaoAtual -= nTiros;
+                return "Disparo realizado!";
+            } else {
+                return "Alvo fora do alcance";
+            }
         }
-
-        int dX = getPosicaoX() - alvoX;
-        int dY = getPosicaoY() - alvoY;
-
-        if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(alcance,2)) {
-            municaoAtual -= nTiros;
-            return "Disparo realizado!";
-        } else {
-            return "Alvo fora do alcance";
+        else{
+            return "O robô está inoperante";
         }
     }
 
@@ -44,10 +48,16 @@ public class TanqueGuerra extends RoboTerrestre {
         return "O robô ainda está operando";
     }
 
-    public void recarregar(int nBalas){
-        municaoAtual+=nBalas;
-        if (municaoAtual>municaoMax){
-            municaoAtual=municaoMax;
+    public String recarregar(int nBalas){
+        if (operando){
+            municaoAtual+=nBalas;
+            if (municaoAtual>municaoMax){
+                municaoAtual=municaoMax;
+            }
+            return "Recarregamento concluido";
+        }
+        else{
+            return "O robô está inoperante";
         }
     }
 }

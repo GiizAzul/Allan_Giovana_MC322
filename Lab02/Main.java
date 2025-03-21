@@ -14,16 +14,15 @@ public class Main{
         geraldo.exibirPosicao();
         System.out.println(geraldo.atirar(50, 20, 50));
         System.out.println(geraldo.defender(50));
-        geraldo.recarregar(20);
+        System.out.println(geraldo.recarregar(20));
         System.out.println(geraldo.defender(60));
 
         Correios bob = new Correios("Bob", "Sul", 10, 10, 30, 2, 20);
-        System.out.println(bob.carregarPacote(142,10));
-        System.out.println(bob.carregarPacote(173,15));
-        System.out.println(bob.carregarPacote(12,5));
-        System.out.println(bob.carregarPacote(1,2));
-
-        bob.entregarPacote(142, 6, 7);
+        System.out.println(bob.carregarPacote("batata",10));
+        System.out.println(bob.carregarPacote("cenoura",15));
+        System.out.println(bob.carregarPacote("brocolis",5));
+        System.out.println(bob.carregarPacote("abacate",2));
+        System.out.println(bob.entregarPacote("batata", 6, 7));
         System.out.println(bob.listarEntregas());
         bob.exibirPosicao();
     }
