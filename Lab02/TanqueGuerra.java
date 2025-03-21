@@ -1,14 +1,13 @@
 public class TanqueGuerra extends RoboTerrestre {
-    private String tipo;
     private int integridade;
     private int municaoMax;
     private int municaoAtual;
     private int alcance;
     private boolean operando;
 
-    public TanqueGuerra(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, String tipo, int municaoMax, int alcance){
+    public TanqueGuerra(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int municaoMax, int alcance){
         super(nome, direcao, posicaoX, posicaoY, velocidadeMaxima);
-        this.tipo=tipo;
+
         this.integridade=100;
         this.municaoMax=municaoMax;
         this.municaoAtual=municaoMax;

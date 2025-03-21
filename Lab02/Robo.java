@@ -18,7 +18,7 @@ public class Robo {
     }
 
     public void exibirPosicao() { //método para imprimir posição
-        String text = "Nome: %s X:%d Y:%d";
+        String text = "%s está na posição X:%d Y:%d";
         String formated = String.format(text, nome, posicaoX, posicaoY);
         System.out.println(formated);
         // idealmente, só métodos da classe Main imprimem no terminal
