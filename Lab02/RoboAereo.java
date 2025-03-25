@@ -3,11 +3,19 @@ public class RoboAereo extends Robo {
     private int altitude;
     private int altitudeMaxima;
 
-    public RoboAereo(String nome, String direcao, int posicaoX, int posicaoY, int altitude, int altitudeMaxima) {
-        super(nome, direcao, posicaoX, posicaoY);
+    public RoboAereo(String n, String d, int x, int y, int h, int hmax) {
+        /*
+         * n -> Nome do Robô
+         * d -> Direção
+         * x -> Posição X
+         * y -> Posição Y
+         * h -> Altura atual
+         * hmax -> Altura máxima
+         */
+        super(n, d, x, y);
 
-        this.altitude = altitude;
-        this.altitudeMaxima = altitudeMaxima;
+        this.altitude = h;
+        this.altitudeMaxima = hmax;
     }
 
     public void subir(int metros) {
@@ -22,6 +30,10 @@ public class RoboAereo extends Robo {
         if (this.altitude < 0){
             this.altitude=0;
         }
+    }
+
+    public int getAltitude() {
+        return this.altitude;
     }
 
 }
