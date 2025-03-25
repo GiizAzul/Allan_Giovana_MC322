@@ -16,11 +16,21 @@ public class DroneVigilancia extends RoboAereo {
 
     // Adicionar um override aqui
     public Object[] identificarObstaculos(Ambiente ambiente) {
+        // Busca todos os robos que o Radar consegue alcançar com base na posição do Drone
+        // Baseado no alcance do radar do robô
+
         ArrayList<Robo> robos_ambiente = ambiente.getListaRobos();
+        ArrayList<Robo> encontrados = new ArrayList<>();
 
         for (Robo robo : robos_ambiente) {
-            if (this.distancia(robo, getPosicaoX(), getPosicaoY()) < this.alcance_radar)            
+            if (robo.getVisivel()) {
+                if (this.distancia(robo, getPosicaoX(), getPosicaoY()) < this.alcance_radar) {
+                    encontrados.add(robo);
+                }
+            }
         }
+
+        return encontrados.toArray();
 
     }
 
@@ -29,6 +39,9 @@ public class DroneVigilancia extends RoboAereo {
     }
 
     public ArrayList<Robo> varrer_area(Ambiente ambiente, int centroX, int centroY, int raio) {
+        // Sistema de varredura, melhor quanto mais alto está o drone
+        // Reposiciona o drone para o centro da varredura
+        // Baseado na capacidade da câmera do drone
 
         // Move o drone para ficar sobre a região central
         this.mover(centroX - this.getPosicaoX(), centroY - this.getPosicaoY());
@@ -50,6 +63,9 @@ public class DroneVigilancia extends RoboAereo {
         return robos_encontrados;
     }
 
+    /*
+    Implementar em cada classe RoboTerrestre e RoboAereo
+
     private double distancia(RoboTerrestre robo) {
         return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
     }
@@ -57,6 +73,7 @@ public class DroneVigilancia extends RoboAereo {
     private double distancia(RoboAereo alvo) {
         return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - this.getAltitude(), 2));
     }
+    */
 
     public void acionar_camuflagem() {
         this.camuflado = true;
