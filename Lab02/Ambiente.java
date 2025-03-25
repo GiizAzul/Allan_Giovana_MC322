@@ -8,12 +8,6 @@ public class Ambiente{
     
     private ArrayList<Robo> listaRobos;
 
-    public Ambiente(int tamX, int tamY){  //constructor q inicializa tamanho do ambiente
-        this.tamX=tamX;
-        this.tamY=tamY;
-        listaRobos = new ArrayList<Robo>();
-    }
-
     public Ambiente(int tamX, int tamY, int tamZ){  //constructor q inicializa tamanho do ambiente
         this.tamX=tamX;
         this.tamY=tamY;
@@ -25,12 +19,24 @@ public class Ambiente{
         return (x<= this.tamX && x>=0) && (y<= this.tamY && y>=0); //posição deve ser entre 0 e limites
     }
 
+    public boolean dentroDosLimites(int x, int y, int z){ //método que verifica se robo está dentro dos limites
+        return (x<= this.tamX && x>=0) && (y<= this.tamY && y>=0) && (z<= this.tamZ && z>=0); //posição deve ser entre 0 e limites
+    }
+
     public void adicionarRobo(Robo robo){
         listaRobos.add(robo);
     }
 
     public ArrayList<Robo> getListaRobos(){
         return listaRobos;
+    }
+
+    public int getTamX() {
+        return tamX;
+    }
+
+    public int getTamY() {
+        return tamY;
     }
 
     public Robo criarRobo(int tipo, int subcategoria, Object... atributo) {

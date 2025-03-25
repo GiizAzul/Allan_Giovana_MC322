@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Robo {
     //propriedades
     protected String nome;
@@ -17,11 +19,8 @@ public class Robo {
         posicaoY += deltaY;
     }
 
-    public void exibirPosicao() { //método para imprimir posição
-        String text = "%s está na posição X:%d Y:%d";
-        String formated = String.format(text, nome, posicaoX, posicaoY);
-        System.out.println(formated);
-        // idealmente, só métodos da classe Main imprimem no terminal
+    public String exibirPosicao() { //método para imprimir posição
+        return this.nome + " está na posição X:" + this.posicaoX + " Y:" + this.posicaoY;
     }
 
     public int getPosicaoX() { //método para retornar posição x
@@ -30,6 +29,51 @@ public class Robo {
 
     public int getPosicaoY() { //método para retornar posição x
         return posicaoY;
+    }
+
+    public String getDirecao() {
+        return direcao;
+    }
+
+    public void setDirecao(String direcao) {
+        this.direcao = direcao;
+    }
+
+    public Object identificarObstaculos(Ambiente ambiente, String direcao){
+        ArrayList<Robo> listaRobo=ambiente.getListaRobos();
+        Object obstaculo = null;
+
+        int posY = ambiente.getTamY();
+        int posX = ambiente.getTamX();
+
+        for (Robo robo : listaRobo) {
+            if (direcao == "Norte"){
+                if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()>this.posicaoY && robo.getPosicaoY()<=posY){
+                    posY=robo.getPosicaoY();
+                    obstaculo=robo;
+                }
+            }
+            if (direcao == "Sul"){
+                if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()<this.posicaoY && robo.getPosicaoY()>=posY){
+                    posY=robo.getPosicaoY();
+                    obstaculo=robo;
+                }
+            }
+            if (direcao == "Leste"){
+                if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()>this.posicaoX && robo.getPosicaoX()<=posX){
+                    posX=robo.getPosicaoY();
+                    obstaculo=robo;
+                }
+            }
+            if (direcao == "Oeste"){
+                if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()<this.posicaoX && robo.getPosicaoX()>=posX){
+                    posX=robo.getPosicaoY();
+                    obstaculo=robo;
+                }
+            }
+            
+        }
+        return obstaculo;
     }
 
 }

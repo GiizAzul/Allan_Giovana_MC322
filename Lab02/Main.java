@@ -1,15 +1,18 @@
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main{
     public static void main(String[] args) { 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com largura e altura");
+        System.out.println("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com dimensões 3D ");
 
-        int largura = scanner.nextInt();
-        int altura = scanner.nextInt();
-        Ambiente ambiente = new Ambiente(largura,altura);
-        System.out.println("Ambiente criado com largura " + largura + " e altura " + altura);
+        int tamX = scanner.nextInt();
+        int tamY = scanner.nextInt();
+        int tamZ = scanner.nextInt();
+
+        Ambiente ambiente = new Ambiente(tamX,tamY,tamZ);
+        System.out.println("Ambiente criado com tamX:" + tamX + "tamY:" + tamY + "tamZ" + tamZ);
         Object[] atributos = new Object[7];
         ArrayList<Robo> listaRobo;
 
@@ -85,7 +88,8 @@ public class Main{
                     if (index >= 0 && index < listaRobo.size()){
                         Robo roboSelecionado = listaRobo.get(index);
                         if (roboSelecionado instanceof TanqueGuerra){
-                            System.out.println("Digite o número da ação desejada\n1. Atirar\n2. Defender\n3. Recarregar\n4. Mover\n5. Exibir posição");
+                            TanqueGuerra roboEscolhido = ((TanqueGuerra) roboSelecionado);
+                            System.out.println("Digite o número da ação desejada\n1. Atirar\n2. Defender\n3. Recarregar\n4. Mover\n5. Exibir posição\n6. Identificar obstáculos");
                             int acao = scanner.nextInt();
                             if (acao == 1){
                                 System.out.println("Digite as coordenadas X e Y do alvo");
@@ -93,15 +97,15 @@ public class Main{
                                 int alvoY = scanner.nextInt();
                                 System.out.println("Digite o número de tiros");
                                 int nTiros = scanner.nextInt();
-                                System.out.println(((TanqueGuerra) roboSelecionado).atirar(alvoX,alvoY,nTiros));
+                                System.out.println(roboEscolhido.atirar(alvoX,alvoY,nTiros));
                             } else if (acao == 2){
                                 System.out.println("Digite o dano tomado");
                                 int dano = scanner.nextInt();
-                                System.out.println(((TanqueGuerra) roboSelecionado).defender(dano));
+                                System.out.println(roboEscolhido.defender(dano));
                             } else if (acao == 3){
                                 System.out.println("Digite o número de balas recarregadas");
                                 int nBalas = scanner.nextInt();
-                                System.out.println(((TanqueGuerra) roboSelecionado).recarregar(nBalas));
+                                System.out.println(roboEscolhido.recarregar(nBalas));
                             } else if (acao == 4){
                                 System.out.println("Digite as coordenadas X e Y do destino");
                                 int destinoX = scanner.nextInt(); 
@@ -113,21 +117,31 @@ public class Main{
                                 }
                                 System.out.println("Digite a velocidade do movimento");
                                 int vel = scanner.nextInt();
-                                ((TanqueGuerra) roboSelecionado).mover(destinoX-roboSelecionado.getPosicaoX(), destinoY-roboSelecionado.getPosicaoY(),vel);
-                                ((TanqueGuerra) roboSelecionado).exibirPosicao();
+                                roboEscolhido.mover(destinoX-roboSelecionado.getPosicaoX(), destinoY-roboSelecionado.getPosicaoY(),vel);
+                                System.out.println(roboEscolhido.exibirPosicao());
                             } else if (acao == 5){
-                                ((TanqueGuerra) roboSelecionado).exibirPosicao();
+                                System.out.println(roboEscolhido.exibirPosicao());
+                            } else if (acao == 6){
+                                Robo obstaculo = (Robo)roboEscolhido.identificarObstaculos(ambiente, roboEscolhido.getDirecao());
+                                if (obstaculo == null){
+                                    System.out.println("Não há  obstáculos");
+                                }
+                                else{
+                                    System.out.println(obstaculo.nome);
+                                }
                             }
+
                         }
                         if (roboSelecionado instanceof Correios){
-                            System.out.println("Digite o número da ação desejada\n1. Carregar pacote\n2. Entregar pacote\n3. Listar entregas\n4. Mover\n5. Exibir posição");
+                            Correios roboEscolhido = ((Correios) roboSelecionado);
+                            System.out.println("Digite o número da ação desejada\n1. Carregar pacote\n2. Entregar pacote\n3. Listar entregas\n4. Mover\n5. Exibir posição\n6. Identificar obstáculos");
                             int acao = scanner.nextInt();
                             if (acao == 1){
                                 System.out.println("Digite o nome ou id do pacote");
                                 String id = scanner.nextLine();
                                 System.out.println("Digite o peso do pacote");
                                 int peso = scanner.nextInt();
-                                System.out.println(((Correios) roboSelecionado).carregarPacote(id, peso));
+                                System.out.println(roboEscolhido.carregarPacote(id, peso));
                             } else if (acao == 2){
                                 System.out.println("Digite o nome ou id do pacote");
                                 String id = scanner.nextLine();
@@ -139,9 +153,9 @@ public class Main{
                                     destinoX = scanner.nextInt(); 
                                     destinoY = scanner.nextInt(); 
                                 }
-                                System.out.println(((Correios) roboSelecionado).entregarPacote(id, destinoX, destinoY));
+                                System.out.println(roboEscolhido.entregarPacote(id, destinoX, destinoY));
                             } else if (acao == 3){
-                                System.out.println(((Correios) roboSelecionado).listarEntregas());
+                                System.out.println(roboEscolhido.listarEntregas());
                             } else if (acao == 4){
                                 System.out.println("Digite as coordenadas X e Y do destino");
                                 int destinoX = scanner.nextInt(); 
@@ -153,10 +167,18 @@ public class Main{
                                 } 
                                 System.out.println("Digite a velocidade do movimento");
                                 int vel = scanner.nextInt();
-                                ((Correios) roboSelecionado).mover(destinoX-roboSelecionado.getPosicaoX(), destinoY-roboSelecionado.getPosicaoY(),vel);
-                                ((Correios) roboSelecionado).exibirPosicao();
+                                roboEscolhido.mover(destinoX-roboSelecionado.getPosicaoX(), destinoY-roboSelecionado.getPosicaoY(),vel);
+                                System.out.println(roboEscolhido.exibirPosicao());
                             } else if (acao == 5){
-                                ((Correios) roboSelecionado).exibirPosicao();
+                                System.out.println(roboEscolhido.exibirPosicao());
+                            } else if (acao == 6){
+                                Robo obstaculo = (Robo)roboEscolhido.identificarObstaculos(ambiente, roboEscolhido.getDirecao());
+                                if (obstaculo == null){
+                                    System.out.println("Não há  obstáculos");
+                                }
+                                else{
+                                    System.out.println(obstaculo.nome);
+                                }
                             }
                         }
                     }
