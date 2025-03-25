@@ -17,10 +17,17 @@ public class Main{
         ArrayList<Robo> listaRobo;
 
         while (true) {
+            System.out.print("\033[H\033[2J");  
+            System.out.flush(); 
+
             System.out.println("Digite o número da ação que deseja realizar\n0. Fechar o simulador\n1. Criar novo robô\n2. Ações de um robô\n3. Lista de robôs\n4. Remover robô");
     
             int comando = scanner.nextInt();
             listaRobo=ambiente.getListaRobos();
+
+            System.out.print("\033[H\033[2J");  
+            System.out.flush(); 
+            
             if (comando == 0){
                 break;
             }

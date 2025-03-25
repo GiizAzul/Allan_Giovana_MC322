@@ -47,25 +47,25 @@ public class Robo {
         int posX = ambiente.getTamX();
 
         for (Robo robo : listaRobo) {
-            if (direcao == "Norte"){
+            if (direcao.equals("Norte")){
                 if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()>this.posicaoY && robo.getPosicaoY()<=posY){
                     posY=robo.getPosicaoY();
                     obstaculo=robo;
                 }
             }
-            if (direcao == "Sul"){
+            if (direcao.equals("Sul")){
                 if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()<this.posicaoY && robo.getPosicaoY()>=posY){
                     posY=robo.getPosicaoY();
                     obstaculo=robo;
                 }
             }
-            if (direcao == "Leste"){
+            if (direcao.equals("Leste")){
                 if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()>this.posicaoX && robo.getPosicaoX()<=posX){
                     posX=robo.getPosicaoY();
                     obstaculo=robo;
                 }
             }
-            if (direcao == "Oeste"){
+            if (direcao.equals("Oeste")){
                 if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()<this.posicaoX && robo.getPosicaoX()>=posX){
                     posX=robo.getPosicaoY();
                     obstaculo=robo;
