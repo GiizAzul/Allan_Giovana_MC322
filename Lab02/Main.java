@@ -1,22 +1,23 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main{
     public static void main(String[] args) { 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com largura e altura separados por espaço");
+        System.out.println("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com largura e altura");
 
         int largura = scanner.nextInt();
         int altura = scanner.nextInt();
         Ambiente ambiente = new Ambiente(largura,altura);
         System.out.println("Ambiente criado com largura " + largura + " e altura " + altura);
         Object[] atributos = new Object[7];
+        ArrayList<Robo> listaRobo;
 
         while (true) {
-            System.out.println("Digite o número da ação que deseja realizar\n0. Fechar o simulador\n1. Criar novo robô\n2. Ações de um robô\n3. Lista de robôs");
+            System.out.println("Digite o número da ação que deseja realizar\n0. Fechar o simulador\n1. Criar novo robô\n2. Ações de um robô\n3. Lista de robôs\n4. Remover robô");
     
             int comando = scanner.nextInt();
+            listaRobo=ambiente.getListaRobos();
             if (comando == 0){
                 break;
             }
@@ -37,6 +38,11 @@ public class Main{
                         System.out.println("Posição X e Posição Y:");
                         atributos[2]=scanner.nextInt();
                         atributos[3]=scanner.nextInt();
+                        while(!ambiente.dentroDosLimites((Integer)atributos[2],(Integer)atributos[3])){
+                            System.out.println("Coordenadas fora dos limites, digite novas coordenadas");
+                            atributos[2] = scanner.nextInt(); 
+                            atributos[3] = scanner.nextInt(); 
+                        }
                         System.out.println("Velocidade Máxima:");
                         atributos[4]=scanner.nextInt();
                         System.out.println("Munição Máxima:");
@@ -45,7 +51,6 @@ public class Main{
                         atributos[6]=scanner.nextInt();
 
                     } else if (categoria==2){//Correios
-                        //String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int capacidadeMax, float pesoMax
                         System.out.println("Digite os atributos\nNome:");
                         atributos[0]=scanner.nextLine();
                         System.out.println("Direção:");
@@ -68,17 +73,17 @@ public class Main{
                 } 
             }
             else if (comando == 2){
-                if (ambiente.getListaRobos().size()==0){
+                if (listaRobo.size()==0){
                     System.out.println("Não há robôs criados");
                 }
                 else{
                     System.out.println("Escolha o Robô:");
-                    for (Robo robo : ambiente.getListaRobos()){
-                        System.out.println((ambiente.getListaRobos().indexOf(robo)+1)+". "+robo.nome);
+                    for (Robo robo : listaRobo){
+                        System.out.println((listaRobo.indexOf(robo)+1)+". "+robo.nome);
                     }
                     int index = scanner.nextInt() - 1;
-                    if (index >= 0 && index < ambiente.getListaRobos().size()){
-                        Robo roboSelecionado = ambiente.getListaRobos().get(index);
+                    if (index >= 0 && index < listaRobo.size()){
+                        Robo roboSelecionado = listaRobo.get(index);
                         if (roboSelecionado instanceof TanqueGuerra){
                             System.out.println("Digite o número da ação desejada\n1. Atirar\n2. Defender\n3. Recarregar\n4. Mover\n5. Exibir posição");
                             int acao = scanner.nextInt();
@@ -129,13 +134,23 @@ public class Main{
                                 System.out.println("Digite as coordenadas X e Y do destino");
                                 int destinoX = scanner.nextInt(); 
                                 int destinoY = scanner.nextInt(); 
+                                while(!ambiente.dentroDosLimites(destinoX,destinoY)){
+                                    System.out.println("Coordenadas fora dos limites, digite novas coordenadas");
+                                    destinoX = scanner.nextInt(); 
+                                    destinoY = scanner.nextInt(); 
+                                }
                                 System.out.println(((Correios) roboSelecionado).entregarPacote(id, destinoX, destinoY));
                             } else if (acao == 3){
                                 System.out.println(((Correios) roboSelecionado).listarEntregas());
                             } else if (acao == 4){
                                 System.out.println("Digite as coordenadas X e Y do destino");
                                 int destinoX = scanner.nextInt(); 
-                                int destinoY = scanner.nextInt(); 
+                                int destinoY = scanner.nextInt();
+                                while(!ambiente.dentroDosLimites(destinoX,destinoY)){
+                                    System.out.println("Coordenadas fora dos limites, digite novas coordenadas");
+                                    destinoX = scanner.nextInt(); 
+                                    destinoY = scanner.nextInt(); 
+                                } 
                                 System.out.println("Digite a velocidade do movimento");
                                 int vel = scanner.nextInt();
                                 ((Correios) roboSelecionado).mover(destinoX-roboSelecionado.getPosicaoX(), destinoY-roboSelecionado.getPosicaoY(),vel);
@@ -148,12 +163,34 @@ public class Main{
                 }
             }
             else if (comando == 3){
-                ArrayList<String> nomes = new ArrayList<>();
-                for (Robo robo : ambiente.getListaRobos()){
-                    nomes.add(robo.nome);
+                if (listaRobo.size()==0){
+                    System.out.println("Não há robôs criados");
                 }
-                System.out.println(String.join(", ", nomes));
+                else{
+                    ArrayList<String> nomes = new ArrayList<>();
+                    for (Robo robo : listaRobo){
+                        nomes.add(robo.nome);
+                    }
+                    System.out.print("Lista de robôs: ");
+                    System.out.println(String.join(", ", nomes));
+                } 
                 
+            }
+            else if (comando == 4){
+                if (listaRobo.size()==0){
+                    System.out.println("Não há robôs criados");
+                }
+                else{
+                    System.out.println("Escolha o Robô:");
+                    for (Robo robo : listaRobo){
+                        System.out.println((listaRobo.indexOf(robo)+1)+". "+robo.nome);
+                    }
+                    int index = scanner.nextInt() - 1;
+                    if (index >= 0 && index < listaRobo.size()){
+                        listaRobo.remove(index);
+                        System.out.println("Robo removido");
+                    }
+                }
             }
         }
         scanner.close();
