@@ -48,7 +48,7 @@ public class Correios extends RoboTerrestre {
         if (entregas.isEmpty()) {
             return "Não há entregas pendentes.";
         } else {
-            return "Entregas pendentes: " + String.join(",", entregas);
+            return "Entregas pendentes: " + String.join(", ", entregas);
         }
     }
 }

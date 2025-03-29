@@ -47,10 +47,6 @@ public class Ambiente{
                 return new Correios((String)atributo[0],(String)atributo[1],(Integer)atributo[2],(Integer)atributo[3],(Integer)atributo[4],(Integer)atributo[5],(Float)atributo[6]);
             }
         }
-        
         return null; 
-
-}
-    
-
+    }
 }
