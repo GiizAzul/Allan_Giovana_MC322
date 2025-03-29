@@ -1,17 +1,22 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+
 
 public class Robo {
     //propriedades
-    protected String nome;
+    private String nome;
     private String direcao;
     private int posicaoX;
     private int posicaoY;
+    private int integridade;
+    private boolean operando;
 
     public Robo(String nome, String direcao, int posicaoX, int posicaoY) { //constructor q inicializa nome e posição do robo
         this.nome = nome;
         this.direcao = direcao;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
+        this.operando=true;
     }
 
     public void mover(int deltaX, int deltaY) { //método para mover o robo
@@ -39,41 +44,81 @@ public class Robo {
         this.direcao = direcao;
     }
 
-    public Object identificarObstaculos(Ambiente ambiente, String direcao){
-        ArrayList<Robo> listaRobo=ambiente.getListaRobos();
-        Object obstaculo = null;
-
-        int posY = ambiente.getTamY();
-        int posX = ambiente.getTamX();
-
-        for (Robo robo : listaRobo) {
-            if (direcao.equals("Norte")){
-                if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()>this.posicaoY && robo.getPosicaoY()<=posY){
-                    posY=robo.getPosicaoY();
-                    obstaculo=robo;
-                }
-            }
-            if (direcao.equals("Sul")){
-                if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()<this.posicaoY && robo.getPosicaoY()>=posY){
-                    posY=robo.getPosicaoY();
-                    obstaculo=robo;
-                }
-            }
-            if (direcao.equals("Leste")){
-                if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()>this.posicaoX && robo.getPosicaoX()<=posX){
-                    posX=robo.getPosicaoY();
-                    obstaculo=robo;
-                }
-            }
-            if (direcao.equals("Oeste")){
-                if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()<this.posicaoX && robo.getPosicaoX()>=posX){
-                    posX=robo.getPosicaoY();
-                    obstaculo=robo;
-                }
-            }
-            
-        }
-        return obstaculo;
+    public boolean getOperando(){
+        return operando;
     }
 
+    public void setOperando(boolean operando){
+        this.operando=operando;
+    }
+
+    public String getNome(){
+        return nome;
+    }
+
+    public int getIntegridade(){
+        return integridade;
+    }
+
+    public void setIntegridade(int integridade){
+        this.integridade=integridade;
+    }
+
+    public ArrayList<Robo> identificarRobosDirecao(Ambiente ambiente, String direcao){
+
+        ArrayList<Robo> listaRobo=ambiente.getListaRobos();
+        ArrayList<Robo> obstaculos = new ArrayList<>();
+
+        if (direcao.equals("Norte")){
+            for (Robo robo : listaRobo) {
+                if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()>this.posicaoY){
+                    obstaculos.add(robo);
+                }
+            }
+            obstaculos.sort(Comparator.comparingInt(o -> o.posicaoY));
+        } else if (direcao.equals("Sul")){
+            for (Robo robo : listaRobo) {
+                if (robo.getPosicaoX()==this.posicaoX && robo.getPosicaoY()<this.posicaoY){
+                    obstaculos.add(robo);
+                }
+            obstaculos.sort(Comparator.comparingInt((Robo o) -> o.posicaoY).reversed());
+            }
+        } else if (direcao.equals("Leste")){
+            for (Robo robo : listaRobo) {
+                if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()>this.posicaoX){
+                    obstaculos.add(robo);
+                }
+            obstaculos.sort(Comparator.comparingInt(o -> o.posicaoX));
+        }
+        } else if (direcao.equals("Oeste")){
+            for (Robo robo : listaRobo) {
+                if (robo.getPosicaoY()==this.posicaoY && robo.getPosicaoX()<this.posicaoX){
+                    obstaculos.add(robo);
+                }
+            obstaculos.sort(Comparator.comparingInt((Robo o) -> o.posicaoX).reversed());
+            }
+        } 
+        return obstaculos;
+    }
+
+    public Object identificarObstaculoPosicao(Ambiente ambiente, int posY, int posX){
+        ArrayList<Robo> listaRobo = ambiente.getListaRobos();
+        for (Robo robo : listaRobo){
+            if (robo.getPosicaoX()==posX && robo.getPosicaoY()==posY){
+                return robo;
+            }
+        }
+        return null;
+    }
+
+    public String defender(int dano){
+        integridade-=dano;
+
+        if (integridade<=0){
+            setOperando(false);
+            return "O robô " + getNome() + " está inoperante devido ao dano tomado";
+        }
+
+        return "O robô " + getNome() + " ainda está operando";
+    }
 }

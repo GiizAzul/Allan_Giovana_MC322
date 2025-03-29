@@ -14,6 +14,7 @@ public class Correios extends RoboTerrestre {
         pesoAtual=0;
         entregas = new ArrayList<String>();
         pesos = new ArrayList<Float>();
+        setIntegridade(50);
     }
     
     public String carregarPacote(String id, float peso){

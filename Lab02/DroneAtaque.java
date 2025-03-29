@@ -1,4 +1,4 @@
-public class DroneAtaque extends RoboAereo {
+/*public class DroneAtaque extends RoboAereo {
 
     private int municao;
     private int alcance;
@@ -45,4 +45,4 @@ public class DroneAtaque extends RoboAereo {
             return "Alvo fora do alcance";
         }
     }
-}
+}*/

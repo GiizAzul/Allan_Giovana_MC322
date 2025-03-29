@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 
 public class DroneVigilancia extends RoboAereo {
 
@@ -74,7 +74,7 @@ public class DroneVigilancia extends RoboAereo {
         return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - this.getAltitude(), 2));
     }
     */
-
+/*
     public void acionar_camuflagem() {
         this.camuflado = true;
     }
@@ -82,4 +82,4 @@ public class DroneVigilancia extends RoboAereo {
     public void desabilitar_camuflagem() {
         this.camuflado = false;
     }
-}
+} */
