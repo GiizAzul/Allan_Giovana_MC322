@@ -80,33 +80,34 @@ public class Main{
                         "1 - Tanque de Guerra\n" + 
                         "2 - Correios\n"
                     );
-                    System.out.println(menu);
-
-                    int categoria = scanner.nextInt();
-                    scanner.nextLine();
+                    System.out.print(menu);
+                    System.out.print("Comando:");
+                    int categoria = scanner.nextInt() ;
+                    scanner.nextLine(); // Consumir quebra de linha
+                    System.out.println();
 
                     if (categoria == 1) { 
                         // Atributos específicos do Tanque de Guerra
     
-                        System.out.println("Velocidade Máxima:");
+                        System.out.print("Velocidade Máxima:");
                         atributos[4]=scanner.nextInt();
 
-                        System.out.println("Munição Máxima:");
+                        System.out.print("Munição Máxima:");
                         atributos[5]=scanner.nextInt();
 
-                        System.out.println("Alcance:");
+                        System.out.print("Alcance:");
                         atributos[6]=scanner.nextInt();
 
                     } else if (categoria==2){
                         // Atributos específicos do Correios
 
-                        System.out.println("Velocidade Máxima:");
+                        System.out.print("Velocidade Máxima:");
                         atributos[4]=scanner.nextInt();
 
-                        System.out.println("Capacidade Máxima:");
+                        System.out.print("Capacidade Máxima:");
                         atributos[5]=scanner.nextInt();
 
-                        System.out.println("Peso Máximo:");
+                        System.out.print("Peso Máximo:");
                         atributos[6]=scanner.nextFloat();
                     }
 
@@ -125,162 +126,172 @@ public class Main{
                 if (comando == 2) {
                     // Realizar ações para um determinado robô
                 
-                    System.out.println("Escolha o Robô:");
+                    System.out.println("Escolha o Robô:\n");
                     int i = 1;
                     for (Robo robo : listaRobo) {
                         System.out.printf("%d - %s%n", i++, robo.getNome());
                     }
-                    int index = scanner.nextInt() - 1;
-                    if (index >= 0 && index < listaRobo.size()){
-                        Robo roboSelecionado = listaRobo.get(index);
+                    int index = 0;
+                    int sizeLista = listaRobo.size();
+                    do {
+                        System.out.print("Robo:");
+                        index = scanner.nextInt() ;
+                    } while (index < 0 || index > sizeLista);
+                    scanner.nextLine(); // Consumir quebra de linha
+                    System.out.println();
 
-                        if (roboSelecionado instanceof TanqueGuerra){
-                            TanqueGuerra roboEscolhido = (TanqueGuerra) roboSelecionado;
-                            menu = String.format(
-                                "Digite o número da ação desejada:\n\n" +
-                                "1 - Exibir posição\n" +
-                                "2 - Atirar\n" +
-                                "3 - Recarregar\n" +
-                                "4 - Mover\n" +
-                                "5 - Identificar obstáculos\n" +
-                                "6 - Mudar direção\n"
-                            );
-                            System.out.println(menu);
-                            int acao = scanner.nextInt();
-                            // Consumir quebra de linha
-                            scanner.nextLine();
+                    Robo roboSelecionado = listaRobo.get(index);
 
-                            if (acao == 1){ // Exibição de posição
+                    if (roboSelecionado instanceof TanqueGuerra){
+                        TanqueGuerra roboEscolhido = (TanqueGuerra) roboSelecionado;
+                        menu = String.format(
+                            "Digite o número da ação desejada:\n\n" +
+                            "1 - Exibir posição\n" +
+                            "2 - Atirar\n" +
+                            "3 - Recarregar\n" +
+                            "4 - Mover\n" +
+                            "5 - Identificar obstáculos\n" +
+                            "6 - Mudar direção\n"
+                        );
+                        System.out.print(menu);
+                        System.out.print("Ação:");
+                        int acao = scanner.nextInt() ;
+                        scanner.nextLine(); // Consumir quebra de linha
+                        System.out.println();
+
+                        if (acao == 1){ // Exibição de posição
+                            System.out.println(roboEscolhido.exibirPosicao());
+
+                        } else if (roboEscolhido.getOperando()) {
+                            // Verificar operabilidade do robô antes de proceder
+                            if (acao == 2) {
+                                System.out.print("Digite as coordenadas X e Y do alvo:");
+                                int alvoX = scanner.nextInt();
+                                int alvoY = scanner.nextInt();
+                                System.out.print("Digite o número de tiros: ");
+                                int nTiros = scanner.nextInt();
+                                System.out.println(roboEscolhido.atirar(alvoX,alvoY,nTiros,ambiente));
+
+                            } else if (acao == 3){
+                                // Recarregar balas do Tanque
+                                System.out.print("Digite o número de balas recarregadas:");
+                                int nBalas = scanner.nextInt();
+                                System.out.println(roboEscolhido.recarregar(nBalas));
+
+                            } else if (acao == 4){
+                                // Movimentação do Robô por DeltaX e DeltaY
+                                System.out.print("Digite as coordenadas X e Y do destino:");
+                                int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+
+                                // Pede a velocidade para não ultrapassar o limite
+                                System.out.print("Digite a velocidade do movimento:");
+                                int vel = scanner.nextInt();
+                                roboEscolhido.mover(coordenadas[0]-roboSelecionado.getPosicaoX(), coordenadas[1]-roboSelecionado.getPosicaoY(), vel);
+                        
                                 System.out.println(roboEscolhido.exibirPosicao());
 
-                            } else if (roboEscolhido.getOperando()) {
-                                // Verificar operabilidade do robô antes de proceder
-                                if (acao == 2) {
-                                    System.out.print("Digite as coordenadas X e Y do alvo:");
-                                    int alvoX = scanner.nextInt();
-                                    int alvoY = scanner.nextInt();
-                                    System.out.print("Digite o número de tiros: ");
-                                    int nTiros = scanner.nextInt();
-                                    System.out.println(roboEscolhido.atirar(alvoX,alvoY,nTiros,ambiente));
-
-                                } else if (acao == 3){
-                                    // Recarregar balas do Tanque
-                                    System.out.print("Digite o número de balas recarregadas:");
-                                    int nBalas = scanner.nextInt();
-                                    System.out.println(roboEscolhido.recarregar(nBalas));
-
-                                } else if (acao == 4){
-                                    // Movimentação do Robô por DeltaX e DeltaY
-                                    System.out.print("Digite as coordenadas X e Y do destino:");
-                                    int[] coordenadas = Main.obterPosicao(ambiente, scanner);
-
-                                    // Pede a velocidade para não ultrapassar o limite
-                                    System.out.print("Digite a velocidade do movimento:");
-                                    int vel = scanner.nextInt();
-                                    roboEscolhido.mover(coordenadas[0]-roboSelecionado.getPosicaoX(), coordenadas[1]-roboSelecionado.getPosicaoY(), vel);
-                            
-                                    System.out.println(roboEscolhido.exibirPosicao());
-
-                                } else if (acao == 5){
-                                    // Identifica todos os robôs na direção atual do Tanque
-                                    ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarRobosDirecao(ambiente, roboEscolhido.getDirecao());
-                                    if (listaRoboVisto.size() == 0){
-                                        System.out.println("Não há obstáculos\n");
-                                    }
-                                    else{
-                                        for (Robo robo:listaRoboVisto){
-                                            System.out.println(robo.getNome() + " X:" + robo.getPosicaoX() + " Y:" + robo.getPosicaoY());
-                                        }
-                                    }
-                                } else if (acao == 6){
-                                    System.out.print("Digite a direção desejada (Norte/Sul/Leste/Oeste):");
-                                    String direcao = scanner.nextLine();
-                                    roboEscolhido.setDirecao(direcao);
+                            } else if (acao == 5){
+                                // Identifica todos os robôs na direção atual do Tanque
+                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarRobosDirecao(ambiente, roboEscolhido.getDirecao());
+                                if (listaRoboVisto.size() == 0){
+                                    System.out.println("Não há obstáculos\n");
                                 }
-                            } else{
-                                System.out.println("O robô está inoperante\n");
-                            }
-                        }
-                        if (roboSelecionado instanceof Correios){
-                            Correios roboEscolhido = ((Correios) roboSelecionado);
-                            menu = String.format(
-                                "Digite o número da ação desejada:\n\n" +
-                                "1 - Exibir posição\n" +
-                                "2 - Carregar pacote\n" +
-                                "3 - Entregar pacote\n" +
-                                "4 - Listar entregas\n" +
-                                "5 - Mover\n" +
-                                "6 - Identificar obstáculos\n" +
-                                "7 - Mudar direção\n"
-                            );
-                            System.out.println(menu);
-                            int acao = scanner.nextInt();
-                            scanner.nextLine(); // Consumir quebra de linha
-
-                            if (acao == 1) {
-                                System.out.println(roboEscolhido.exibirPosicao());
-
-                            } else if (roboEscolhido.getOperando()){
-                                // Verifica operabilidade do robô
-                                if (acao == 2) {
-                                    // Carregar pacote
-                                    System.out.print("Digite o nome ou id do pacote:");
-                                    String id = scanner.nextLine();
-                                    System.out.print("Digite o peso do pacote:");
-                                    int peso = scanner.nextInt();
-                                    System.out.println(roboEscolhido.carregarPacote(id, peso));
-
-                                } else if (acao == 3){
-                                    // Entregar um pacote
-                                    System.out.print("Digite o nome ou id do pacote:");
-                                    String id = scanner.nextLine();
-
-                                    System.out.print("Digite as coordenadas X e Y do destino:");
-                                    int[] coordenadas = Main.obterPosicao(ambiente, scanner);
-                                    System.out.println(roboEscolhido.entregarPacote(id, coordenadas[0], coordenadas[1]));
-
-                                } else if (acao == 4){
-                                    // Listar todas as entregas
-                                    System.out.println(roboEscolhido.listarEntregas());
-
-                                } else if (acao == 5) {
-                                    // Mover robô para um destino
-                                    System.out.print("Digite as coordenadas X e Y do destino:");
-                                    int[] coordenadas = Main.obterPosicao(ambiente, scanner);
-
-                                    System.out.print("Digite a velocidade do movimento:");
-                                    int vel = scanner.nextInt();
-                                    roboEscolhido.mover(coordenadas[0]-roboSelecionado.getPosicaoX(), coordenadas[1]-roboSelecionado.getPosicaoY(),vel);
-
-                                } else if (acao == 6){
-                                    // Identificar obstáculos na direção definida
-
-                                    System.out.println(roboEscolhido.exibirPosicao());
-                                    ArrayList<Robo> listaRoboVisto= roboEscolhido.identificarRobosDirecao(ambiente, roboEscolhido.getDirecao());
-                                    if (listaRoboVisto.size() == 0){
-                                        System.out.println("Não há obstáculos");
-
-                                    } else {
-                                        // Apenas o primeiro obstáculos é visto pelo robô Correio
-                                        Robo obstaculo = listaRoboVisto.get(0);
-                                        String info_obstaculo = String.format(
-                                            "Obstáculo encontrado! Dados:\n\n" + 
-                                            "Nome: %s\n" + 
-                                            "X: %d\n" + "Y: %d\n", obstaculo.getNome(), obstaculo.getPosicaoX(), obstaculo.getPosicaoY()
-                                        );
-                                        System.out.println(info_obstaculo);
+                                else{
+                                    for (Robo robo:listaRoboVisto){
+                                        System.out.println(robo.getNome() + " X:" + robo.getPosicaoX() + " Y:" + robo.getPosicaoY());
                                     }
-                                } else if (acao == 7){
-                                    // Mudança de direção do robô
-                                    System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
-                                    String direcao = scanner.nextLine();
-                                    roboEscolhido.setDirecao(direcao);
                                 }
-                            } else{
-                                System.out.println("O robô está inoperante");
+                            } else if (acao == 6){
+                                System.out.print("Digite a direção desejada (Norte/Sul/Leste/Oeste):");
+                                String direcao = scanner.nextLine();
+                                roboEscolhido.setDirecao(direcao);
                             }
+                        } else{
+                            System.out.println("O robô está inoperante\n");
                         }
                     }
+                    if (roboSelecionado instanceof Correios){
+                        Correios roboEscolhido = ((Correios) roboSelecionado);
+                        menu = String.format(
+                            "Digite o número da ação desejada:\n\n" +
+                            "1 - Exibir posição\n" +
+                            "2 - Carregar pacote\n" +
+                            "3 - Entregar pacote\n" +
+                            "4 - Listar entregas\n" +
+                            "5 - Mover\n" +
+                            "6 - Identificar obstáculos\n" +
+                            "7 - Mudar direção\n"
+                        );
+                        System.out.print(menu);
+                        System.out.print("Ação:");
+                        int acao = scanner.nextInt() ;
+                        scanner.nextLine(); // Consumir quebra de linha
+                        System.out.println();
+
+                        if (acao == 1) {
+                            System.out.println(roboEscolhido.exibirPosicao());
+
+                        } else if (roboEscolhido.getOperando()){
+                            // Verifica operabilidade do robô
+                            if (acao == 2) {
+                                // Carregar pacote
+                                System.out.print("Digite o nome ou id do pacote:");
+                                String id = scanner.nextLine();
+                                System.out.print("Digite o peso do pacote:");
+                                int peso = scanner.nextInt();
+                                System.out.println(roboEscolhido.carregarPacote(id, peso));
+
+                            } else if (acao == 3){
+                                // Entregar um pacote
+                                System.out.print("Digite o nome ou id do pacote:");
+                                String id = scanner.nextLine();
+
+                                System.out.print("Digite as coordenadas X e Y do destino:");
+                                int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+                                System.out.println(roboEscolhido.entregarPacote(id, coordenadas[0], coordenadas[1]));
+
+                            } else if (acao == 4){
+                                // Listar todas as entregas
+                                System.out.println(roboEscolhido.listarEntregas());
+
+                            } else if (acao == 5) {
+                                // Mover robô para um destino
+                                System.out.print("Digite as coordenadas X e Y do destino:");
+                                int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+
+                                System.out.print("Digite a velocidade do movimento:");
+                                int vel = scanner.nextInt();
+                                roboEscolhido.mover(coordenadas[0]-roboSelecionado.getPosicaoX(), coordenadas[1]-roboSelecionado.getPosicaoY(),vel);
+
+                            } else if (acao == 6){
+                                // Identificar obstáculos na direção definida
+
+                                System.out.println(roboEscolhido.exibirPosicao());
+                                ArrayList<Robo> listaRoboVisto= roboEscolhido.identificarRobosDirecao(ambiente, roboEscolhido.getDirecao());
+                                if (listaRoboVisto.size() == 0){
+                                    System.out.println("Não há obstáculos");
+
+                                } else {
+                                    // Apenas o primeiro obstáculos é visto pelo robô Correio
+                                    Robo obstaculo = listaRoboVisto.get(0);
+                                    String info_obstaculo = String.format(
+                                        "Obstáculo encontrado! Dados:\n\n" + 
+                                        "Nome: %s\n" + 
+                                        "X: %d\n" + "Y: %d\n", obstaculo.getNome(), obstaculo.getPosicaoX(), obstaculo.getPosicaoY()
+                                    );
+                                    System.out.println(info_obstaculo);
+                                }
+                            } else if (acao == 7){
+                                // Mudança de direção do robô
+                                System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
+                                String direcao = scanner.nextLine();
+                                roboEscolhido.setDirecao(direcao);
+                            }
+                        } else{
+                            System.out.println("O robô está inoperante");
+                        }
+                    }
+                    
                 } else if (comando == 3){
                     // Exibe lista de robôs no ambiente
                     System.out.println("Lista de robôs:");
