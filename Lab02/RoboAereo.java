@@ -118,7 +118,7 @@ public class RoboAereo extends Robo {
 
     @Override
     public String exibirPosicao() { //método para imprimir posição
-        return String.format("%s está em (%d, %d, %d)", this.getNome(), this.getPosicaoX(), this.getPosicaoY(), this,getAltitude());
+        return String.format("%s está em (%d, %d, %d)", super.getNome(), super.getPosicaoX(), super.getPosicaoY(), this.getAltitude());
     }
 
 }
