@@ -370,7 +370,7 @@ public class Main{
                             } else if (acao == 3){
                                 // Se movimentar
 
-                                System.out.print("Digite as coordenadas X e Y do destino:");
+                                System.out.println("Digite as coordenadas X e Y do destino:");
                                 int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                                 System.out.print("Digite a altura do destino:");
                                 int nAlt = scanner.nextInt();
@@ -454,7 +454,7 @@ public class Main{
 
                                 } else {
                                     // Todos os obstáculos detectados são exibidos!
-                                    System.out.println("Obstáculo Encontrado!\nDados:\n\n");
+                                    System.out.print("Obstáculo Encontrado!\nDados:\n\n");
                                     String info_obstaculo;
                                     for (Robo robo : robosAlcanceRadar) {
                                         // Não exibir a si mesmo
