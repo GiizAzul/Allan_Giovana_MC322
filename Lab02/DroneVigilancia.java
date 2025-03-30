@@ -1,4 +1,4 @@
-/*import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class DroneVigilancia extends RoboAereo {
 
@@ -14,34 +14,29 @@ public class DroneVigilancia extends RoboAereo {
         this.angulo_camera = ang_cam;
     }
 
-    // Adicionar um override aqui
-    public Object[] identificarObstaculos(Ambiente ambiente) {
+    public ArrayList<Robo> identificarObstaculo(Ambiente ambiente) {
         // Busca todos os robos que o Radar consegue alcançar com base na posição do Drone
+        // Sistema de Radar encontra até Drones camuflados
         // Baseado no alcance do radar do robô
 
         ArrayList<Robo> robos_ambiente = ambiente.getListaRobos();
         ArrayList<Robo> encontrados = new ArrayList<>();
 
         for (Robo robo : robos_ambiente) {
-            if (robo.getVisivel()) {
-                if (this.distancia(robo, getPosicaoX(), getPosicaoY()) < this.alcance_radar) {
-                    encontrados.add(robo);
-                }
+            if (robo.distanciaRobo(this) < this.alcance_radar) {
+                encontrados.add(robo);
             }
         }
 
-        return encontrados.toArray();
+        return encontrados;
 
     }
 
-    public boolean visivel() {
-        return this.camuflado;
-    }
-
-    public ArrayList<Robo> varrer_area(Ambiente ambiente, int centroX, int centroY, int raio) {
+    public ArrayList<Robo> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura
         // Baseado na capacidade da câmera do drone
+        // Sistema de varredura não encontra drones camuflados
 
         // Move o drone para ficar sobre a região central
         this.mover(centroX - this.getPosicaoX(), centroY - this.getPosicaoY());
@@ -55,31 +50,63 @@ public class DroneVigilancia extends RoboAereo {
         ArrayList<Robo> lista_robos = ambiente.getListaRobos();
         ArrayList<Robo> robos_encontrados = new ArrayList<>();
         for (Robo robo : lista_robos) {
-            if (this.distancia(robo) <= raio) {
+            double distancia = robo.distanciaRobo(this);
+            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getAltitude(), 2))) {
+                continue;
+            }
+
+            double hMax = this.getAltitude() - distancia * Math.cos(ang_rad);
+            if (robo instanceof RoboAereo) {
+                RoboAereo roboAereo = (RoboAereo) robo;
+                if (roboAereo.getAltitude() > hMax) {
+                    // Fora da região de visualização da câmera
+                    continue;
+                }
+                if (roboAereo.getVisivel()) {
+                    robos_encontrados.add(robo);
+                }
+            } else if (!(robo instanceof RoboTerrestre)) {
+                // RoboTerrestre automaticamente já está na região de varredura
+                System.out.printf("Robo %s não avaliado!%n", robo.getNome());
+            }
+
+            if (robo.getVisivel()) {
                 robos_encontrados.add(robo);
             }
+            
         }
 
         return robos_encontrados;
     }
 
-    /*
-    Implementar em cada classe RoboTerrestre e RoboAereo
-
-    private double distancia(RoboTerrestre robo) {
-        return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
+    public boolean isCamuflado() {
+        return this.camuflado;
     }
 
-    private double distancia(RoboAereo alvo) {
-        return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - this.getAltitude(), 2));
-    }
-    */
-/*
-    public void acionar_camuflagem() {
+    public void acionarCamuflagem() {
         this.camuflado = true;
+        this.visivel = false;
     }
 
-    public void desabilitar_camuflagem() {
+    public void desabilitarCamuflagem() {
+        this.visivel = true;
         this.camuflado = false;
     }
-} */
+
+
+    public float getAlcanceRadar() {
+        return alcance_radar;
+    }
+
+    public void setAlcanceRadar(float alcance_radar) {
+        this.alcance_radar = alcance_radar;
+    }
+
+    public float getAnguloCamera() {
+        return angulo_camera;
+    }
+
+    public void setAnguloCamera(float angulo_camera) {
+        this.angulo_camera = angulo_camera;
+    }
+} 

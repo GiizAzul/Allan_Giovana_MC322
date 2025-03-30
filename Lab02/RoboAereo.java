@@ -73,4 +73,12 @@ public class RoboAereo extends Robo {
         this.altitudeMaxima = hMax;
     }
 
+    public double distanciaRobo(RoboTerrestre robo) {
+        return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(0 - this.getAltitude(), 2));
+    }
+
+    public double distanciaRobo(RoboAereo alvo) {
+        return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - this.getAltitude(), 2));
+    }
+
 }
