@@ -33,7 +33,22 @@ public class DroneAtaque extends RoboAereo {
             }
         }
     }
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros) {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
+        // Verifica se há munição suficiente
+        if (this.municao < nTiros) {
+            return "Munição insuficiente";
+        }
+
+        // Verifica se alvo está no alcance
+        int dX = this.getPosicaoX() - alvoX;
+        int dY = this.getPosicaoY() - alvoY;
+        int dZ = this.getAltitude() - alvoZ;
+
+        return executarTiro(dX, dY, dZ, alvoX, alvoY, alvoZ, nTiros, ambiente);
+
+    }
+
+    public String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
         // Verifica se há munição suficiente
         if (this.municao < nTiros) {
             return "Munição insuficiente";
@@ -43,45 +58,42 @@ public class DroneAtaque extends RoboAereo {
         int dX = this.getPosicaoX() - alvoX;
         int dY = this.getPosicaoY() - alvoY;
 
-        if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(this.alcance,2)) {
-            this.municao -= nTiros;
-            return "Disparo realizado!";
-        } else {
-            return "Alvo fora do alcance";
-        }
+        return executarTiro(dX, dY, this.getAltitude(), alvoX, alvoY, 0, nTiros, ambiente);
+
     }
 
-    public String atirar(int alvoX, int alvoY, int nTiros) {
-        // Verifica se há munição suficiente
+    public String atirar(Robo robo, int nTiros, Ambiente ambiente) {
         if (this.municao < nTiros) {
             return "Munição insuficiente";
         }
 
-        // Verifica se alvo está no alcance
-        int dX = this.getPosicaoX() - alvoX;
-        int dY = this.getPosicaoY() - alvoY;
-
-        if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(this.alcance,2)) {
-            this.municao -= nTiros;
-            return "Disparo realizado!";
+        if (robo instanceof RoboTerrestre) {
+            String result = this.atirar(robo.getPosicaoX(), robo.getPosicaoY(), nTiros, ambiente);
+            return result;
+        } else if (robo instanceof RoboAereo) {
+            RoboAereo roboAereo = (RoboAereo) robo;
+            String result = this.atirar(roboAereo.getPosicaoX(), roboAereo.getPosicaoY(), roboAereo.getAltitude(), nTiros, ambiente);
+            return result;
         } else {
-            return "Alvo fora do alcance";
+            return "Robô inválido!";
         }
-
     }
 
-    public String atirar(Robo robo, int nTiros) {
-        // Verifica se alvo está no alcance
-        if (this.municao < nTiros) {
-            return "Munição insuficiente";
-        }
-
-        int dX = this.getPosicaoX() - robo.getPosicaoX();
-        int dY = this.getPosicaoY() - robo.getPosicaoY();
-
-        if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(this.alcance,2)) {
+    private String executarTiro(int dX, int dY, int dZ, int aX, int aY, int aZ, int nTiros, Ambiente ambiente) {
+        if (Math.pow(dX, 2) + Math.pow(dY, 2) + Math.pow(dZ, 2) <= Math.pow(this.alcance,2)) {
             this.municao -= nTiros;
-            return "Disparo realizado!";
+            Robo alvo = (Robo) ambiente.identificarObjetoPosicao(aX, aY, aZ);
+            if (alvo == null) {
+                return String.format("Disparado realizado nas coordenadas (%d, %d, %d)\nNenhum alvo foi atingido!\n", aX, aY, aZ);
+            } else {
+                String defesa = alvo.defender(nTiros);
+                String result = String.format(
+                    "Disparo realizado no alvo (%d, %d, %d)\n" +
+                    "Robô foi %s foi atingido!\n" +
+                    defesa
+                , aX, aY, aZ, alvo.getNome());
+                return result;
+            }
         } else {
             return "Alvo fora do alcance";
         }
