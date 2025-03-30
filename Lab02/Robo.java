@@ -72,7 +72,13 @@ public class Robo {
     }
 
     public void setIntegridade(int integridade){
-        this.integridade=integridade;
+        if (integridade <= 0) {
+            this.integridade = 0;
+            this.operando = false;
+        } else {
+            this.integridade=integridade;
+            this.operando = true;
+        }
     }
 
     public ArrayList<Robo> identificarObstaculo(Ambiente ambiente, String direcao){
