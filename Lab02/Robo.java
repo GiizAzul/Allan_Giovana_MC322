@@ -56,6 +56,10 @@ public class Robo {
         return nome;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public int getIntegridade(){
         return integridade;
     }
