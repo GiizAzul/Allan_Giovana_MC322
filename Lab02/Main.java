@@ -152,7 +152,7 @@ public class Main{
                         // Atributos específicos do Drone de Vigilância
 
                         System.out.print("Alcance do Radar:");
-                        atributos[6] = scanner.nextInt();
+                        atributos[6] = scanner.nextFloat();
 
                         System.out.print("Ângulo de abertura da câmera (Graus):");
                         atributos[7] = scanner.nextFloat();
