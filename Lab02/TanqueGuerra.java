@@ -28,9 +28,11 @@ public class TanqueGuerra extends RoboTerrestre {
                 if (alvo == null) {
                     return String.format("Disparado realizado no alvo (%d, %d)\nNenhum alvo foi atingido!\n", alvoX, alvoY);
                 } else {
+                    String defesa = alvo.defender(nTiros);
                     String result = String.format(
                         "Disparo realizado no alvo (%d, %d)\n" +
-                        "Robô foi %s foi atingido!\n"
+                        "Robô foi %s foi atingido!\n" + 
+                        defesa
                     , alvoX, alvoY, alvo.getNome());
                     return result;
                 }
