@@ -36,7 +36,7 @@ public class Correios extends RoboTerrestre {
             return("Pacote " + id + " não encontrado na carga.");
         }
         int i = entregas.indexOf(id);
-        mover(destinoX - getPosicaoX(), destinoY - getPosicaoY(), 20);
+        mover(destinoX - getPosicaoX(), destinoY - getPosicaoY(), this.getVelocidadeMaxima());
         pesoAtual -= pesos.get(i);
         entregas.remove(i);
         pesos.remove(i);

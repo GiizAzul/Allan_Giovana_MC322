@@ -7,9 +7,13 @@ public class RoboTerrestre extends Robo {
     }
 
     public void mover(int deltaX, int deltaY, int vel){
-            if (vel <= velocidadeMaxima){
+        if (vel <= velocidadeMaxima){
             super.mover(deltaX, deltaY);
         }
+    }
+
+    public int getVelocidadeMaxima() {
+        return this.velocidadeMaxima;
     }
 
     public double distanciaRobo(RoboTerrestre robo) {
