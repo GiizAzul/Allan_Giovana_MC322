@@ -49,4 +49,28 @@ public class Ambiente{
         }
         return null; 
     }
+
+    public Object identificarObjetoPosicao(int posX, int posY){
+        for (Robo robo : this.listaRobos){
+            if (robo.getPosicaoX() == posX && robo.getPosicaoY() == posY){
+                return robo;
+            }
+        }
+        return null;
+    }
+
+    public Object identificarObjetoPosicao(int posX, int posY, int posZ){
+        if (posZ == 0) {
+            return this.identificarObjetoPosicao(posX, posY);
+        }
+        for (Robo robo : this.listaRobos){
+            if (robo instanceof RoboAereo) {
+                RoboAereo roboAir = (RoboAereo) robo;
+                if (roboAir.getPosicaoX() == posX && roboAir.getPosicaoY() == posY && roboAir.getAltitude() == posZ){
+                    return robo;
+                }
+            }
+        }
+        return null;
+    }
 }
