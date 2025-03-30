@@ -44,6 +44,7 @@ public class DroneVigilancia extends RoboAereo {
         // Verifica se a câmera possui abertura para fazer a varredura
         double ang_rad = Math.toRadians(this.angulo_camera);
         if (raio > this.getAltitude()*Math.tan(ang_rad / 2)) {
+            System.out.println("Não é possível varrer tal raio com a câmera atual!");
             return new ArrayList<>();
         }
 

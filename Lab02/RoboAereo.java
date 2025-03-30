@@ -48,6 +48,7 @@ public class RoboAereo extends Robo {
 
         this.altitude += metros;
         if (this.altitude>this.altitudeMaxima){
+            System.out.println("Altura máxima foi atingida!");
             this.altitude=this.altitudeMaxima;
         }
     }
@@ -60,7 +61,7 @@ public class RoboAereo extends Robo {
 
         this.altitude -= metros;
         if (this.altitude < 0){
-            this.altitude=0;
+            this.altitude = 0;
         }
     }
 
@@ -84,6 +85,17 @@ public class RoboAereo extends Robo {
         return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - this.getAltitude(), 2));
     }
 
+    public void mover(int X, int Y, int Z) {
+        super.mover(X - this.getPosicaoX(), Y - this.getPosicaoY());
+        int h = this.getAltitude();
+        if (Z > h) {
+            this.subir(Z - h);
+        } else {
+            this.descer(h - Z);
+        }
+    }
+
+    @Override
     public ArrayList<Robo> identificarObstaculo(Ambiente ambiente, String direcao){
 
         ArrayList<Robo> listaRobo = ambiente.getListaRobos();
