@@ -5,7 +5,7 @@ public class Main{
 
     public static void main(String[] args) { 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com dimensões 3D no formato X Y Z");
+        System.out.print("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com dimensões 3D no formato X Y Z:");
 
         int tamX = scanner.nextInt();
         int tamY = scanner.nextInt();
@@ -18,7 +18,7 @@ public class Main{
         );
         System.out.println(mensagem);
 
-        Object[] atributos = new Object[7];
+        Object[] atributos = new Object[8];
         ArrayList<Robo> listaRobo;
 
         while (true) {
@@ -36,6 +36,8 @@ public class Main{
             int comando = scanner.nextInt() ;
             scanner.nextLine(); // Consumir quebra de linha
             System.out.println();
+
+            Main.limparTerminal();
 
             if (comando > 4 || comando < 0) {
                 System.out.println("Comando inválido!!\n");
@@ -126,11 +128,16 @@ public class Main{
                     scanner.nextLine(); // Consumir quebra de linha
                     System.out.println();
 
-                    System.out.print("Altura Inicial:");
-                    atributos[4]=scanner.nextInt();
+                    do {
+                        System.out.print("Altura Inicial:");
+                        atributos[4] = scanner.nextInt();
+                    } while ((Integer) atributos[4] >= ambiente.getTamZ());
 
-                    System.out.print("Altura Máxima:");
-                    atributos[5]=scanner.nextInt();
+                    do {
+                        System.out.print("Altura Máxima:");
+                        atributos[5]=scanner.nextInt();
+                    } while ((Integer) atributos[5] >= ambiente.getTamZ());
+
 
                     if (categoria == 1) { 
                         // Atributos específicos do Drone de Ataque
@@ -152,6 +159,9 @@ public class Main{
                     }
 
                     ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
+                    Main.limparTerminal();
+                    System.out.println("Robô adicionado com sucesso!\n");
+
                 } 
             } else {
                 // Opções 2, 3 e 4 necessitam que haja ao menos um robô
@@ -177,7 +187,7 @@ public class Main{
                     scanner.nextLine(); // Consumir quebra de linha
                     System.out.println();
 
-                    Robo roboSelecionado = listaRobo.get(index);
+                    Robo roboSelecionado = listaRobo.get(index - 1);
 
                     if (roboSelecionado instanceof TanqueGuerra){
                         TanqueGuerra roboEscolhido = (TanqueGuerra) roboSelecionado;
@@ -409,15 +419,9 @@ public class Main{
                         );
 
                         if (roboEscolhido.isCamuflado()) {
-                            menu = String.join(
-                                menu,
-                                "6 - Desativar Camuflagem"
-                            );
+                            menu += "6 - Desativar Camuflagem\n";
                         } else {
-                            menu = String.join(
-                                menu,
-                                "6 - Ativar Camuflagem"
-                            );
+                            menu += "6 - Ativar Camuflagem\n";
                         }
 
                         System.out.print(menu);
@@ -450,9 +454,13 @@ public class Main{
 
                                 } else {
                                     // Todos os obstáculos detectados são exibidos!
-                                    System.out.println("Obstáculo Encontrado!Dados:\n\n");
+                                    System.out.println("Obstáculo Encontrado!\nDados:\n\n");
                                     String info_obstaculo;
                                     for (Robo robo : robosAlcanceRadar) {
+                                        // Não exibir a si mesmo
+                                        if (robo.getNome() == roboEscolhido.getNome()) {
+                                            continue;
+                                        }
                                         if (robo instanceof RoboAereo) {
                                             info_obstaculo = String.format(
                                                 "Nome: %s\n" + 
@@ -533,6 +541,8 @@ public class Main{
                     for (Robo robo : listaRobo){
                         System.out.printf("%d - %s %n", i++, robo.getNome());
                     }
+                    System.out.println("");
+
                 } else if (comando == 4){
                     // Remoção de um robô do ambiente
 
@@ -550,6 +560,11 @@ public class Main{
             }
         }
         scanner.close();
+    }
+
+    public static void limparTerminal() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public static int[] obterPosicao(Ambiente ambiente, Scanner scanner) {
