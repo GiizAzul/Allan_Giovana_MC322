@@ -246,8 +246,7 @@ public class Main{
                         } else{
                             System.out.println("O robô está inoperante\n");
                         }
-                    }
-                    if (roboSelecionado instanceof Correios){
+                    } else if (roboSelecionado instanceof Correios){
                         Correios roboEscolhido = ((Correios) roboSelecionado);
                         menu = String.format(
                             "Digite o número da ação desejada:\n\n" +
@@ -327,6 +326,204 @@ public class Main{
                         } else{
                             System.out.println("O robô está inoperante");
                         }
+                    } else if (roboSelecionado instanceof DroneAtaque) {
+                        DroneAtaque roboEscolhido = (DroneAtaque) roboSelecionado;
+                        menu = String.format(
+                            "Digite o número da ação desejada:\n\n" +
+                            "1 - Exibir posição\n" +
+                            "2 - Atirar\n" +
+                            "3 - Mover\n" +
+                            "4 - Identificar obstáculos\n" +
+                            "5 - Mudar direção\n"
+                        );
+                        System.out.print(menu);
+                        System.out.print("Ação:");
+                        int acao = scanner.nextInt() ;
+                        scanner.nextLine(); // Consumir quebra de linha
+                        System.out.println();
+
+                        if (acao == 1) {
+                            System.out.println(roboEscolhido.exibirPosicao());
+
+                        } else if (roboEscolhido.getOperando()){
+                            // Verifica operabilidade do robô
+                            if (acao == 2) {
+                                // Executar tiro em posição
+                                System.out.print("Digite as coordenadas X e Y do alvo:");
+                                int alvoX = scanner.nextInt();
+                                int alvoY = scanner.nextInt();
+                                System.out.print("Digite o número de tiros: ");
+                                int nTiros = scanner.nextInt();
+                                System.out.println(roboEscolhido.atirar(alvoX,alvoY,nTiros,ambiente));
+
+
+                            } else if (acao == 3){
+                                // Se movimentar
+
+                                System.out.print("Digite as coordenadas X e Y do destino:");
+                                int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+                                System.out.print("Digite a altura do destino:");
+                                int nAlt = scanner.nextInt();
+
+                                roboEscolhido.mover(coordenadas[0], coordenadas[1], nAlt);
+                        
+                                System.out.println(roboEscolhido.exibirPosicao());
+
+
+                            } else if (acao == 4){
+                                // Identificar todos os obstáculos
+                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarObstaculo(ambiente, roboEscolhido.getDirecao());
+                                if (listaRoboVisto.size() == 0){
+                                    System.out.println("Não há obstáculos");
+
+                                } else {
+                                    // Apenas o primeiro obstáculos é visto pelo Drone de Ataque
+                                    RoboAereo obstaculo = (RoboAereo) listaRoboVisto.get(0);
+                                    String info_obstaculo = String.format(
+                                        "Obstáculo encontrado! Dados:\n\n" + 
+                                        "Nome: %s\n" + 
+                                        "X: %d\n" + "Y: %d\n" + "Altura: %d\n", obstaculo.getNome(), obstaculo.getPosicaoX(), obstaculo.getPosicaoY(),  obstaculo.getAltitude()
+                                    );
+                                    System.out.println(info_obstaculo);
+                                }
+
+
+                            } else if (acao == 5){
+                                // Mudança de direção do robô
+                                System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
+                                String direcao = scanner.nextLine();
+                                roboEscolhido.setDirecao(direcao);
+                            }
+                        } else {
+                            System.out.println("O robô está inoperante");
+                        }
+                    } else if (roboSelecionado instanceof DroneVigilancia) {
+                        DroneVigilancia roboEscolhido = (DroneVigilancia) roboSelecionado;
+                        menu = String.format(
+                            "Digite o número da ação desejada:\n\n" +
+                            "1 - Exibir posição\n" +
+                            "2 - Mover\n" +
+                            "3 - Identificar obstáculos\n" +
+                            "4 - Mudar direção\n" +
+                            "5 - Varrer Área\n"
+                        );
+
+                        if (roboEscolhido.isCamuflado()) {
+                            menu = String.join(
+                                menu,
+                                "6 - Desativar Camuflagem"
+                            );
+                        } else {
+                            menu = String.join(
+                                menu,
+                                "6 - Ativar Camuflagem"
+                            );
+                        }
+
+                        System.out.print(menu);
+                        System.out.print("Ação:");
+                        int acao = scanner.nextInt() ;
+                        scanner.nextLine(); // Consumir quebra de linha
+                        System.out.println();
+
+                        if (acao == 1) { // Exibir posição do Drone
+                            System.out.println(roboEscolhido.exibirPosicao());
+                        } if (roboEscolhido.getOperando()) {
+
+                            if (acao == 2) { // Movimentar Drone
+
+                                System.out.print("Digite as coordenadas X e Y do destino:");
+                                int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+                                System.out.print("Digite a altura do destino:");
+                                int nAlt = scanner.nextInt();
+
+                                roboEscolhido.mover(coordenadas[0], coordenadas[1], nAlt);
+        
+                                System.out.println(roboEscolhido.exibirPosicao());
+
+
+                            } else if (acao == 3) { // Identificar obstáculos do Drone
+                                // Identificar todos os obstáculos
+                                ArrayList<Robo> robosAlcanceRadar = roboEscolhido.identificarObstaculo(ambiente);
+                                if (robosAlcanceRadar.size() == 0){
+                                    System.out.println("Não há obstáculos");
+
+                                } else {
+                                    // Todos os obstáculos detectados são exibidos!
+                                    System.out.println("Obstáculo Encontrado!Dados:\n\n");
+                                    String info_obstaculo;
+                                    for (Robo robo : robosAlcanceRadar) {
+                                        if (robo instanceof RoboAereo) {
+                                            info_obstaculo = String.format(
+                                                "Nome: %s\n" + 
+                                                "X: %d\n" + "Y: %d\n" + "Altura: %d\n", robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY(),  ((RoboAereo) robo).getAltitude()
+                                            );
+                                        } else if (robo instanceof RoboTerrestre) {
+                                            info_obstaculo = String.format(
+                                                "Nome: %s\n" + 
+                                                "X: %d\n" + "Y: %d\n", robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY()
+                                            );
+                                        } else {
+                                            info_obstaculo = "Robô de tipo não definido!";
+                                        }
+                                        System.out.println(info_obstaculo);
+                                    }
+                                }
+
+
+                            } else if (acao == 4) { // Mudar direção do Drone
+                                System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
+                                String direcao = scanner.nextLine();
+                                roboEscolhido.setDirecao(direcao);
+
+                            } else if (acao == 5) { // Varrer Área
+                                System.out.println("Digite as coordenadas do centro de varredura");
+                                int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+
+                                System.out.print("Digite o raio da varredura:");
+                                int raio = scanner.nextInt();
+
+                                ArrayList<Robo> robos_encontrados = roboEscolhido.varrerArea(ambiente, coordenadas[0], coordenadas[1], raio);
+
+                                if (robos_encontrados.size() == 0) {
+                                    System.out.println("Nenhum robô foi encontrado!");
+                                } else {
+                                    System.out.println("Robôs encontrados!");
+                                    String info_obstaculo;
+                                    for (Robo robo : robos_encontrados) {
+                                        if (robo instanceof RoboAereo) {
+                                            info_obstaculo = String.format(
+                                                "Nome: %s\n" + 
+                                                "Tipo: Robô Aéreo\n" + 
+                                                "X: %d\n" + "Y: %d\n" + "Altura: %d\n", robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY(),  ((RoboAereo) robo).getAltitude()
+                                            );
+                                        } else if (robo instanceof RoboTerrestre) {
+                                            info_obstaculo = String.format(
+                                                "Nome: %s (RoboTerrestre)\n" +
+                                                "TIpo: Robô Terrestre\n" +
+                                                "X: %d\n" + "Y: %d\n", robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY()
+                                            );
+                                        } else {
+                                            info_obstaculo = "Robô de tipo não definido!";
+                                        }
+                                        System.out.println(info_obstaculo);
+                                    }
+                                }
+
+
+                            } else if (acao == 6) { // Acionar/Desativar Camuflagem
+                                if (roboEscolhido.isCamuflado()) {
+                                    roboEscolhido.desabilitarCamuflagem();
+                                } else {
+                                    roboEscolhido.acionarCamuflagem();
+                                }
+                            }
+                        } else {
+                            System.out.println("Robô escolhido não está operante!");
+                        }
+
+                    } else {
+                        System.out.println("Tipo de Robô inválido!");
                     }
                     
                 } else if (comando == 3){
