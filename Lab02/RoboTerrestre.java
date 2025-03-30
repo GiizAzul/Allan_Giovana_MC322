@@ -16,6 +16,10 @@ public class RoboTerrestre extends Robo {
         return this.velocidadeMaxima;
     }
 
+    public void setVelocidadeMaxima(int vmax) {
+        this.velocidadeMaxima = vmax;
+    }   
+
     public double distanciaRobo(RoboTerrestre robo) {
         return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
     }
