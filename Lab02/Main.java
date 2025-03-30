@@ -192,7 +192,7 @@ public class Main{
 
                             } else if (acao == 5){
                                 // Identifica todos os robôs na direção atual do Tanque
-                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarRobosDirecao(ambiente, roboEscolhido.getDirecao());
+                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarObstaculo(ambiente, roboEscolhido.getDirecao());
                                 if (listaRoboVisto.size() == 0){
                                     System.out.println("Não há obstáculos\n");
                                 }
@@ -267,7 +267,7 @@ public class Main{
                                 // Identificar obstáculos na direção definida
 
                                 System.out.println(roboEscolhido.exibirPosicao());
-                                ArrayList<Robo> listaRoboVisto= roboEscolhido.identificarRobosDirecao(ambiente, roboEscolhido.getDirecao());
+                                ArrayList<Robo> listaRoboVisto= roboEscolhido.identificarObstaculo(ambiente, roboEscolhido.getDirecao());
                                 if (listaRoboVisto.size() == 0){
                                     System.out.println("Não há obstáculos");
 

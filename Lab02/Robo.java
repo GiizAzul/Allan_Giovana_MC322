@@ -3,13 +3,16 @@ import java.util.Comparator;
 
 
 public class Robo {
-    //propriedades
+    // Propriedades
     private String nome;
     private String direcao;
     private int posicaoX;
     private int posicaoY;
     private int integridade;
     private boolean operando;
+
+    // Acessível somente para subclasses
+    protected boolean visivel = true;
 
     public Robo(String nome, String direcao, int posicaoX, int posicaoY) { //constructor q inicializa nome e posição do robo
         this.nome = nome;
@@ -60,6 +63,10 @@ public class Robo {
         this.nome = nome;
     }
 
+    public boolean getVisivel() {
+        return this.visivel;
+    }
+
     public int getIntegridade(){
         return integridade;
     }
@@ -68,7 +75,7 @@ public class Robo {
         this.integridade=integridade;
     }
 
-    public ArrayList<Robo> identificarRobosDirecao(Ambiente ambiente, String direcao){
+    public ArrayList<Robo> identificarObstaculo(Ambiente ambiente, String direcao){
 
         ArrayList<Robo> listaRobo=ambiente.getListaRobos();
         ArrayList<Robo> obstaculos = new ArrayList<>();
@@ -124,5 +131,9 @@ public class Robo {
         }
 
         return "O robô " + getNome() + " ainda está operando";
+    }
+
+    public double distanciaRobo(Robo robo) {
+        return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
     }
 }

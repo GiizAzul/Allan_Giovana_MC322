@@ -11,4 +11,12 @@ public class RoboTerrestre extends Robo {
             super.mover(deltaX, deltaY);
         }
     }
+
+    public double distanciaRobo(RoboTerrestre robo) {
+        return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
+    }
+
+    public double distanciaRobo(RoboAereo alvo) {
+        return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - 0, 2));
+    }
 }
