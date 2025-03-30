@@ -113,8 +113,45 @@ public class Main{
 
                     ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
                 }
-                else if (tipo == 2) { // aereo
-                    System.out.println("Digite o número da categoria de robô que deseja criar\n1. Drone\n2. N lembro");
+                else if (tipo == 2) {
+                    // Criação de Robôs Aéreos
+                    menu = String.format(
+                        "Digite o número da categoria de robô que deseja criar:\n\n" +
+                        "1 - Drone de Ataque\n" + 
+                        "2 - Drone de Vigilância\n"
+                    );
+                    System.out.print(menu);
+                    System.out.print("Comando:");
+                    int categoria = scanner.nextInt() ;
+                    scanner.nextLine(); // Consumir quebra de linha
+                    System.out.println();
+
+                    System.out.print("Altura Inicial:");
+                    atributos[4]=scanner.nextInt();
+
+                    System.out.print("Altura Máxima:");
+                    atributos[5]=scanner.nextInt();
+
+                    if (categoria == 1) { 
+                        // Atributos específicos do Drone de Ataque
+    
+                        System.out.print("Munição:");
+                        atributos[6]=scanner.nextInt();
+
+                        System.out.print("Alcance:");
+                        atributos[7]=scanner.nextInt();
+
+                    } else if (categoria == 2){
+                        // Atributos específicos do Drone de Vigilância
+
+                        System.out.print("Alcance do Radar:");
+                        atributos[6] = scanner.nextInt();
+
+                        System.out.print("Ângulo de abertura da câmera (Graus):");
+                        atributos[7] = scanner.nextFloat();
+                    }
+
+                    ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
                 } 
             } else {
                 // Opções 2, 3 e 4 necessitam que haja ao menos um robô

@@ -5,7 +5,7 @@ public class DroneAtaque extends RoboAereo {
     private int escudo;
 
     public DroneAtaque(String nome, String dir, int x, int y, int alt, int altMax, 
-                   int muni, int auto, int alc) {
+                   int muni, int alc) {
         
         super(nome, dir, x, y, alt, altMax);
         this.municao = muni;

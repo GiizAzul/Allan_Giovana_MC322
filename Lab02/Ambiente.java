@@ -46,6 +46,12 @@ public class Ambiente{
             } else if (subcategoria==2) {
                 return new Correios((String)atributo[0],(String)atributo[1],(Integer)atributo[2],(Integer)atributo[3],(Integer)atributo[4],(Integer)atributo[5],(Float)atributo[6]);
             }
+        } else if (tipo == 2) {
+            if (subcategoria == 1) {
+                return new DroneAtaque((String)atributo[0],(String)atributo[1],(Integer)atributo[2],(Integer)atributo[3],(Integer)atributo[4],(Integer)atributo[5], (Integer)atributo[6], (Integer)atributo[7]);
+            } else if (subcategoria == 2) {
+                return new DroneVigilancia((String) atributo[0], (String)atributo[1],(Integer)atributo[2],(Integer)atributo[3],(Integer)atributo[4],(Integer)atributo[5], (Float) atributo[6], (Float) atributo[7]);
+            }
         }
         return null; 
     }
