@@ -19,7 +19,9 @@ public class Robo {
         this.direcao = direcao;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
-        this.operando=true;
+        this.operando = true;
+        this.integridade = 100;
+    
     }
 
     public void mover(int deltaX, int deltaY) { //método para mover o robo
@@ -118,21 +120,11 @@ public class Robo {
         return obstaculos;
     }
 
-    public Object identificarObstaculoPosicao(Ambiente ambiente, int posY, int posX){
-        ArrayList<Robo> listaRobo = ambiente.getListaRobos();
-        for (Robo robo : listaRobo){
-            if (robo.getPosicaoX()==posX && robo.getPosicaoY()==posY){
-                return robo;
-            }
-        }
-        return null;
-    }
-
     public String defender(int dano){
-        integridade-=dano;
+        this.integridade -= dano;
 
-        if (integridade<=0){
-            setOperando(false);
+        if (integridade <= 0){
+            this.operando = false;
             return "O robô " + getNome() + " está inoperante devido ao dano tomado";
         }
 
