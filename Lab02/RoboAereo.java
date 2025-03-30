@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+
 public class RoboAereo extends Robo {
     
     private int altitude = -1;
@@ -80,5 +83,54 @@ public class RoboAereo extends Robo {
     public double distanciaRobo(RoboAereo alvo) {
         return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - this.getAltitude(), 2));
     }
+
+    public ArrayList<Robo> identificarObstaculo(Ambiente ambiente, String direcao){
+
+        ArrayList<Robo> listaRobo = ambiente.getListaRobos();
+        ArrayList<Robo> obstaculos = new ArrayList<>();
+        ArrayList<RoboAereo> robosAereos = new ArrayList<>();
+
+        for (Robo robo: listaRobo) {
+            if (robo instanceof RoboAereo && robo.getVisivel()) {
+                RoboAereo roboAir = (RoboAereo) robo;
+                if (roboAir.getAltitude() == this.getAltitude()) {
+                    robosAereos.add(roboAir);
+                }
+            }
+        }
+        
+
+        if (direcao.equals("Norte")){
+            for (RoboAereo robo : robosAereos) {
+                if (robo.getPosicaoX()==this.getPosicaoX() && robo.getPosicaoY()>this.getPosicaoY()){
+                    obstaculos.add(robo);
+                }
+            }
+            obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoY));
+        } else if (direcao.equals("Sul")){
+            for (RoboAereo robo : robosAereos) {
+                if (robo.getPosicaoX()==this.getPosicaoX() && robo.getPosicaoY()<this.getPosicaoY()){
+                    obstaculos.add(robo);
+                }
+            obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoY).reversed());
+            }
+        } else if (direcao.equals("Leste")){
+            for (RoboAereo robo : robosAereos) {
+                if (robo.getPosicaoY()==this.getPosicaoY() && robo.getPosicaoX()>this.getPosicaoX()){
+                    obstaculos.add(robo);
+                }
+            obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoX));
+            }
+        } else if (direcao.equals("Oeste")) {
+            for (RoboAereo robo : robosAereos) {
+                if (robo.getPosicaoY()==this.getPosicaoY() && robo.getPosicaoX()<this.getPosicaoX()){
+                    obstaculos.add(robo);
+                }
+            obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoX).reversed());
+            }
+        }
+        return obstaculos;
+    }
+
 
 }
