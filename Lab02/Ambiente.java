@@ -8,7 +8,7 @@ public class Ambiente{
     
     private ArrayList<Robo> listaRobos;
 
-    public Ambiente(int tamX, int tamY, int tamZ){  //constructor q inicializa tamanho do ambiente
+    public Ambiente(int tamX, int tamY, int tamZ){  //constructor q inicializa tamanho do ambiente        
         this.tamX=tamX;
         this.tamY=tamY;
         this.tamZ=tamZ;

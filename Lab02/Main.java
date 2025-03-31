@@ -6,11 +6,13 @@ public class Main{
     public static void main(String[] args) { 
         Scanner scanner = new Scanner(System.in);
         System.out.print("Bem vindo ao Simulador de Robôs!\nCrie um ambiente com dimensões 3D no formato X Y Z:");
-
-        int tamX = scanner.nextInt();
-        int tamY = scanner.nextInt();
-        int tamZ = scanner.nextInt();
-
+        int tamX, tamY, tamZ;
+        do {
+            tamX = scanner.nextInt();
+            tamY = scanner.nextInt();
+            tamZ = scanner.nextInt();
+        } while(tamX <= 0 || tamY <= 0 || tamZ <= 0);
+        
         Ambiente ambiente = new Ambiente(tamX,tamY,tamZ);
         String mensagem = String.format(
             "Ambiente criado com:\nTamX: %d\nTamY: %d\nTamZ: %d\n",
