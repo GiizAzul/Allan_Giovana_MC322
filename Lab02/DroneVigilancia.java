@@ -63,9 +63,7 @@ public class DroneVigilancia extends RoboAereo {
                     // Fora da região de visualização da câmera
                     continue;
                 }
-                if (roboAereo.getVisivel()) {
-                    robos_encontrados.add(robo);
-                }
+
             } else if (!(robo instanceof RoboTerrestre)) {
                 // RoboTerrestre automaticamente já está na região de varredura
                 System.out.printf("Robo %s não avaliado!%n", robo.getNome());
