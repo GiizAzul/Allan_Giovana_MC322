@@ -119,7 +119,7 @@ public class Main{
                             System.out.print("Velocidade Máxima:");
                             atributos[4]=scanner.nextInt();
                         } while( (Integer) atributos[4] < 0);
-                        
+
                         do {
                             System.out.print("Capacidade Máxima:");
                             atributos[5]=scanner.nextInt();
@@ -128,7 +128,7 @@ public class Main{
                         do {
                             System.out.print("Peso Máximo:");
                             atributos[6]=scanner.nextFloat();
-                        } while( (Integer) atributos[6] < 0);
+                        } while( (Float) atributos[6] < 0);
                     }
 
                     ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
@@ -174,12 +174,12 @@ public class Main{
                         do {
                             System.out.print("Alcance do Radar:");
                             atributos[6] = scanner.nextFloat();
-                        } while ((Integer) atributos[6] < 0);
+                        } while ((Float) atributos[6] < 0);
 
                         do {
                             System.out.print("Ângulo de abertura da câmera (Graus):");
                             atributos[7] = scanner.nextFloat();
-                        } while ((Integer) atributos[7] < 0);
+                        } while ((Float) atributos[7] < 0);
                     }
 
                     ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
