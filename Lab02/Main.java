@@ -129,14 +129,14 @@ public class Main{
                     System.out.println();
 
                     do {
-                        System.out.print("Altura Inicial:");
-                        atributos[4] = scanner.nextInt();
-                    } while ((Integer) atributos[4] >= ambiente.getTamZ());
-
-                    do {
                         System.out.print("Altura Máxima:");
                         atributos[5]=scanner.nextInt();
                     } while ((Integer) atributos[5] >= ambiente.getTamZ());
+
+                    do {
+                        System.out.print("Altura Inicial:");
+                        atributos[4] = scanner.nextInt();
+                    } while ((Integer) atributos[4] >= ambiente.getTamZ() && (Integer) atributos[4] <= (Integer) atributos[5]);
 
 
                     if (categoria == 1) { 
