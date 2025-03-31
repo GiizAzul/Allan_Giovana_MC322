@@ -187,7 +187,7 @@ public class Main{
                     do {
                         System.out.print("Robo:");
                         index = scanner.nextInt() ;
-                    } while (index < 0 || index > sizeLista);
+                    } while (index <= 0 || index > sizeLista);
                     scanner.nextLine(); // Consumir quebra de linha
                     System.out.println();
 
