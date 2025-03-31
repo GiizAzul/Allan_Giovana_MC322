@@ -134,4 +134,13 @@ public class Robo {
     public double distanciaRobo(Robo robo) {
         return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2) + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
     }
+
+    public static ArrayList<String> getDirecoesPossiveis() {
+        ArrayList<String> opcoes = new ArrayList<>();
+        opcoes.add("Norte");
+        opcoes.add("Sul");
+        opcoes.add("Leste");
+        opcoes.add("Oeste");
+        return opcoes;
+    }
 }

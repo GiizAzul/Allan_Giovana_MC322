@@ -12,7 +12,7 @@ public class Main{
             tamY = scanner.nextInt();
             tamZ = scanner.nextInt();
         } while(tamX <= 0 || tamY <= 0 || tamZ <= 0);
-        
+
         Ambiente ambiente = new Ambiente(tamX,tamY,tamZ);
         String mensagem = String.format(
             "Ambiente criado com:\nTamX: %d\nTamY: %d\nTamZ: %d\n",
@@ -60,7 +60,9 @@ public class Main{
                 atributos[0]=scanner.nextLine();
 
                 System.out.print("Direção (Norte/Sul/Leste/Oeste):");
-                atributos[1]=scanner.nextLine();
+                do {
+                    atributos[1] = scanner.nextLine();
+                } while (!Robo.getDirecoesPossiveis().contains(atributos[1]));
 
                 int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                 atributos[2] = coordenadas[0]; // Posição X
@@ -133,12 +135,12 @@ public class Main{
                     do {
                         System.out.print("Altura Máxima:");
                         atributos[5]=scanner.nextInt();
-                    } while ((Integer) atributos[5] >= ambiente.getTamZ());
+                    } while ((Integer) atributos[5] > ambiente.getTamZ());
 
                     do {
                         System.out.print("Altura Inicial:");
                         atributos[4] = scanner.nextInt();
-                    } while ((Integer) atributos[4] >= ambiente.getTamZ() && (Integer) atributos[4] <= (Integer) atributos[5]);
+                    } while ((Integer) atributos[4] > ambiente.getTamZ() && (Integer) atributos[4] <= (Integer) atributos[5]);
 
 
                     if (categoria == 1) { 
@@ -252,7 +254,10 @@ public class Main{
                                 }
                             } else if (acao == 6){
                                 System.out.print("Digite a direção desejada (Norte/Sul/Leste/Oeste):");
-                                String direcao = scanner.nextLine();
+                                String direcao;
+                                do {
+                                    direcao = scanner.nextLine();
+                                } while (!Robo.getDirecoesPossiveis().contains(direcao));
                                 roboEscolhido.setDirecao(direcao);
                             }
                         } else{
@@ -332,7 +337,11 @@ public class Main{
                             } else if (acao == 7){
                                 // Mudança de direção do robô
                                 System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
-                                String direcao = scanner.nextLine();
+
+                                String direcao;
+                                do {
+                                    direcao = scanner.nextLine();
+                                } while (!Robo.getDirecoesPossiveis().contains(direcao));
                                 roboEscolhido.setDirecao(direcao);
                             }
                         } else{
@@ -403,7 +412,10 @@ public class Main{
                             } else if (acao == 5){
                                 // Mudança de direção do robô
                                 System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
-                                String direcao = scanner.nextLine();
+                                String direcao;
+                                do {
+                                    direcao = scanner.nextLine();
+                                } while (!Robo.getDirecoesPossiveis().contains(direcao));
                                 roboEscolhido.setDirecao(direcao);
                             }
                         } else {
@@ -483,7 +495,10 @@ public class Main{
 
                             } else if (acao == 4) { // Mudar direção do Drone
                                 System.out.println("Digite a direção desejada (Norte/Sul/Leste/Oeste)");
-                                String direcao = scanner.nextLine();
+                                String direcao;
+                                do {
+                                    direcao = scanner.nextLine();
+                                } while (!Robo.getDirecoesPossiveis().contains(direcao));
                                 roboEscolhido.setDirecao(direcao);
 
                             } else if (acao == 5) { // Varrer Área
