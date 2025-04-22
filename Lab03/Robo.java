@@ -12,7 +12,7 @@ public class Robo {
     private int posicaoY;       // Coordenada Y da posição do robô
     private int integridade;    // Nível de integridade do robô (0-100)
     private boolean operando;   // Estado de operação do robô (true = operando, false = inoperante)
-    private ArrayList<Sensor> listaSensores; // Lista de sensores acoplados ao robô
+    private ArrayList<Sensor<?>> listaSensores; // Lista de sensores acoplados ao robô
 
     // Acessível somente para subclasses
     protected boolean visivel = true;  // Indica se o robô está visível para outros robôs
@@ -31,7 +31,7 @@ public class Robo {
         this.posicaoY = posicaoY;
         this.operando = true;
         this.integridade = 100;
-        this.listaSensores = new ArrayList<Sensor>();
+        this.listaSensores = new ArrayList<Sensor<?>>();
     }
 
     /**
@@ -153,50 +153,88 @@ public class Robo {
      * @param direcao Direção a ser verificada
      * @return Lista de robôs que são obstáculos na direção indicada
      */
-    public ArrayList<Robo> identificarObstaculo(Ambiente ambiente, String direcao) {
+    public ArrayList<Robo> identificarRobo(Ambiente ambiente, String direcao) {
         ArrayList<Robo> listaRobo = ambiente.getListaRobos();
-        ArrayList<Robo> obstaculos = new ArrayList<>();
+        ArrayList<Robo> robosVistos = new ArrayList<>();
 
         if (direcao.equals("Norte")) {
             // Identifica robôs ao norte (mesmo X, Y maior)
             for (Robo robo : listaRobo) {
                 if (robo.getPosicaoX() == this.posicaoX && robo.getPosicaoY() > this.posicaoY) {
-                    obstaculos.add(robo);
+                    robosVistos.add(robo);
                 }
             }
-            // Ordena por Y crescente ou seja, o mais próximo primeiro
-            obstaculos.sort(Comparator.comparingInt(o -> o.posicaoY));
+            // Ordena por Y crescente ou seja, o mais próximo primeiro            
+            robosVistos.sort(Comparator.comparingInt((Robo o) -> o.posicaoY));
         } else if (direcao.equals("Sul")) {
             // Identifica robôs ao sul (mesmo X, Y menor)
             for (Robo robo : listaRobo) {
                 if (robo.getPosicaoX() == this.posicaoX && robo.getPosicaoY() < this.posicaoY) {
-                    obstaculos.add(robo);
+                    robosVistos.add(robo);
                 }
                 // Ordena por Y decrescente ou seja, o mais próximo primeiro
-                obstaculos.sort(Comparator.comparingInt((Robo o) -> o.posicaoY).reversed());
+                robosVistos.sort(Comparator.comparingInt((Robo o) -> o.posicaoY).reversed());
+
             }
         } else if (direcao.equals("Leste")) {
             // Identifica robôs ao leste (mesmo Y, X maior)
             for (Robo robo : listaRobo) {
                 if (robo.getPosicaoY() == this.posicaoY && robo.getPosicaoX() > this.posicaoX) {
-                    obstaculos.add(robo);
+                    robosVistos.add(robo);
                 }
                 // Ordena por X crescente ou seja, o mais próximo primeiro
-                obstaculos.sort(Comparator.comparingInt(o -> o.posicaoX));
+                robosVistos.sort(Comparator.comparingInt((Robo o) -> o.posicaoX));
             }
         } else if (direcao.equals("Oeste")) {
             // Identifica robôs ao oeste (mesmo Y, X menor)
             for (Robo robo : listaRobo) {
                 if (robo.getPosicaoY() == this.posicaoY && robo.getPosicaoX() < this.posicaoX) {
-                    obstaculos.add(robo);
+                    robosVistos.add(robo);
                 }
                 // Ordena por X decrescente ou seja, o mais próximo primeiro
-                obstaculos.sort(Comparator.comparingInt((Robo o) -> o.posicaoX).reversed());
+                robosVistos.sort(Comparator.comparingInt((Robo o) -> o.posicaoX).reversed());
             }
         } else {
             return null; // Direção inválida
         }
-        return obstaculos;
+        return robosVistos;
+    }
+
+    public ArrayList<Obstaculo> identificarObstaculo(Ambiente ambiente, String direcao) {
+
+        ArrayList<Obstaculo> listaObstaculo = ambiente.getListaObstaculos();
+        ArrayList<Obstaculo> obstaculosVistos = new ArrayList<>();
+
+        if (direcao.equals("Norte")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getX1() <= this.posicaoX && obstaculo.getX2()>=this.posicaoX && obstaculo.getY1() > this.posicaoY) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getY1()));
+        } else if (direcao.equals("Sul")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getX1() <= this.posicaoX && obstaculo.getX2()>=this.posicaoX && obstaculo.getY2() < this.posicaoY) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getY1()).reversed());
+        } else if (direcao.equals("Leste")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getY1() <= this.posicaoY && obstaculo.getY2()>=this.posicaoY && obstaculo.getX1() > this.posicaoX) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()));
+        } else if (direcao.equals("Oeste")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getY1() <= this.posicaoY && obstaculo.getY2()>=this.posicaoY && obstaculo.getX1() < this.posicaoX) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()).reversed());
+        }
+        return obstaculosVistos;
     }
 
     /**
@@ -236,5 +274,13 @@ public class Robo {
         opcoes.add("Leste");
         opcoes.add("Oeste");
         return opcoes;
+    }
+
+    public void addSensor(Sensor<?> sensor){
+        listaSensores.add(sensor);
+    }
+
+    public ArrayList<Sensor<?>> getListaSensores(){
+        return listaSensores;
     }
 }
