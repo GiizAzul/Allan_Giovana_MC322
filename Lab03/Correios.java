@@ -7,8 +7,7 @@ public class Correios extends RoboTerrestre {
     private ArrayList<String> entregas;
     private ArrayList<Float> pesos;
 
-    public Correios(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int capacidadeMax,
-            float pesoMax) {
+    public Correios(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int capacidadeMax, float pesoMax) {
         super(nome, direcao, posicaoX, posicaoY, velocidadeMaxima);
         this.capacidadeMax = capacidadeMax;
         this.pesoMax = pesoMax;
