@@ -8,14 +8,14 @@ public class Obstaculo {
     private int integridade;
     private boolean indestrutivel;
 
-    public Obstaculo(TipoObstaculo tipo, int x1, int x2, int y1, int y2){
+    public Obstaculo(TipoObstaculo tipo, int x1, int x2, int y1, int y2) {
         this.tipo = tipo;
         this.x1 = x1;
         this.x2 = x2;
         this.y1 = y1;
         this.y2 = y2;
         this.altura = tipo.getAlturaPadrao();
-        this.integridade = tipo.getIntegridade(); 
+        this.integridade = tipo.getIntegridade();
         this.indestrutivel = tipo.isIndestrutivel();
     }
 
@@ -47,21 +47,23 @@ public class Obstaculo {
         return integridade;
     }
 
-    public boolean isIndestrutivel(){
+    public boolean isIndestrutivel() {
         return indestrutivel;
     }
 
     public String defender(int dano, Ambiente ambiente) {
-        this.integridade -= dano;
+        if (indestrutivel) {
+            return "O obstáculo é indestrutível";
+        } else {
+            this.integridade -= dano;
 
-        if (integridade <= 0) {
-            ambiente.removerObstaculo(this);
-            return "O obstáculo foi destruído";
+            if (integridade <= 0) {
+                ambiente.removerObstaculo(this);
+                return "O obstáculo foi destruído";
+            }
+
+            return "O obstáculo ainda não foi destruído";
         }
-
-        return "O obstáculo ainda não foi destruído";
     }
-
-    
 
 }
