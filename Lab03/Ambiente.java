@@ -42,6 +42,10 @@ public class Ambiente {
         listaRobos.add(robo);
     }
 
+    public void removerRobo(Robo robo){
+        listaRobos.remove(robo);
+    }
+
     /**
      * Retorna a lista de robôs no ambiente
      */
@@ -54,6 +58,10 @@ public class Ambiente {
      */
     public void adicionarObstaculo(Obstaculo obstaculo) {
         listaObstaculos.add(obstaculo);
+    }
+
+    public void removerObstaculo(Obstaculo obstaculo){
+        listaObstaculos.remove(obstaculo);
     }
 
     /**
@@ -168,7 +176,7 @@ public class Ambiente {
      */
     public Object identificarObjetoPosicao(int posX, int posY, int posZ) {
         if (posZ == 0) {
-            return this.identificarObjetoPosicao(posX, posY);
+            return this.identificarRoboPosicao(posX, posY);
         }
         for (Robo robo : this.listaRobos) {
             if (robo instanceof RoboAereo) {
