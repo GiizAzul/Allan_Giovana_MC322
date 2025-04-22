@@ -164,7 +164,7 @@ public class Robo {
                     obstaculos.add(robo);
                 }
             }
-            // Ordena por Y crescente
+            // Ordena por Y crescente ou seja, o mais próximo primeiro
             obstaculos.sort(Comparator.comparingInt(o -> o.posicaoY));
         } else if (direcao.equals("Sul")) {
             // Identifica robôs ao sul (mesmo X, Y menor)
@@ -172,7 +172,7 @@ public class Robo {
                 if (robo.getPosicaoX() == this.posicaoX && robo.getPosicaoY() < this.posicaoY) {
                     obstaculos.add(robo);
                 }
-                // Ordena por Y decrescente
+                // Ordena por Y decrescente ou seja, o mais próximo primeiro
                 obstaculos.sort(Comparator.comparingInt((Robo o) -> o.posicaoY).reversed());
             }
         } else if (direcao.equals("Leste")) {
@@ -181,7 +181,7 @@ public class Robo {
                 if (robo.getPosicaoY() == this.posicaoY && robo.getPosicaoX() > this.posicaoX) {
                     obstaculos.add(robo);
                 }
-                // Ordena por X crescente
+                // Ordena por X crescente ou seja, o mais próximo primeiro
                 obstaculos.sort(Comparator.comparingInt(o -> o.posicaoX));
             }
         } else if (direcao.equals("Oeste")) {
@@ -190,9 +190,11 @@ public class Robo {
                 if (robo.getPosicaoY() == this.posicaoY && robo.getPosicaoX() < this.posicaoX) {
                     obstaculos.add(robo);
                 }
-                // Ordena por X decrescente
+                // Ordena por X decrescente ou seja, o mais próximo primeiro
                 obstaculos.sort(Comparator.comparingInt((Robo o) -> o.posicaoX).reversed());
             }
+        } else {
+            return null; // Direção inválida
         }
         return obstaculos;
     }
