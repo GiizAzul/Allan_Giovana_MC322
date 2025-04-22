@@ -117,7 +117,8 @@ public class RoboAereo extends Robo {
      * @return Lista de robôs que são obstáculos na direção indicada
      */
     @Override
-    public ArrayList<Robo> identificarObstaculo(Ambiente ambiente, String direcao) {
+    public ArrayList<Robo> identificarRobo(Ambiente ambiente, String direcao) {
+
         ArrayList<Robo> listaRobo = ambiente.getListaRobos();
         ArrayList<Robo> obstaculos = new ArrayList<>();
         ArrayList<RoboAereo> robosAereos = new ArrayList<>();

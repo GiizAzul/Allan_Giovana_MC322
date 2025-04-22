@@ -33,7 +33,8 @@ public class Main {
                             "1 - Criar novo robô\n" +
                             "2 - Ações de um robô\n" +
                             "3 - Lista de robôs\n" +
-                            "4 - Remover robô\n");
+                            "4 - Remover robô\n" +
+                            "5 - Criar obstáculo\n");
             System.out.print(menu);
             System.out.print("Comando:");
             int comando = scanner.nextInt();
@@ -180,6 +181,36 @@ public class Main {
                     System.out.println("Robô adicionado com sucesso!\n");
 
                 }
+            } else if (comando == 5) {
+                System.out.println("Escolha as coordenadas do obstáculo X1 e X2");
+                int X1 = scanner.nextInt();
+                int X2 = scanner.nextInt();
+                System.out.println("Escolha as coordenadas do obstáculo Y1 e Y2");
+                int Y1 = scanner.nextInt();
+                int Y2 = scanner.nextInt();
+                menu = String.format("Escolha o tipo de obstáculo:\n\n" +
+                        "0 - Parede\n" +
+                        "1 - Árvore\n" +
+                        "2 - Prédio\n" +
+                        "3 - Buraco\n" +
+                        "4 - Outro\n");
+                System.out.print(menu);
+                System.out.print("Tipo:");
+                int tipo = scanner.nextInt();
+                scanner.nextLine(); // Consumir quebra de linha
+                System.out.println();
+                if (tipo == 0){
+                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.PAREDE, X1, X2, Y1, Y2));
+                }else if (tipo == 1){
+                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.ARVORE, X1, X2, Y1, Y2));
+                }else if (tipo == 2){
+                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.PREDIO, X1, X2, Y1, Y2));
+                }else if (tipo == 3){
+                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.BURACO, X1, X2, Y1, Y2));
+                }else if (tipo == 4){
+                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.OUTRO, X1, X2, Y1, Y2));
+                }
+
             } else {
                 // Opções 2, 3 e 4 necessitam que haja ao menos um robô
                 if (listaRobo.size() <= 0) {
@@ -256,14 +287,26 @@ public class Main {
 
                             } else if (acao == 5) {
                                 // Identifica todos os robôs na direção atual do Tanque
-                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarObstaculo(ambiente,
+                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarRobo(ambiente,
+                                        roboEscolhido.getDirecao());
+                                ArrayList<Obstaculo> listaObstaculoVisto = roboEscolhido.identificarObstaculo(ambiente,
                                         roboEscolhido.getDirecao());
                                 if (listaRoboVisto.size() == 0) {
-                                    System.out.println("Não há obstáculos\n");
+                                    System.out.println("Não há robôs\n");
                                 } else {
                                     for (Robo robo : listaRoboVisto) {
                                         System.out.println(robo.getNome() + " X:" + robo.getPosicaoX() + " Y:"
                                                 + robo.getPosicaoY());
+                                    }
+                                }
+                                if (listaObstaculoVisto.size() == 0) {
+                                    System.out.println("Não há obstáculos\n");
+                                } else {
+                                    for (Obstaculo obstaculo : listaObstaculoVisto) {
+                                        System.out
+                                                .println("X1:" + obstaculo.getX1() + " X2:" + obstaculo.getX2() + " Y1:"
+                                                        + obstaculo.getY1() + " Y2:"
+                                                        + obstaculo.getY2());
                                     }
                                 }
                             } else if (acao == 6) {
@@ -331,22 +374,30 @@ public class Main {
                                         coordenadas[1] - roboSelecionado.getPosicaoY(), vel);
 
                             } else if (acao == 6) {
-                                // Identificar obstáculos na direção definida
-
-                                System.out.println(roboEscolhido.exibirPosicao());
-                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarObstaculo(ambiente,
+                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarRobo(ambiente,
+                                        roboEscolhido.getDirecao());
+                                ArrayList<Obstaculo> listaObstaculoVisto = roboEscolhido.identificarObstaculo(ambiente,
                                         roboEscolhido.getDirecao());
                                 if (listaRoboVisto.size() == 0) {
-                                    System.out.println("Não há obstáculos");
-
+                                    System.out.println("Não há robôs\n");
                                 } else {
-                                    // Apenas o primeiro obstáculos é visto pelo robô Correio
-                                    Robo obstaculo = listaRoboVisto.get(0);
-                                    String info_obstaculo = String.format(
-                                            "Obstáculo encontrado! Dados:\n\n" +
+                                    // Apenas o robô obstáculos é visto pelo robô Correio
+                                    Robo robo = listaRoboVisto.get(0);
+                                    String info_robo = String.format(
+                                            "Robô encontrado! Dados:\n\n" +
                                                     "Nome: %s\n" +
                                                     "X: %d\n" + "Y: %d\n",
-                                            obstaculo.getNome(), obstaculo.getPosicaoX(), obstaculo.getPosicaoY());
+                                            robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY());
+                                    System.out.println(info_robo);
+                                }
+                                if (listaObstaculoVisto.size() == 0) {
+                                    System.out.println("Não há obstáculos\n");
+                                } else {
+                                    Obstaculo obstaculo = listaObstaculoVisto.get(0);
+                                    String info_obstaculo = String.format(
+                                            "Obstáculo encontrado! Dados:\n\n" +
+                                                    "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n",
+                                            obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(), obstaculo.getY2());
                                     System.out.println(info_obstaculo);
                                 }
                             } else if (acao == 7) {
@@ -405,7 +456,7 @@ public class Main {
 
                             } else if (acao == 4) {
                                 // Identificar todos os obstáculos
-                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarObstaculo(ambiente,
+                                ArrayList<Robo> listaRoboVisto = roboEscolhido.identificarRobo(ambiente,
                                         roboEscolhido.getDirecao());
                                 if (listaRoboVisto.size() == 0) {
                                     System.out.println("Não há obstáculos");
@@ -583,13 +634,14 @@ public class Main {
                     }
                     int index = scanner.nextInt() - 1;
                     if (index >= 0 && index < listaRobo.size()) {
-                        listaRobo.remove(index);
+                        ambiente.removerRobo(listaRobo.get(index));
                         System.out.println("Robo removido!\n");
                     }
                 }
             }
         }
         scanner.close();
+
     }
 
     public static void limparTerminal() {
