@@ -78,30 +78,76 @@ public class Ambiente {
 
     /**
      * Cria um robô baseado no tipo e subcategoria
-     * tipo 1: Robôs terrestres (1: TanqueGuerra, 2: Correios)
-     * tipo 2: Robôs aéreos (1: DroneAtaque, 2: DroneVigilancia)
+     * @param tipo Tipo de robô (1: Terrestre, 2: Aéreo)
+     * @param subcategoria Subtipo do robô (1: TanqueGuerra/DroneAtaque, 2: Correios/DroneVigilancia)
+     * @param atributo Array de atributos específicos para cada tipo de robô
+     * @return Instância de Robo criada ou null se houver algum problema
      */
     public Robo criarRobo(int tipo, int subcategoria, Object... atributo) {
-        if (tipo == 1) {
-            if (subcategoria == 1) {
-                return new TanqueGuerra((String) atributo[0], (String) atributo[1], (Integer) atributo[2],
-                        (Integer) atributo[3], (Integer) atributo[4], (Integer) atributo[5], (Integer) atributo[6]);
-            } else if (subcategoria == 2) {
-                return new Correios((String) atributo[0], (String) atributo[1], (Integer) atributo[2],
-                        (Integer) atributo[3], (Integer) atributo[4], (Integer) atributo[5], (Float) atributo[6]);
-            }
-        } else if (tipo == 2) {
-            if (subcategoria == 1) {
-                return new DroneAtaque((String) atributo[0], (String) atributo[1], (Integer) atributo[2],
-                        (Integer) atributo[3], (Integer) atributo[4], (Integer) atributo[5], (Integer) atributo[6],
-                        (Integer) atributo[7]);
-            } else if (subcategoria == 2) {
-                return new DroneVigilancia((String) atributo[0], (String) atributo[1], (Integer) atributo[2],
-                        (Integer) atributo[3], (Integer) atributo[4], (Integer) atributo[5], (Float) atributo[6],
-                        (Float) atributo[7]);
-            }
+        // Validação dos parâmetros
+        if (tipo < 1 || tipo > 2 || subcategoria < 1 || subcategoria > 2) {
+            System.out.println("Tipo ou subcategoria inválidos");
+            return null;
         }
-        return null;
+        
+        try {
+            // Extrair parâmetros comuns
+            String nome = (String) atributo[0];
+            String direcao = (String) atributo[1];
+            int posX = (Integer) atributo[2];
+            int posY = (Integer) atributo[3];
+            
+            // Verificar se a posição está dentro dos limites
+            if (!dentroDosLimites(posX, posY)) {
+                System.out.println("Posição fora dos limites do ambiente");
+                return null;
+            }
+            
+            // Criar robô baseado no tipo e subcategoria
+            switch (tipo) {
+                case 1: // Robôs terrestres
+                    int velocidadeMaxima = (Integer) atributo[4];
+                    if (subcategoria == 1) { // TanqueGuerra
+                        int municaoMax = (Integer) atributo[5];
+                        int alcance = (Integer) atributo[6];
+                        return new TanqueGuerra(nome, direcao, posX, posY,
+                                                velocidadeMaxima, municaoMax, alcance);
+                    } else { // Correios
+                        int capacidadeMax = (Integer) atributo[5];
+                        int pesoMaximo = (Integer) atributo[6];
+                        return new Correios(nome, direcao, posX, posY, 
+                                           velocidadeMaxima, capacidadeMax, pesoMaximo);
+                    }
+                    
+                case 2: // Robôs aéreos
+                    int altitude = (Integer) atributo[4];
+                    int altitudeMaxima = (Integer) atributo[5];
+                    
+                    // Verificar se altitude está dentro dos limites
+                    if (!dentroDosLimites(posX, posY, altitude)) {
+                        System.out.println("Altitude fora dos limites do ambiente");
+                        return null;
+                    }
+                    
+                    if (subcategoria == 1) { // DroneAtaque
+                        int municao = (Integer) atributo[6];
+                        int alcance = (Integer) atributo[7];
+                        return new DroneAtaque(nome, direcao, posX, posY, 
+                                              altitude, altitudeMaxima, municao, alcance);
+                    } else { // DroneVigilancia
+                        float alcanceRadar = (Float) atributo[6];
+                        float anguloCamera = (Float) atributo[7];
+                        return new DroneVigilancia(nome, direcao, posX, posY, 
+                                                 altitude, altitudeMaxima, alcanceRadar, anguloCamera);
+                    }
+                    
+                default:
+                    return null;
+            }
+        } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Erro ao criar robô: parâmetros incorretos");
+            return null;
+        }
     }
 
     /**
