@@ -1,15 +1,19 @@
 import java.util.ArrayList;
 
 public class Ambiente {
-    // propriedades
+    // Dimensões do ambiente
     private int tamX;
     private int tamY;
     private int tamZ;
 
+    // Listas para armazenar robôs e obstáculos
     private ArrayList<Robo> listaRobos;
     private ArrayList<Obstaculo> listaObstaculos;
 
-    public Ambiente(int tamX, int tamY, int tamZ) { // constructor q inicializa tamanho do ambiente
+    /**
+     * Construtor que inicializa o ambiente com as dimensões especificadas
+     */
+    public Ambiente(int tamX, int tamY, int tamZ) {
         this.tamX = tamX;
         this.tamY = tamY;
         this.tamZ = tamZ;
@@ -17,32 +21,49 @@ public class Ambiente {
         listaObstaculos = new ArrayList<Obstaculo>();
     }
 
-    public boolean dentroDosLimites(int x, int y) { // método que verifica se robo está dentro dos limites
-        return (x <= this.tamX && x >= 0) && (y <= this.tamY && y >= 0); // posição deve ser entre 0 e limites
+    /**
+     * Verifica se uma posição 2D está dentro dos limites do ambiente
+     */
+    public boolean dentroDosLimites(int x, int y) {
+        return (x <= this.tamX && x >= 0) && (y <= this.tamY && y >= 0);
     }
 
-    public boolean dentroDosLimites(int x, int y, int z) { // método que verifica se robo está dentro dos limites
-        return (x <= this.tamX && x >= 0) && (y <= this.tamY && y >= 0) && (z <= this.tamZ && z >= 0); // posição deve
-                                                                                                       // ser entre 0 e
-                                                                                                       // limites
+    /**
+     * Verifica se uma posição 3D está dentro dos limites do ambiente
+     */
+    public boolean dentroDosLimites(int x, int y, int z) {
+        return (x <= this.tamX && x >= 0) && (y <= this.tamY && y >= 0) && (z <= this.tamZ && z >= 0);
     }
 
+    /**
+     * Adiciona um robô ao ambiente
+     */
     public void adicionarRobo(Robo robo) {
         listaRobos.add(robo);
     }
 
+    /**
+     * Retorna a lista de robôs no ambiente
+     */
     public ArrayList<Robo> getListaRobos() {
         return listaRobos;
     }
 
+    /**
+     * Adiciona um obstáculo ao ambiente
+     */
     public void adicionarObstaculo(Obstaculo obstaculo) {
         listaObstaculos.add(obstaculo);
     }
 
+    /**
+     * Retorna a lista de obstáculos no ambiente
+     */
     public ArrayList<Obstaculo> getListaObstaculos() {
         return listaObstaculos;
     }
 
+    // Getters para as dimensões do ambiente
     public int getTamX() {
         return tamX;
     }
@@ -55,6 +76,11 @@ public class Ambiente {
         return tamZ;
     }
 
+    /**
+     * Cria um robô baseado no tipo e subcategoria
+     * tipo 1: Robôs terrestres (1: TanqueGuerra, 2: Correios)
+     * tipo 2: Robôs aéreos (1: DroneAtaque, 2: DroneVigilancia)
+     */
     public Robo criarRobo(int tipo, int subcategoria, Object... atributo) {
         if (tipo == 1) {
             if (subcategoria == 1) {
@@ -78,6 +104,9 @@ public class Ambiente {
         return null;
     }
 
+    /**
+     * Identifica um objeto na posição 2D específica (no plano do solo)
+     */
     public Object identificarObjetoPosicao(int posX, int posY) {
         for (Robo robo : this.listaRobos) {
             if (robo.getPosicaoX() == posX && robo.getPosicaoY() == posY) {
@@ -87,6 +116,10 @@ public class Ambiente {
         return null;
     }
 
+    /**
+     * Identifica um objeto na posição 3D específica
+     * Se posZ for 0, busca no plano do solo
+     */
     public Object identificarObjetoPosicao(int posX, int posY, int posZ) {
         if (posZ == 0) {
             return this.identificarObjetoPosicao(posX, posY);
