@@ -3,7 +3,8 @@ public class TanqueGuerra extends RoboTerrestre {
     private int municaoAtual;
     private int alcance;
 
-    public TanqueGuerra(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int municaoMax, int alcance) {
+    public TanqueGuerra(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int municaoMax,
+            int alcance) {
         super(nome, direcao, posicaoX, posicaoY, velocidadeMaxima);
 
         this.municaoMax = municaoMax;
@@ -13,7 +14,7 @@ public class TanqueGuerra extends RoboTerrestre {
     }
 
     public String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
-        Robo alvo = (Robo) ambiente.identificarObjetoPosicao(alvoX, alvoY);
+        Object alvo = (Object) ambiente.identificarObjetoPosicao(alvoX, alvoY);
         if (municaoAtual < nTiros) {
             return "Munição insuficiente";
 
@@ -29,12 +30,25 @@ public class TanqueGuerra extends RoboTerrestre {
                     return String.format("Disparado realizado no alvo (%d, %d)\nNenhum alvo foi atingido!\n", alvoX,
                             alvoY);
                 } else {
-                    String defesa = alvo.defender(nTiros);
-                    String result = String.format(
-                            "Disparo realizado no alvo (%d, %d)\n" +
-                                    "Robô foi %s foi atingido!\n" +
-                                    defesa,
-                            alvoX, alvoY, alvo.getNome());
+                    String result = null;
+                    if (alvo instanceof Robo) {
+                        Robo alvodef = (Robo) alvo;
+                        String defesa = alvodef.defender(nTiros);
+                        result = String.format(
+                                "Disparo realizado no alvo (%d, %d)\n" +
+                                        "Robô %s foi atingido!\n" +
+                                        defesa,
+                                alvoX, alvoY, alvodef.getNome());
+                    } else if (alvo instanceof Obstaculo) {
+                        Obstaculo alvodef = (Obstaculo) alvo;
+                        String defesa = alvodef.defender(nTiros, ambiente);
+                        result = String.format(
+                                "Disparo realizado no alvo (%d, %d)\n" +
+                                        "Obstáculo foi atingido!\n" +
+                                        defesa,
+                                alvoX, alvoY);
+
+                    }
                     return result;
                 }
             } else {
