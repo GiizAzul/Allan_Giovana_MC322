@@ -12,7 +12,7 @@ public class TestRobo {
         testarIntegridade();
         testarDirecao();
         testarDefesa();
-        testarIdentificacaoObstaculos();
+        testarIdentificacaoRobos();
         testarDistanciaEntreRobos();
         
         System.out.println("\nTodos os testes foram concluídos!");
@@ -121,7 +121,7 @@ public class TestRobo {
                  robo.getIntegridade() == 0);
     }
     
-    private static void testarIdentificacaoObstaculos() {
+    private static void testarIdentificacaoRobos() {
         System.out.println("\n== Teste de Identificação de Obstáculos ==");
         
         // Configuração do ambiente e robôs
@@ -138,19 +138,19 @@ public class TestRobo {
         
         // Teste 1: Identificação ao Norte
         verificar("Deve identificar 2 obstáculos ao Norte", 
-                 roboBase.identificarObstaculo(ambiente, "Norte").size() == 2);
+                 roboBase.identificarRobo(ambiente, "Norte").size() == 2);
         verificar("Primeiro obstáculo ao Norte deve ser Norte1", 
-                 roboBase.identificarObstaculo(ambiente, "Norte").get(0).getNome().equals("Norte1"));
+                 roboBase.identificarRobo(ambiente, "Norte").get(0).getNome().equals("Norte1"));
         
         // Teste 2: Identificação ao Leste
         verificar("Deve identificar 1 obstáculo ao Leste", 
-                 roboBase.identificarObstaculo(ambiente, "Leste").size() == 1);
+                 roboBase.identificarRobo(ambiente, "Leste").size() == 1);
         verificar("Obstáculo ao Leste deve ser Leste", 
-                 roboBase.identificarObstaculo(ambiente, "Leste").get(0).getNome().equals("Leste"));
+                 roboBase.identificarRobo(ambiente, "Leste").get(0).getNome().equals("Leste"));
         
         // Teste 3: Identificação sem obstáculos
         verificar("Não deve haver obstáculos ao Sul", 
-                 roboBase.identificarObstaculo(ambiente, "Sul").isEmpty());
+                 roboBase.identificarRobo(ambiente, "Sul").isEmpty());
     }
     
     private static void testarDistanciaEntreRobos() {

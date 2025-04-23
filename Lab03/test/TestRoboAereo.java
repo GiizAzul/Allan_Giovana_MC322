@@ -13,7 +13,7 @@ public class TestRoboAereo {
         testarAltitudeMaxima();
         testarDistanciaEntreRoboAereoTerrestre();
         testarDistanciaEntreRobosAereos();
-        testarIdentificacaoObstaculos();
+        testarIdentificacaoRobos();
         testarExibirPosicao();
         
         System.out.println("\nTodos os testes foram concluídos!");
@@ -145,7 +145,7 @@ public class TestRoboAereo {
                  Math.abs(distancia - 20.62) < 0.1);
     }
     
-    private static void testarIdentificacaoObstaculos() {
+    private static void testarIdentificacaoRobos() {
         System.out.println("\n== Teste de Identificação de Obstáculos ==");
         
         // Configuração do ambiente e robôs
@@ -164,19 +164,19 @@ public class TestRoboAereo {
         
         // Teste 1: Identificação ao Norte (mesma altitude)
         verificar("Deve identificar 2 obstáculos ao Norte na mesma altitude", 
-                 roboBase.identificarObstaculo(ambiente, "Norte").size() == 2);
+                 roboBase.identificarRobo(ambiente, "Norte").size() == 2);
         verificar("Primeiro obstáculo ao Norte deve ser DroneNorte1", 
-                 roboBase.identificarObstaculo(ambiente, "Norte").get(0).getNome().equals("DroneNorte1"));
+                 roboBase.identificarRobo(ambiente, "Norte").get(0).getNome().equals("DroneNorte1"));
         
         // Teste 2: Identificação ao Leste (mesma altitude)
         verificar("Deve identificar 1 obstáculo ao Leste na mesma altitude", 
-                 roboBase.identificarObstaculo(ambiente, "Leste").size() == 1);
+                 roboBase.identificarRobo(ambiente, "Leste").size() == 1);
         verificar("Obstáculo ao Leste deve ser DroneLeste", 
-                 roboBase.identificarObstaculo(ambiente, "Leste").get(0).getNome().equals("DroneLeste"));
+                 roboBase.identificarRobo(ambiente, "Leste").get(0).getNome().equals("DroneLeste"));
         
         // Teste 3: Não deve identificar drones em altitudes diferentes
         verificar("Não deve identificar drones em altitudes diferentes", 
-                 !roboBase.identificarObstaculo(ambiente, "Norte").stream()
+                 !roboBase.identificarRobo(ambiente, "Norte").stream()
                         .anyMatch(r -> r.getNome().equals("DroneAlto")));
     }
     
