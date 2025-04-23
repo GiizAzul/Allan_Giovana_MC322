@@ -208,6 +208,8 @@ public class Main {
                 }else if (tipo == 3){
                     ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.BURACO, X1, X2, Y1, Y2));
                 }else if (tipo == 4){
+                    Obstaculo outro = new Obstaculo(TipoObstaculo.OUTRO, X1, X2, Y1, Y2);
+                    System.out.println("");
                     ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.OUTRO, X1, X2, Y1, Y2));
                 }
 

@@ -12,12 +12,21 @@ skinparam classBorderColor Navy
 
 ' Enumeração TipoObstaculo (implícita no seu código)
 enum TipoObstaculo {
+  - alturaPadrao: int
+  - bloqueiaPassagem: boolean
+  - integridade: int
+  - indestrutivel: boolean
   + getAlturaPadrao() : int
   + getIntegridade() : int
+  + isIndestrutivel() : boolean
+  + isBloqueiaPassagem() : boolean
 }
 
 ' Classe Sensor (implícita no seu código)
 class Sensor {
+  - raio : int
+  + getRaio() : int
+  + {abstract} monitorar() : T
 }
 
 ' Classe principal Robo
@@ -30,7 +39,6 @@ class Robo {
   - operando : boolean
   - listaSensores : ArrayList<Sensor>
   # visivel : boolean
-  + Robo(nome : String, direcao : String, posicaoX : int, posicaoY : int)
   + mover(deltaX : int, deltaY : int) : void
   + exibirPosicao() : String
   + getPosicaoX() : int
@@ -53,7 +61,6 @@ class Robo {
 ' Classe RoboTerrestre
 class RoboTerrestre {
   - velocidadeMaxima : int
-  + RoboTerrestre(nome : String, direcao : String, posicaoX : int, posicaoY : int, velocidadeMaxima : int)
   + mover(deltaX : int, deltaY : int, vel : int) : void
   + getVelocidadeMaxima() : int
   + setVelocidadeMaxima(vmax : int) : void
@@ -65,7 +72,6 @@ class RoboTerrestre {
 class RoboAereo {
   - altitude : int
   - altitudeMaxima : int
-  + RoboAereo(n : String, d : String, x : int, y : int, h : int, hmax : int)
   + subir(metros : int) : void
   + descer(metros : int) : void
   + getAltitude() : int
@@ -85,7 +91,6 @@ class Correios {
   - pesoAtual : float
   - entregas : ArrayList<String>
   - pesos : ArrayList<Float>
-  + Correios(nome : String, direcao : String, posicaoX : int, posicaoY : int, velocidadeMaxima : int, capacidadeMax : int, pesoMax : float)
   + carregarPacote(id : String, peso : float) : String
   + entregarPacote(id : String, destinoX : int, destinoY : int) : String
   + listarEntregas() : String
@@ -93,7 +98,11 @@ class Correios {
 
 ' Classe TanqueGuerra (implícita no seu código)
 class TanqueGuerra {
-  + TanqueGuerra(nome : String, direcao : String, posicaoX : int, posicaoY : int, velocidadeMaxima : int, municao : int, alcance : int)
+  - municaoMax : int
+  - municaoAtual : int
+  - alcance : int
+  + atirar(alvoX: int, alvoY: int, nTiros: int, ambiente: Ambiente): String
+  + recarregar(nBalas: int): String
 }
 
 ' Classe DroneAtaque
@@ -101,7 +110,6 @@ class DroneAtaque {
   - municao : int
   - alcance : int
   - escudo : int
-  + DroneAtaque(nome : String, dir : String, x : int, y : int, alt : int, altMax : int, muni : int, alc : int)
   + defender(dano : int) : String
   + atirar(alvoX : int, alvoY : int, alvoZ : int, nTiros : int, ambiente : Ambiente) : String
   + atirar(alvoX : int, alvoY : int, nTiros : int, ambiente : Ambiente) : String
@@ -114,7 +122,6 @@ class DroneVigilancia {
   - camuflado : boolean
   - alcance_radar : float
   - angulo_camera : float
-  + DroneVigilancia(nome : String, dir : String, x : int, y : int, h : int, hmax : int, alc_rad : float, ang_cam : float)
   + identificarObstaculo(ambiente : Ambiente) : ArrayList<Robo>
   + varrerArea(ambiente : Ambiente, centroX : int, centroY : int, raio : int) : ArrayList<Robo>
   + isCamuflado() : boolean
@@ -135,7 +142,6 @@ class Obstaculo {
   - altura : int
   - tipo : TipoObstaculo
   - integridade : int
-  + Obstaculo(tipo : TipoObstaculo, x1 : int, x2 : int, y1 : int, y2 : int)
   + getX1() : int
   + getX2() : int
   + getY1() : int
@@ -153,7 +159,6 @@ class Ambiente {
   - tamZ : int
   - listaRobos : ArrayList<Robo>
   - listaObstaculos : ArrayList<Obstaculo>
-  + Ambiente(tamX : int, tamY : int, tamZ : int)
   + dentroDosLimites(x : int, y : int) : boolean
   + dentroDosLimites(x : int, y : int, z : int) : boolean
   + adicionarRobo(robo : Robo) : void
@@ -178,7 +183,7 @@ RoboAereo <|-- DroneVigilancia
 
 ' Relações de associação
 Obstaculo --> TipoObstaculo
-Robo o--> "0..*" Sensor : possui
+Robo o--> "1..*" Sensor : possui
 Ambiente o--> "0..*" Robo : contém
 Ambiente o--> "0..*" Obstaculo : contém
 
