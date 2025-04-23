@@ -110,6 +110,10 @@ public class Ambiente {
                 System.out.println("Posição fora dos limites do ambiente");
                 return null;
             }
+
+            if (identificarObjetoPosicao(posX, posY)!=null){
+                System.out.println("Já existe um objeto nesta posição");
+            }
             
             // Criar robô baseado no tipo e subcategoria
             switch (tipo) {
@@ -167,6 +171,11 @@ public class Ambiente {
                 return robo;
             }
         }
+        for (Obstaculo obstaculo : this.listaObstaculos) {
+            if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
+                return obstaculo;
+            }
+        }
         return null;
     }
 
@@ -176,7 +185,7 @@ public class Ambiente {
      */
     public Object identificarObjetoPosicao(int posX, int posY, int posZ) {
         if (posZ == 0) {
-            return this.identificarRoboPosicao(posX, posY);
+            return this.identificarObjetoPosicao(posX, posY);
         }
         for (Robo robo : this.listaRobos) {
             if (robo instanceof RoboAereo) {
@@ -184,6 +193,11 @@ public class Ambiente {
                 if (roboAir.getPosicaoX() == posX && roboAir.getPosicaoY() == posY && roboAir.getAltitude() == posZ) {
                     return robo;
                 }
+            }
+        }
+        for (Obstaculo obstaculo : this.listaObstaculos) {
+            if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY && obstaculo.getY2() >= posY && obstaculo.getAltura()>= posZ) {
+                return obstaculo;
             }
         }
         return null;
