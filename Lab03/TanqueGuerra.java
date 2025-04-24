@@ -44,9 +44,9 @@ public class TanqueGuerra extends RoboTerrestre {
                         String defesa = alvodef.defender(nTiros, ambiente);
                         result = String.format(
                                 "Disparo realizado no alvo (%d, %d)\n" +
-                                        "Obstáculo foi atingido!\n" +
+                                        "Obstáculo %s foi atingido!\n" +
                                         defesa,
-                                alvoX, alvoY);
+                                alvoX, alvoY, alvodef.getTipo());
 
                     }
                     return result;

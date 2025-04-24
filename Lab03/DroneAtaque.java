@@ -85,19 +85,32 @@ public class DroneAtaque extends RoboAereo {
     private String executarTiro(int dX, int dY, int dZ, int aX, int aY, int aZ, int nTiros, Ambiente ambiente) {
         if (Math.pow(dX, 2) + Math.pow(dY, 2) + Math.pow(dZ, 2) <= Math.pow(this.alcance, 2)) {
             this.municao -= nTiros;
-            Robo alvo = (Robo) ambiente.identificarObjetoPosicao(aX, aY, aZ);
+            Object alvo = ambiente.identificarObjetoPosicao(aX, aY, aZ);
             if (alvo == null) {
                 return String.format("Disparado realizado nas coordenadas (%d, %d, %d)\nNenhum alvo foi atingido!\n",
                         aX, aY, aZ);
             } else {
-                String defesa = alvo.defender(nTiros);
-                String result = String.format(
-                        "Disparo realizado no alvo (%d, %d, %d)\n" +
-                                "Robô foi %s foi atingido!\n" +
-                                defesa,
-                        aX, aY, aZ, alvo.getNome());
-                return result;
+                if (alvo instanceof Robo) {
+                    Robo alvodef = (Robo) alvo;
+                    String defesa = alvodef.defender(nTiros);
+                    String result = String.format(
+                            "Disparo realizado no alvo (%d, %d, %d)\n" +
+                                    "Robô foi %s foi atingido!\n" +
+                                    defesa,
+                            aX, aY, aZ, alvodef.getNome());
+                    return result;
+                } else {
+                    Obstaculo alvodef = (Obstaculo) alvo;
+                    String defesa = alvodef.defender(nTiros, ambiente);
+                    String result = String.format(
+                            "Disparo realizado no alvo (%d, %d, %d)\n" +
+                                    "Obstáculo foi %s foi atingido!\n" +
+                                    defesa,
+                            aX, aY, aZ, alvodef.getTipo());
+                    return result;
+                }
             }
+
         } else {
             return "Alvo fora do alcance";
         }

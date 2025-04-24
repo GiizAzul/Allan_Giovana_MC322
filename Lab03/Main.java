@@ -310,8 +310,12 @@ public class Main {
                                 } else {
                                     System.err.println("Robôs:");
                                     for (Robo robo : listaRoboVisto) {
-                                        System.out.println(robo.getNome() + " X:" + robo.getPosicaoX() + " Y:"
-                                                + robo.getPosicaoY());
+                                        String info_robo = String.format(
+                                                "Nome: %s\n" +
+                                                        "X: %d\n" + "Y: %d\n",
+                                                robo.getNome(),
+                                                robo.getPosicaoX(), robo.getPosicaoY());
+                                        System.out.println(info_robo);
                                     }
                                 }
                                 if (listaObstaculoVisto.size() == 0) {
@@ -319,11 +323,14 @@ public class Main {
                                 } else {
                                     System.out.println("Obstáculos:");
                                     for (Obstaculo obstaculo : listaObstaculoVisto) {
-                                        System.out
-                                                .println(obstaculo.getTipo() + " X1:" + obstaculo.getX1() + " X2:"
-                                                        + obstaculo.getX2() + " Y1:"
-                                                        + obstaculo.getY1() + " Y2:"
-                                                        + obstaculo.getY2());
+                                        String info_obstaculo = String.format(
+                                                "Tipo: %s\n" +
+                                                        "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
+                                                obstaculo.getTipo(),
+                                                obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(),
+                                                obstaculo.getY2(),
+                                                obstaculo.getAltura());
+                                        System.out.println(info_obstaculo);
                                     }
                                 }
                             } else if (acao == 6) {
@@ -402,7 +409,7 @@ public class Main {
                                     // Apenas o robô obstáculos é visto pelo robô Correio
                                     Robo robo = listaRoboVisto.get(0);
                                     String info_robo = String.format(
-                                            "Robô encontrado! Dados:\n\n" +
+                                            "Robô encontrado!\n" +
                                                     "Nome: %s\n" +
                                                     "X: %d\n" + "Y: %d\n",
                                             robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY());
@@ -413,9 +420,12 @@ public class Main {
                                 } else {
                                     Obstaculo obstaculo = listaObstaculoVisto.get(0);
                                     String info_obstaculo = String.format(
-                                            "Obstáculo encontrado! Dados:\n\n" +
-                                                    "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n",
-                                            obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(), obstaculo.getY2());
+                                            "Obstáculo encontrado!\n" +
+                                                    "Tipo: %s\n" +
+                                                    "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
+                                            obstaculo.getTipo(),
+                                            obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(), obstaculo.getY2(),
+                                            obstaculo.getAltura());
                                     System.out.println(info_obstaculo);
                                 }
                             } else if (acao == 7) {
@@ -453,12 +463,13 @@ public class Main {
                             // Verifica operabilidade do robô
                             if (acao == 2) {
                                 // Executar tiro em posição
-                                System.out.print("Digite as coordenadas X e Y do alvo:");
+                                System.out.print("Digite as coordenadas X, Y e Z do alvo:");
                                 int alvoX = scanner.nextInt();
                                 int alvoY = scanner.nextInt();
+                                int alvoZ = scanner.nextInt();
                                 System.out.print("Digite o número de tiros: ");
                                 int nTiros = scanner.nextInt();
-                                System.out.println(roboEscolhido.atirar(alvoX, alvoY, nTiros, ambiente));
+                                System.out.println(roboEscolhido.atirar(alvoX, alvoY, alvoZ, nTiros, ambiente));
 
                             } else if (acao == 3) {
                                 // Se movimentar
@@ -483,7 +494,7 @@ public class Main {
                                     // Apenas o robô obstáculos é visto pelo robô Correio
                                     RoboAereo robo = (RoboAereo) listaRoboVisto.get(0);
                                     String info_robo = String.format(
-                                            "Robô encontrado! Dados:\n\n" +
+                                            "Robô encontrado! \n" +
                                                     "Nome: %s\n" +
                                                     "X: %d\n" + "Y: %d\n" + "Z: %d\n",
                                             robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY(), robo.getAltitude());
@@ -494,8 +505,10 @@ public class Main {
                                 } else {
                                     Obstaculo obstaculo = listaObstaculoVisto.get(0);
                                     String info_obstaculo = String.format(
-                                            "Obstáculo encontrado! Dados:\n\n" +
+                                            "Obstáculo encontrado! \n" +
+                                                    "Tipo: %s\n" +
                                                     "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
+                                            obstaculo.getTipo(),
                                             obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(), obstaculo.getY2(),
                                             obstaculo.getAltura());
                                     System.out.println(info_obstaculo);
@@ -562,28 +575,28 @@ public class Main {
 
                                 } else {
                                     // Todos os robos detectados são exibidos!
-                                    System.out.print("Robôs Encontrados!\nDados:\n\n");
-                                    String info_obstaculo;
+                                    System.out.print("Robôs Encontrados!\n");
+                                    String info_robo;
                                     for (Robo robo : robosAlcanceRadar) {
                                         // Não exibir a si mesmo
                                         if (robo.getNome() == roboEscolhido.getNome()) {
                                             continue;
                                         }
                                         if (robo instanceof RoboAereo) {
-                                            info_obstaculo = String.format(
+                                            info_robo = String.format(
                                                     "Nome: %s\n" +
                                                             "X: %d\n" + "Y: %d\n" + "Altura: %d\n",
                                                     robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY(),
                                                     ((RoboAereo) robo).getAltitude());
                                         } else if (robo instanceof RoboTerrestre) {
-                                            info_obstaculo = String.format(
+                                            info_robo = String.format(
                                                     "Nome: %s\n" +
                                                             "X: %d\n" + "Y: %d\n",
                                                     robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY());
                                         } else {
-                                            info_obstaculo = "Robô de tipo não definido!";
+                                            info_robo = "Robô de tipo não definido!";
                                         }
-                                        System.out.println(info_obstaculo);
+                                        System.out.println(info_robo);
                                     }
                                 }
                                 if (obstaculosAlcanceRadar.size() == 0) {
@@ -591,13 +604,16 @@ public class Main {
 
                                 } else {
                                     // Todos os obstaculos detectados são exibidos!
-                                    System.out.print("Robôs Encontrados!\nDados:\n\n");
+                                    System.out.print("Obstáculos Encontrados!\n");
                                     for (Obstaculo obstaculo : obstaculosAlcanceRadar) {
-                                        System.out
-                                                .println(obstaculo.getTipo() + " X1:" + obstaculo.getX1() + " X2:"
-                                                        + obstaculo.getX2() + " Y1:"
-                                                        + obstaculo.getY1() + " Y2:"
-                                                        + obstaculo.getY2());
+                                        String info_obstaculo = String.format(
+                                                        "Tipo: %s\n" +
+                                                        "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
+                                                obstaculo.getTipo(),
+                                                obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(),
+                                                obstaculo.getY2(),
+                                                obstaculo.getAltura());
+                                        System.out.println(info_obstaculo);
                                     }
                                 }
 
