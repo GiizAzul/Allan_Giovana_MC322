@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Comparator;
+import Sensores.*;
 
 /**
  * Classe que representa um robô aéreo, especialização de Robo
@@ -9,6 +10,7 @@ public class RoboAereo extends Robo {
 
     private int altitude = -1;        // Altitude atual do robô aéreo
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
+    private Barometro barometro;      // Sensor de pressão atmosférica
 
     /**
      * Construtor de RoboAereo
@@ -23,6 +25,7 @@ public class RoboAereo extends Robo {
         super(n, d, x, y);
         this.altitude = h;
         this.altitudeMaxima = hmax;
+        this.barometro = new Barometro((double) h);
     }
 
     /**
@@ -104,6 +107,10 @@ public class RoboAereo extends Robo {
      */
     public int getAltitudeMaxima() {
         return this.altitudeMaxima;
+    }
+
+    public double getPressao() {
+        return this.barometro.acionar(this.getAltitude());
     }
 
     /**

@@ -45,5 +45,5 @@ public abstract class Sensor<T> {
      * 
      * @return Dados coletados pelo sensor
      */
-    abstract T acionar();
+    abstract <E> T acionar(E dados);
 }
