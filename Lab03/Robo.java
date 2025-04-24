@@ -2,25 +2,27 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
- * Classe que representa um robô com funcionalidades básicas de movimento e sensoriamento.
+ * Classe que representa um robô com funcionalidades básicas de movimento e
+ * sensoriamento.
  */
 public class Robo {
     // Propriedades
-    private String nome;        // Nome do robô
-    private String direcao;     // Direção atual do robô (Norte, Sul, Leste, Oeste)
-    private int posicaoX;       // Coordenada X da posição do robô
-    private int posicaoY;       // Coordenada Y da posição do robô
-    private int integridade;    // Nível de integridade do robô (0-100)
-    private boolean operando;   // Estado de operação do robô (true = operando, false = inoperante)
+    private String nome; // Nome do robô
+    private String direcao; // Direção atual do robô (Norte, Sul, Leste, Oeste)
+    private int posicaoX; // Coordenada X da posição do robô
+    private int posicaoY; // Coordenada Y da posição do robô
+    private int integridade; // Nível de integridade do robô (0-100)
+    private boolean operando; // Estado de operação do robô (true = operando, false = inoperante)
     private ArrayList<Sensor<?>> listaSensores; // Lista de sensores acoplados ao robô
 
     // Acessível somente para subclasses
-    protected boolean visivel = true;  // Indica se o robô está visível para outros robôs
+    protected boolean visivel = true; // Indica se o robô está visível para outros robôs
 
     /**
      * Construtor que inicializa um robô com parâmetros básicos
-     * @param nome Nome do robô
-     * @param direcao Direção inicial do robô
+     * 
+     * @param nome     Nome do robô
+     * @param direcao  Direção inicial do robô
      * @param posicaoX Posição inicial X
      * @param posicaoY Posição inicial Y
      */
@@ -36,16 +38,56 @@ public class Robo {
 
     /**
      * Move o robô de acordo com o delta especificado
+     * 
      * @param deltaX Deslocamento na direção X
      * @param deltaY Deslocamento na direção Y
      */
-    public void mover(int deltaX, int deltaY) {
-        posicaoX += deltaX;
-        posicaoY += deltaY;
+    public void mover(int deltaX, int deltaY, Ambiente ambiente) {
+        int destinoX = posicaoX + deltaX;
+        int destinoY = posicaoY + deltaY;
+
+        // Movimentação em linha reta no eixo X
+        if (deltaX != 0) {
+            int passoX = deltaX > 0 ? 1 : -1;
+            for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
+                Object obj = ambiente.identificarObjetoPosicao(x, posicaoY);
+                if (obj != null) {
+                    System.out.print("O robô "+this.nome+" colidiu com o objeto: ");
+                    if (obj instanceof Robo){
+                        System.out.println(((Robo)obj).getNome()+" na posição X:"+x+" Y:"+posicaoY);
+                    }
+                    else{
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
+                    }
+                    return; // Para uma casa antes do obstáculo
+                }
+                posicaoX = x;
+            }
+        }
+
+        // Movimentação em linha reta no eixo Y
+        if (deltaY != 0) {
+            int passoY = deltaY > 0 ? 1 : -1;
+            for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
+                Object obj = ambiente.identificarObjetoPosicao(posicaoX, y);
+                if (obj != null) {
+                    System.out.print("O robô "+this.nome+" colidiu com o objeto: ");
+                    if (obj instanceof Robo){
+                        System.out.println(((Robo)obj).getNome()+" na posição X:"+posicaoX+" Y:"+y);
+                    }
+                    else{
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);
+                    }
+                    return; // Para uma casa antes do obstáculo
+                }
+                posicaoY = y;
+            }
+        }
     }
 
     /**
      * Retorna uma string com a posição atual do robô
+     * 
      * @return String formatada com nome e posição do robô
      */
     public String exibirPosicao() {
@@ -54,22 +96,33 @@ public class Robo {
 
     /**
      * Obtém a coordenada X atual do robô
+     * 
      * @return Posição X
      */
     public int getPosicaoX() {
         return posicaoX;
     }
 
+    public void setPosicaoX(int posicaoX){
+        this.posicaoX=posicaoX;
+    }
+
     /**
      * Obtém a coordenada Y atual do robô
+     * 
      * @return Posição Y
      */
     public int getPosicaoY() {
         return posicaoY;
     }
 
+    public void setPosicaoY(int posicaoY){
+        this.posicaoY=posicaoY;
+    }
+
     /**
      * Obtém a direção atual do robô
+     * 
      * @return Direção
      */
     public String getDirecao() {
@@ -78,6 +131,7 @@ public class Robo {
 
     /**
      * Define uma nova direção para o robô
+     * 
      * @param direcao Nova direção
      */
     public void setDirecao(String direcao) {
@@ -86,6 +140,7 @@ public class Robo {
 
     /**
      * Verifica se o robô está operando
+     * 
      * @return Estado de operação
      */
     public boolean getOperando() {
@@ -94,6 +149,7 @@ public class Robo {
 
     /**
      * Define o estado de operação do robô
+     * 
      * @param operando Novo estado de operação
      */
     public void setOperando(boolean operando) {
@@ -102,6 +158,7 @@ public class Robo {
 
     /**
      * Obtém o nome do robô
+     * 
      * @return Nome do robô
      */
     public String getNome() {
@@ -110,6 +167,7 @@ public class Robo {
 
     /**
      * Define um novo nome para o robô
+     * 
      * @param nome Novo nome
      */
     public void setNome(String nome) {
@@ -118,6 +176,7 @@ public class Robo {
 
     /**
      * Verifica se o robô está visível
+     * 
      * @return Estado de visibilidade
      */
     public boolean getVisivel() {
@@ -126,6 +185,7 @@ public class Robo {
 
     /**
      * Obtém o nível de integridade atual do robô
+     * 
      * @return Nível de integridade
      */
     public int getIntegridade() {
@@ -135,6 +195,7 @@ public class Robo {
     /**
      * Define um novo nível de integridade para o robô
      * Se a integridade for <= 0, o robô ficará inoperante
+     * 
      * @param integridade Novo nível de integridade
      */
     public void setIntegridade(int integridade) {
@@ -149,8 +210,9 @@ public class Robo {
 
     /**
      * Identifica obstáculos (outros robôs) na direção especificada
+     * 
      * @param ambiente Ambiente onde os robôs estão
-     * @param direcao Direção a ser verificada
+     * @param direcao  Direção a ser verificada
      * @return Lista de robôs que são obstáculos na direção indicada
      */
     public ArrayList<Robo> identificarRobo(Ambiente ambiente, String direcao) {
@@ -164,7 +226,7 @@ public class Robo {
                     robosVistos.add(robo);
                 }
             }
-            // Ordena por Y crescente ou seja, o mais próximo primeiro            
+            // Ordena por Y crescente ou seja, o mais próximo primeiro
             robosVistos.sort(Comparator.comparingInt((Robo o) -> o.posicaoY));
         } else if (direcao.equals("Sul")) {
             // Identifica robôs ao sul (mesmo X, Y menor)
@@ -207,38 +269,43 @@ public class Robo {
 
         if (direcao.equals("Norte")) {
             for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getX1() <= this.posicaoX && obstaculo.getX2()>=this.posicaoX && obstaculo.getY1() > this.posicaoY) {
+                if (obstaculo.getX1() <= this.posicaoX && obstaculo.getX2() >= this.posicaoX
+                        && obstaculo.getY1() > this.posicaoY) {
                     obstaculosVistos.add(obstaculo);
                 }
             }
             obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getY1()));
         } else if (direcao.equals("Sul")) {
             for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getX1() <= this.posicaoX && obstaculo.getX2()>=this.posicaoX && obstaculo.getY2() < this.posicaoY) {
+                if (obstaculo.getX1() <= this.posicaoX && obstaculo.getX2() >= this.posicaoX
+                        && obstaculo.getY2() < this.posicaoY) {
                     obstaculosVistos.add(obstaculo);
                 }
             }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getY1()).reversed());
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getY1()).reversed());
         } else if (direcao.equals("Leste")) {
             for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getY1() <= this.posicaoY && obstaculo.getY2()>=this.posicaoY && obstaculo.getX1() > this.posicaoX) {
+                if (obstaculo.getY1() <= this.posicaoY && obstaculo.getY2() >= this.posicaoY
+                        && obstaculo.getX1() > this.posicaoX) {
                     obstaculosVistos.add(obstaculo);
                 }
             }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()));
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getX1()));
         } else if (direcao.equals("Oeste")) {
             for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getY1() <= this.posicaoY && obstaculo.getY2()>=this.posicaoY && obstaculo.getX1() < this.posicaoX) {
+                if (obstaculo.getY1() <= this.posicaoY && obstaculo.getY2() >= this.posicaoY
+                        && obstaculo.getX1() < this.posicaoX) {
                     obstaculosVistos.add(obstaculo);
                 }
             }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()).reversed());
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getX1()).reversed());
         }
         return obstaculosVistos;
     }
 
     /**
      * Aplica dano ao robô e verifica seu estado de operação
+     * 
      * @param dano Quantidade de dano a ser aplicada
      * @return Mensagem indicando o estado do robô após o dano
      */
@@ -256,6 +323,7 @@ public class Robo {
 
     /**
      * Calcula a distância euclidiana entre este robô e outro
+     * 
      * @param robo Robô alvo para cálculo de distância
      * @return Distância calculada
      */
@@ -266,6 +334,7 @@ public class Robo {
 
     /**
      * Retorna as direções possíveis para um robô
+     * 
      * @return Lista de strings com as direções disponíveis
      */
     public static ArrayList<String> getDirecoesPossiveis() {
@@ -277,11 +346,11 @@ public class Robo {
         return opcoes;
     }
 
-    public void addSensor(Sensor<?> sensor){
+    public void addSensor(Sensor<?> sensor) {
         listaSensores.add(sensor);
     }
 
-    public ArrayList<Sensor<?>> getListaSensores(){
+    public ArrayList<Sensor<?>> getListaSensores() {
         return listaSensores;
     }
 }

@@ -39,7 +39,7 @@ public class DroneVigilancia extends RoboAereo {
         // Sistema de varredura não encontra drones camuflados
 
         // Move o drone para ficar sobre a região central
-        this.mover(centroX - this.getPosicaoX(), centroY - this.getPosicaoY());
+        this.mover(centroX - this.getPosicaoX(), centroY - this.getPosicaoY(), ambiente);
 
         // Verifica se a câmera possui abertura para fazer a varredura
         double ang_rad = Math.toRadians(this.angulo_camera);

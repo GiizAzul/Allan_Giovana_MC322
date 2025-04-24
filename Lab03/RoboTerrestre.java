@@ -24,9 +24,9 @@ public class RoboTerrestre extends Robo {
      * @param deltaY Deslocamento Y
      * @param vel Velocidade desejada
      */
-    public void mover(int deltaX, int deltaY, int vel) {
+    public void mover(int deltaX, int deltaY, int vel, Ambiente ambiente) {
         if (vel <= velocidadeMaxima) {
-            super.mover(deltaX, deltaY);
+            super.mover(deltaX, deltaY, ambiente);
         }
     }
 

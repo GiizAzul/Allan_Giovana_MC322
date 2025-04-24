@@ -31,12 +31,12 @@ public class Correios extends RoboTerrestre {
         return "Pacote carregado com sucesso";
     }
 
-    public String entregarPacote(String id, int destinoX, int destinoY) {
+    public String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) {
         if (!entregas.contains(id)) {
             return ("Pacote " + id + " não encontrado na carga.");
         }
         int i = entregas.indexOf(id);
-        mover(destinoX - getPosicaoX(), destinoY - getPosicaoY(), this.getVelocidadeMaxima());
+        mover(destinoX - getPosicaoX(), destinoY - getPosicaoY(), this.getVelocidadeMaxima(), ambiente);
         pesoAtual -= pesos.get(i);
         entregas.remove(i);
         pesos.remove(i);

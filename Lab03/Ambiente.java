@@ -113,6 +113,7 @@ public class Ambiente {
 
             if (identificarObjetoPosicao(posX, posY)!=null){
                 System.out.println("Já existe um objeto nesta posição");
+                return null;
             }
             
             // Criar robô baseado no tipo e subcategoria

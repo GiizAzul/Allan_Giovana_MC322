@@ -29,11 +29,31 @@ public class RoboAereo extends Robo {
      * Aumenta a altitude do robô aéreo
      * @param metros Quantidade de metros a subir
      */
-    public void subir(int metros) {
-        this.altitude += metros;
-        if (this.altitude > this.altitudeMaxima) {
-            System.out.println("Altura máxima foi atingida!");
-            this.altitude = this.altitudeMaxima;
+    public void subir(int metros, Ambiente ambiente) {
+        // Movimentação em linha reta no eixo Z
+        int Z = this.altitude+metros;
+        if (metros != 0) {
+            int passoZ = 1;
+            for (int z = altitude + passoZ; z != Z + passoZ; z += passoZ) {
+                if (this.altitude > this.altitudeMaxima) {
+                    System.out.println("Altura máxima foi atingida!");
+                    this.altitude = this.altitudeMaxima;
+                    return;
+                }else{
+                    Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), getPosicaoY(),z);
+                    if (obj != null) {
+                        System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
+                        if (obj instanceof Robo){
+                            System.out.println(((Robo)obj).getNome()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+z);
+                        }
+                        else{
+                            System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+altitude);
+                        }
+                        return; // Para uma casa antes do obstáculo
+                    }
+                    this.altitude=z;
+                }
+            }
         }
     }
 
@@ -41,11 +61,32 @@ public class RoboAereo extends Robo {
      * Diminui a altitude do robô aéreo
      * @param metros Quantidade de metros a descer
      */
-    public void descer(int metros) {
-        this.altitude -= metros;
-        if (this.altitude < 0) {
-            this.altitude = 0;
-        }
+    public void descer(int metros, Ambiente ambiente) {
+            // Movimentação em linha reta no eixo Z
+            int Z = this.altitude-metros;
+            if (metros != 0) {
+                int passoZ = -1;
+                for (int z = altitude + passoZ; z != Z + passoZ; z += passoZ) {
+                    if (this.altitude > this.altitudeMaxima) {
+                        System.out.println("Altura máxima foi atingida!");
+                        this.altitude = this.altitudeMaxima;
+                        return;
+                    }else{
+                        Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), getPosicaoY(),z);
+                        if (obj != null) {
+                            System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
+                            if (obj instanceof Robo){
+                                System.out.println(((Robo)obj).getNome()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+z);
+                            }
+                            else{
+                                System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+altitude);
+                            }
+                            return; // Para uma casa antes do obstáculo
+                        }
+                        this.altitude=z;
+                    }
+                }
+            }
     }
 
     /**
@@ -99,13 +140,54 @@ public class RoboAereo extends Robo {
      * @param Y Nova coordenada Y
      * @param Z Nova altitude
      */
-    public void mover(int X, int Y, int Z) {
-        super.mover(X - this.getPosicaoX(), Y - this.getPosicaoY());
+    public void mover(int X, int Y, int Z, Ambiente ambiente) {
+        int deltaX = X - getPosicaoX();
+        int deltaY = Y - getPosicaoY();
+
+        // Movimentação em linha reta no eixo X
+        if (deltaX != 0) {
+            int passoX = deltaX > 0 ? 1 : -1;
+            for (int x = getPosicaoX() + passoX; x != X + passoX; x += passoX) {
+                Object obj = ambiente.identificarObjetoPosicao(x, getPosicaoY(),altitude);
+                if (obj != null) {
+                    System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
+                    if (obj instanceof RoboAereo){
+                        System.out.println(((RoboAereo)obj).getNome()+" na posição X:"+x+" Y:"+getPosicaoY()+" Z:"+altitude);
+                    }
+                    else{
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getPosicaoY()+" Z:"+altitude);
+                    }
+                    return; // Para uma casa antes do obstáculo
+                }
+                setPosicaoX(x);
+            }
+        }
+
+        // Movimentação em linha reta no eixo Y
+        if (deltaY != 0) {
+            int passoY = deltaY > 0 ? 1 : -1;
+            for (int y = getPosicaoY() + passoY; y != Y + passoY; y += passoY) {
+                Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), y, altitude);
+                if (obj != null) {
+                    System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
+                    if (obj instanceof Robo){
+                        System.out.println(((Robo)obj).getNome()+" na posição X:"+getPosicaoX()+" Y:"+y+" Z:"+altitude);
+                    }
+                    else{
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getPosicaoX()+" Y:"+y+" Z:"+altitude);
+                    }
+                    return; // Para uma casa antes do obstáculo
+                }
+                setPosicaoY(y);
+            }
+        }
+
+        
         int h = this.getAltitude();
         if (Z > h) {
-            this.subir(Z - h);
+            this.subir(Z - h, ambiente);
         } else {
-            this.descer(h - Z);
+            this.descer(h - Z, ambiente);
         }
     }
 
@@ -120,7 +202,7 @@ public class RoboAereo extends Robo {
     public ArrayList<Robo> identificarRobo(Ambiente ambiente, String direcao) {
 
         ArrayList<Robo> listaRobo = ambiente.getListaRobos();
-        ArrayList<Robo> obstaculos = new ArrayList<>();
+        ArrayList<Robo> robos = new ArrayList<>();
         ArrayList<RoboAereo> robosAereos = new ArrayList<>();
 
         // Filtra apenas robôs aéreos na mesma altitude
@@ -137,40 +219,77 @@ public class RoboAereo extends Robo {
             // Identifica robôs ao norte (mesmo X, Y maior)
             for (RoboAereo robo : robosAereos) {
                 if (robo.getPosicaoX() == this.getPosicaoX() && robo.getPosicaoY() > this.getPosicaoY()) {
-                    obstaculos.add(robo);
+                    robos.add(robo);
                 }
             }
             // Ordena por Y crescente
-            obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoY));
+            robos.sort(Comparator.comparingInt(Robo::getPosicaoY));
         } else if (direcao.equals("Sul")) {
             // Identifica robôs ao sul (mesmo X, Y menor)
             for (RoboAereo robo : robosAereos) {
                 if (robo.getPosicaoX() == this.getPosicaoX() && robo.getPosicaoY() < this.getPosicaoY()) {
-                    obstaculos.add(robo);
+                    robos.add(robo);
                 }
                 // Ordena por Y decrescente
-                obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoY).reversed());
+                robos.sort(Comparator.comparingInt(Robo::getPosicaoY).reversed());
             }
         } else if (direcao.equals("Leste")) {
             // Identifica robôs ao leste (mesmo Y, X maior)
             for (RoboAereo robo : robosAereos) {
                 if (robo.getPosicaoY() == this.getPosicaoY() && robo.getPosicaoX() > this.getPosicaoX()) {
-                    obstaculos.add(robo);
+                    robos.add(robo);
                 }
                 // Ordena por X crescente
-                obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoX));
+                robos.sort(Comparator.comparingInt(Robo::getPosicaoX));
             }
         } else if (direcao.equals("Oeste")) {
             // Identifica robôs ao oeste (mesmo Y, X menor)
             for (RoboAereo robo : robosAereos) {
                 if (robo.getPosicaoY() == this.getPosicaoY() && robo.getPosicaoX() < this.getPosicaoX()) {
-                    obstaculos.add(robo);
+                    robos.add(robo);
                 }
                 // Ordena por X decrescente
-                obstaculos.sort(Comparator.comparingInt(Robo::getPosicaoX).reversed());
+                robos.sort(Comparator.comparingInt(Robo::getPosicaoX).reversed());
             }
         }
-        return obstaculos;
+        return robos;
+    }
+
+    public ArrayList<Obstaculo> identificarobstaculo(Ambiente ambiente, String direcao) {
+
+        ArrayList<Obstaculo> listaObstaculo = ambiente.getListaObstaculos();
+        ArrayList<Obstaculo> obstaculosVistos = new ArrayList<>();
+
+        if (direcao.equals("Norte")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getX1() <= this.getPosicaoX() && obstaculo.getX2()>=this.getPosicaoX() && obstaculo.getY1() > this.getPosicaoY() && obstaculo.getAltura() >= this.altitude) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getY1()));
+        } else if (direcao.equals("Sul")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getX1() <= this.getPosicaoX() && obstaculo.getX2()>=this.getPosicaoX() && obstaculo.getY2() < this.getPosicaoY() && obstaculo.getAltura() >= this.altitude) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getY1()).reversed());
+        } else if (direcao.equals("Leste")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getY1() <= this.getPosicaoY() && obstaculo.getY2()>=this.getPosicaoY() && obstaculo.getX1() > this.getPosicaoX() && obstaculo.getAltura() >= this.altitude) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()));
+        } else if (direcao.equals("Oeste")) {
+            for (Obstaculo obstaculo : listaObstaculo) {
+                if (obstaculo.getY1() <= this.getPosicaoY() && obstaculo.getY2()>=this.getPosicaoY() && obstaculo.getX1() < this.getPosicaoX() && obstaculo.getAltura() >= this.altitude) {
+                    obstaculosVistos.add(obstaculo);
+                }
+            }
+            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()).reversed());
+        }
+        return obstaculosVistos;
     }
 
     /**

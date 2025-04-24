@@ -39,6 +39,10 @@ public class Obstaculo {
         return altura;
     }
 
+    public void setAltura(int altura){
+        this.altura = altura;
+    }
+
     public TipoObstaculo getTipo() {
         return tipo;
     }
@@ -47,8 +51,16 @@ public class Obstaculo {
         return integridade;
     }
 
+    public void setIntegridade(int integridade){
+        this.integridade=integridade;
+    }
+
     public boolean isIndestrutivel() {
         return indestrutivel;
+    }
+
+    public void setIndestrutivel(boolean indestrutivel){
+        this.indestrutivel=indestrutivel;
     }
 
     public String defender(int dano, Ambiente ambiente) {

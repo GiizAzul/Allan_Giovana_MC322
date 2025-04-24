@@ -13,13 +13,11 @@ skinparam classBorderColor Navy
 ' Enumeração TipoObstaculo (implícita no seu código)
 enum TipoObstaculo {
   - alturaPadrao: int
-  - bloqueiaPassagem: boolean
   - integridade: int
   - indestrutivel: boolean
   + getAlturaPadrao() : int
   + getIntegridade() : int
   + isIndestrutivel() : boolean
-  + isBloqueiaPassagem() : boolean
 }
 
 ' Classe Sensor (implícita no seu código)
