@@ -29,31 +29,11 @@ public class RoboAereo extends Robo {
      * Aumenta a altitude do robô aéreo
      * @param metros Quantidade de metros a subir
      */
-    public void subir(int metros, Ambiente ambiente) {
-        // Movimentação em linha reta no eixo Z
-        int Z = this.altitude+metros;
-        if (metros != 0) {
-            int passoZ = 1;
-            for (int z = altitude + passoZ; z != Z + passoZ; z += passoZ) {
-                if (this.altitude > this.altitudeMaxima) {
-                    System.out.println("Altura máxima foi atingida!");
-                    this.altitude = this.altitudeMaxima;
-                    return;
-                }else{
-                    Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), getPosicaoY(),z);
-                    if (obj != null) {
-                        System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
-                        if (obj instanceof Robo){
-                            System.out.println(((Robo)obj).getNome()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+z);
-                        }
-                        else{
-                            System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+altitude);
-                        }
-                        return; // Para uma casa antes do obstáculo
-                    }
-                    this.altitude=z;
-                }
-            }
+    public void subir(int metros) {
+        this.altitude += metros;
+        if (this.altitude > this.altitudeMaxima) {
+            System.out.println("Altura máxima foi atingida!");
+            this.altitude = this.altitudeMaxima;
         }
     }
 
@@ -153,8 +133,11 @@ public class RoboAereo extends Robo {
                     System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
                     if (obj instanceof RoboAereo){
                         System.out.println(((RoboAereo)obj).getNome()+" na posição X:"+x+" Y:"+getPosicaoY()+" Z:"+altitude);
-                    }
-                    else{
+                    }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getPosicaoY());
+                        System.out.println("O robô "+getNome()+"caiu no buraco e foi destruido");
+                        ambiente.removerRobo(this);
+                    } else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getPosicaoY()+" Z:"+altitude);
                     }
                     return; // Para uma casa antes do obstáculo
@@ -185,7 +168,7 @@ public class RoboAereo extends Robo {
         
         int h = this.getAltitude();
         if (Z > h) {
-            this.subir(Z - h, ambiente);
+            this.subir(Z - h);
         } else {
             this.descer(h - Z, ambiente);
         }
