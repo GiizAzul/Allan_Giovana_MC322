@@ -333,6 +333,27 @@ public class Robo {
     }
 
     /**
+     * Calcula a distância euclidiana entre este robô e obstaculo
+     * 
+     * @param obstaculo obstaculo alvo para cálculo de distância
+     * @return Distância calculada
+     */
+    public double distanciaObstaculo(Obstaculo obstaculo) {
+        if (getPosicaoX()<=obstaculo.getX1()&&getPosicaoX()<=obstaculo.getX2()){
+            return Math.min(Math.abs(getPosicaoY()-obstaculo.getY1()), Math.abs(getPosicaoY()-obstaculo.getY2()));
+        }
+        else if (getPosicaoY()<=obstaculo.getY1()&&getPosicaoY()<=obstaculo.getY2()){
+            return Math.min(Math.abs(getPosicaoX()-obstaculo.getX1()), Math.abs(getPosicaoX()-obstaculo.getX2()));
+        } else{
+            return Math.min(Math.min(Math.sqrt(Math.pow(obstaculo.getX1() - this.getPosicaoX(), 2)
+            + Math.pow(obstaculo.getY1() - this.getPosicaoY(), 2)),Math.sqrt(Math.pow(obstaculo.getX2() - this.getPosicaoX(), 2)
+            + Math.pow(obstaculo.getY1() - this.getPosicaoY(), 2))),Math.min(Math.sqrt(Math.pow(obstaculo.getX1() - this.getPosicaoX(), 2)
+            + Math.pow(obstaculo.getY2() - this.getPosicaoY(), 2)),Math.sqrt(Math.pow(obstaculo.getX2() - this.getPosicaoX(), 2)
+            + Math.pow(obstaculo.getY2() - this.getPosicaoY(), 2))));
+        }
+    }
+
+    /**
      * Retorna as direções possíveis para um robô
      * 
      * @return Lista de strings com as direções disponíveis

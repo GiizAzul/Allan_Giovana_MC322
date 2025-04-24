@@ -374,7 +374,8 @@ public class Main {
 
                                 System.out.print("Digite as coordenadas X e Y do destino:");
                                 int[] coordenadas = Main.obterPosicao(ambiente, scanner);
-                                System.out.println(roboEscolhido.entregarPacote(id, coordenadas[0], coordenadas[1], ambiente));
+                                System.out.println(
+                                        roboEscolhido.entregarPacote(id, coordenadas[0], coordenadas[1], ambiente));
 
                             } else if (acao == 4) {
                                 // Listar todas as entregas
@@ -495,7 +496,8 @@ public class Main {
                                     String info_obstaculo = String.format(
                                             "Obstáculo encontrado! Dados:\n\n" +
                                                     "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
-                                            obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(), obstaculo.getY2(), obstaculo.getAltura());
+                                            obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(), obstaculo.getY2(),
+                                            obstaculo.getAltura());
                                     System.out.println(info_obstaculo);
                                 }
 
@@ -551,13 +553,16 @@ public class Main {
 
                             } else if (acao == 3) { // Identificar obstáculos do Drone
                                 // Identificar todos os obstáculos
-                                ArrayList<Robo> robosAlcanceRadar = roboEscolhido.identificarObstaculo(ambiente);
+                                ArrayList<Robo> robosAlcanceRadar = roboEscolhido.identificarRobo(ambiente);
+                                ArrayList<Obstaculo> obstaculosAlcanceRadar = roboEscolhido
+                                        .identificarObstaculo(ambiente);
+
                                 if (robosAlcanceRadar.size() == 0) {
-                                    System.out.println("Não há obstáculos");
+                                    System.out.println("Não há robôs");
 
                                 } else {
-                                    // Todos os obstáculos detectados são exibidos!
-                                    System.out.print("Obstáculo Encontrado!\nDados:\n\n");
+                                    // Todos os robos detectados são exibidos!
+                                    System.out.print("Robôs Encontrados!\nDados:\n\n");
                                     String info_obstaculo;
                                     for (Robo robo : robosAlcanceRadar) {
                                         // Não exibir a si mesmo
@@ -579,6 +584,20 @@ public class Main {
                                             info_obstaculo = "Robô de tipo não definido!";
                                         }
                                         System.out.println(info_obstaculo);
+                                    }
+                                }
+                                if (obstaculosAlcanceRadar.size() == 0) {
+                                    System.out.println("Não há robôs");
+
+                                } else {
+                                    // Todos os obstaculos detectados são exibidos!
+                                    System.out.print("Robôs Encontrados!\nDados:\n\n");
+                                    for (Obstaculo obstaculo : obstaculosAlcanceRadar) {
+                                        System.out
+                                                .println(obstaculo.getTipo() + " X1:" + obstaculo.getX1() + " X2:"
+                                                        + obstaculo.getX2() + " Y1:"
+                                                        + obstaculo.getY1() + " Y2:"
+                                                        + obstaculo.getY2());
                                     }
                                 }
 
@@ -693,7 +712,7 @@ public class Main {
             System.out.print("Posição Y:");
             destinoY = scanner.nextInt();
         }
-    
+
         System.out.println();
         return new int[] { destinoX, destinoY };
     }

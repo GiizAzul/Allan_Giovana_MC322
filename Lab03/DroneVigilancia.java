@@ -13,7 +13,7 @@ public class DroneVigilancia extends RoboAereo {
         this.camuflado = false;
     }
 
-    public ArrayList<Robo> identificarObstaculo(Ambiente ambiente) {
+    public ArrayList<Robo> identificarRobo(Ambiente ambiente) {
         // Busca todos os robos que o Radar consegue alcançar com base na posição do
         // Drone
         // Sistema de Radar encontra até Drones camuflados
@@ -25,6 +25,24 @@ public class DroneVigilancia extends RoboAereo {
         for (Robo robo : robos_ambiente) {
             if (robo.distanciaRobo(this) < this.alcance_radar) {
                 encontrados.add(robo);
+            }
+        }
+
+        return encontrados;
+
+    }
+
+    public ArrayList<Obstaculo> identificarObstaculo(Ambiente ambiente) {
+        // Busca todos os obstáculos que o Radar consegue alcançar com base na posição do
+        // Drone
+        // Baseado no alcance do radar do robô
+
+        ArrayList<Obstaculo> obstaculos_ambiente = ambiente.getListaObstaculos();
+        ArrayList<Obstaculo> encontrados = new ArrayList<>();
+
+        for (Obstaculo obstaculo : obstaculos_ambiente) {
+            if (distanciaObstaculo(obstaculo) < this.alcance_radar) {
+                encontrados.add(obstaculo);
             }
         }
 
@@ -66,7 +84,7 @@ public class DroneVigilancia extends RoboAereo {
 
             } else if (!(robo instanceof RoboTerrestre)) {
                 // RoboTerrestre automaticamente já está na região de varredura
-                System.out.printf("Robo %s não avaliado!%n", robo.getNome());
+                System.out.printf("Robo %s não avaliado!\n", robo.getNome());
             }
 
             if (robo.getVisivel()) {
