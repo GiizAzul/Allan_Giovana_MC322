@@ -43,6 +43,9 @@ public class TestRoboAereo {
     }
     
     private static void testarSubirDescer() {
+        // Verificando a função subir automaticamente as demais funções
+        // de movimento ficam ajustadas
+
         System.out.println("\n== Teste de Subir e Descer ==");
         
         // Teste 1: Subir dentro do limite

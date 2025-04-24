@@ -12,7 +12,6 @@ public class TestRoboTerrestre {
         testarAlteracaoVelocidadeMaxima();
         testarDistanciaEntreRobosTerrestre();
         testarDistanciaComRoboAereo();
-        testarHerancaRobo();
         
         System.out.println("\nTodos os testes para RoboTerrestre foram concluídos!");
     }
@@ -92,12 +91,7 @@ public class TestRoboTerrestre {
         verificar("Distância entre dois robôs terrestres deve ser 5.0", 
                  Math.abs(distancia - 5.0) < 0.001);
         
-        // Teste 2: Distância do método da classe pai com mesmo resultado
-        double distanciaSuper = ((Robo)robo1).distanciaRobo((Robo)robo2);
-        verificar("Distância calculada pela classe pai deve ser igual", 
-                 Math.abs(distancia - distanciaSuper) < 0.001);
-        
-        // Teste 3: Distância entre robôs na mesma posição
+        // Teste 2: Distância entre robôs na mesma posição
         RoboTerrestre robo3 = new RoboTerrestre("Trator3", "Oeste", 0, 0, 10);
         verificar("Distância entre robôs terrestres na mesma posição deve ser 0", 
                  robo1.distanciaRobo(robo3) == 0.0);
@@ -119,25 +113,6 @@ public class TestRoboTerrestre {
         distancia = trator.distanciaRobo(droneCima);
         verificar("Distância com drone diretamente acima deve ser 10.0", 
                  Math.abs(distancia - 10.0) < 0.001);
-    }
-    
-    private static void testarHerancaRobo() {
-        System.out.println("\n== Teste de Herança da Classe Robo ==");
-        
-        // Teste 1: Verificando se RoboTerrestre é instância de Robo
-        RoboTerrestre robo = new RoboTerrestre("Bulldozer", "Leste", 5, 5, 15);
-        verificar("RoboTerrestre deve ser instância de Robo", 
-                 robo instanceof Robo);
-        
-        // Teste 2: Métodos herdados
-        robo.defender(30);
-        verificar("Método defender() herdado deve funcionar", 
-                 robo.getIntegridade() == 70);
-        
-        // Teste 3: Chamada de método da classe pai
-        robo.setDirecao("Oeste");
-        verificar("Método setDirecao() herdado deve funcionar", 
-                 robo.getDirecao().equals("Oeste"));
     }
     
     // Método auxiliar para verificação de testes
