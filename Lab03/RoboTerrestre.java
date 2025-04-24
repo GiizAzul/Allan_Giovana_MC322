@@ -23,6 +23,7 @@ public class RoboTerrestre extends Robo {
      * @param deltaX Deslocamento X
      * @param deltaY Deslocamento Y
      * @param vel Velocidade desejada
+     * @param ambiente Ambiente onde o robô se encontra
      */
     public void mover(int deltaX, int deltaY, int vel, Ambiente ambiente) {
         if (vel <= velocidadeMaxima) {

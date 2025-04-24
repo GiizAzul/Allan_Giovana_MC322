@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
+// Importando classes dos sensores
+import Sensores.*;
+
 /**
  * Classe que representa um robô com funcionalidades básicas de movimento e
  * sensoriamento.
@@ -41,10 +44,12 @@ public class Robo {
      * 
      * @param deltaX Deslocamento na direção X
      * @param deltaY Deslocamento na direção Y
+     * @param ambiente Ambiente onde o robô está
      */
     public void mover(int deltaX, int deltaY, Ambiente ambiente) {
-        int destinoX = posicaoX + deltaX;
-        int destinoY = posicaoY + deltaY;
+        // Verifica se o robô está dentro dos limites do ambiente
+        int destinoX = posicaoX + deltaX > ambiente.getTamX() ? ambiente.getTamX() : posicaoX + deltaX;
+        int destinoY = posicaoY + deltaY > ambiente.getTamY() ? ambiente.getTamY() : posicaoY + deltaY;
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {

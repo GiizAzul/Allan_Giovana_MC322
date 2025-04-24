@@ -28,6 +28,7 @@ public class RoboAereo extends Robo {
     /**
      * Aumenta a altitude do robô aéreo
      * @param metros Quantidade de metros a subir
+     * @param ambiente Ambiente onde o robô se encontra
      */
     public void subir(int metros, Ambiente ambiente) {
         // Movimentação em linha reta no eixo Z
@@ -139,6 +140,7 @@ public class RoboAereo extends Robo {
      * @param X Nova coordenada X
      * @param Y Nova coordenada Y
      * @param Z Nova altitude
+     * @param ambiente Ambiente onde o robô se encontra
      */
     public void mover(int X, int Y, int Z, Ambiente ambiente) {
         int deltaX = X - getPosicaoX();
