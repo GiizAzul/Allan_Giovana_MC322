@@ -40,30 +40,39 @@ public class TestRoboTerrestre {
     private static void testarMovimentoComVelocidade() {
         System.out.println("\n== Teste de Movimento com Velocidade ==");
         
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 10);
+        
         // Teste 1: Movimento com velocidade dentro do limite
         RoboTerrestre robo = new RoboTerrestre("Trator", "Leste", 0, 0, 10);
-        robo.mover(3, 4, 8);
+        ambiente.adicionarRobo(robo);
+        robo.mover(3, 4, 8, ambiente);
         verificar("Posição X após movimento deve ser 3", 
                  robo.getPosicaoX() == 3);
         verificar("Posição Y após movimento deve ser 4", 
                  robo.getPosicaoY() == 4);
         
         // Teste 2: Movimento com velocidade acima do limite
-        robo.mover(2, 3, 15);
+        robo.mover(2, 3, 15, ambiente);
         verificar("Posição não deve mudar quando velocidade é maior que máxima", 
                  robo.getPosicaoX() == 3 && robo.getPosicaoY() == 4);
         
-        // Teste 3: Movimento com velocidade igual ao limite
-        robo.mover(2, 3, 10);
-        verificar("Posição X após movimento com velocidade máxima deve ser 5", 
+        // Teste 3: Movimento com obstáculo no caminho
+        RoboTerrestre roboObstaculo = new RoboTerrestre("Obstáculo", "Oeste", 6, 4, 5);
+        ambiente.adicionarRobo(roboObstaculo);
+        robo.mover(5, 0, 10, ambiente);
+        verificar("Movimento deve parar antes do obstáculo", 
                  robo.getPosicaoX() == 5);
-        verificar("Posição Y após movimento com velocidade máxima deve ser 7", 
-                 robo.getPosicaoY() == 7);
+        verificar("Posição Y não deve mudar", 
+                 robo.getPosicaoY() == 4);
     }
     
     private static void testarAlteracaoVelocidadeMaxima() {
         System.out.println("\n== Teste de Alteração da Velocidade Máxima ==");
         
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 100);
+
         // Teste 1: Alteração da velocidade máxima
         RoboTerrestre robo = new RoboTerrestre("Escavadora", "Sul", 10, 10, 5);
         verificar("Velocidade máxima inicial deve ser 5", 
@@ -75,7 +84,7 @@ public class TestRoboTerrestre {
                  robo.getVelocidadeMaxima() == 8);
         
         // Teste 3: Movimento com nova velocidade máxima
-        robo.mover(2, 2, 6);
+        robo.mover(2, 2, 6, ambiente);
         verificar("Deve permitir movimento com velocidade dentro do novo limite", 
                  robo.getPosicaoX() == 12 && robo.getPosicaoY() == 12);
     }

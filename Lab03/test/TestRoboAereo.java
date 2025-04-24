@@ -43,39 +43,46 @@ public class TestRoboAereo {
     }
     
     private static void testarSubirDescer() {
-        // Verificando a função subir automaticamente as demais funções
-        // de movimento ficam ajustadas
-
         System.out.println("\n== Teste de Subir e Descer ==");
         
-        // Teste 1: Subir dentro do limite
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 100);
+        
+        // Teste 1: Subir dentro do limite sem obstáculos
         RoboAereo robo = new RoboAereo("Drone2", "Leste", 0, 0, 10, 50);
-        robo.subir(20);
+        ambiente.adicionarRobo(robo);
+        robo.subir(20, ambiente);
         verificar("Altitude após subir 20 deve ser 30", 
                  robo.getAltitude() == 30);
         
         // Teste 2: Subir além do limite
-        robo.subir(30);
+        robo.subir(30, ambiente);
         verificar("Altitude não deve exceder o máximo", 
                  robo.getAltitude() == 50);
         
-        // Teste 3: Descer
-        robo.descer(20);
+        // Teste 3: Descer sem obstáculos
+        robo.descer(20, ambiente);
         verificar("Altitude após descer 20 deve ser 30", 
                  robo.getAltitude() == 30);
         
-        // Teste 4: Descer abaixo de zero
-        robo.descer(40);
-        verificar("Altitude não deve ser negativa", 
-                 robo.getAltitude() == 0);
+        // Teste 4: Descer com obstáculo no caminho
+        RoboAereo roboObstaculo = new RoboAereo("DroneObstaculoAbaixo", "Norte", 0, 0, 20, 50);
+        ambiente.adicionarRobo(roboObstaculo);
+        robo.descer(20, ambiente);
+        verificar("Descida deve parar antes do obstáculo", 
+                 robo.getAltitude() > 20);
     }
     
     private static void testarMovimento3D() {
         System.out.println("\n== Teste de Movimento 3D ==");
         
-        // Teste 1: Movimento 3D completo
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 100);
+        
+        // Teste 1: Movimento 3D completo sem obstáculos
         RoboAereo robo = new RoboAereo("Drone3", "Norte", 5, 5, 10, 100);
-        robo.mover(8, 12, 20);
+        ambiente.adicionarRobo(robo);
+        robo.mover(8, 12, 20, ambiente);
         verificar("Posição X após movimento deve ser 8", 
                  robo.getPosicaoX() == 8);
         verificar("Posição Y após movimento deve ser 12", 
@@ -83,19 +90,35 @@ public class TestRoboAereo {
         verificar("Altitude após movimento deve ser 20", 
                  robo.getAltitude() == 20);
         
-        // Teste 2: Movimento 3D para baixo
-        robo.mover(15, 15, 5);
-        verificar("Posição X após segundo movimento deve ser 15", 
-                 robo.getPosicaoX() == 15);
-        verificar("Posição Y após segundo movimento deve ser 15", 
-                 robo.getPosicaoY() == 15);
-        verificar("Altitude após descer deve ser 5", 
-                 robo.getAltitude() == 5);
+        // Teste 2: Movimento 3D com obstáculo no caminho horizontal
+        RoboAereo roboObstaculo = new RoboAereo("DroneObstaculo", "Sul", 10, 12, 20, 100);
+        ambiente.adicionarRobo(roboObstaculo);
+        robo.mover(15, 12, 20, ambiente);
+        verificar("Movimento deve parar antes do obstáculo", 
+                 robo.getPosicaoX() == 9);
+        verificar("Posição Y não deve mudar", 
+                 robo.getPosicaoY() == 12);
+        verificar("Altitude não deve mudar", 
+                 robo.getAltitude() == 20);
+        
+        // Teste 3: Movimento 3D com obstáculo no caminho vertical
+        RoboAereo roboObstaculoVertical = new RoboAereo("DroneObstaculoVertical", "Leste", 9, 12, 25, 100);
+        ambiente.adicionarRobo(roboObstaculoVertical);
+        robo.mover(9, 12, 30, ambiente);
+        verificar("Posição X não deve mudar", 
+                 robo.getPosicaoX() == 9);
+        verificar("Posição Y não deve mudar", 
+                 robo.getPosicaoY() == 12);
+        verificar("Movimento vertical deve parar antes do obstáculo", 
+                 robo.getAltitude() < 25);
     }
     
     private static void testarAltitudeMaxima() {
         System.out.println("\n== Teste de Altitude Máxima ==");
         
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 100);
+
         // Teste 1: Definir nova altitude máxima
         RoboAereo robo = new RoboAereo("Drone4", "Sul", 10, 10, 20, 80);
         verificar("Altitude máxima inicial deve ser 80", 
@@ -107,7 +130,7 @@ public class TestRoboAereo {
                  robo.getAltitudeMaxima() == 100);
         
         // Teste 3: Subir acima do novo limite
-        robo.subir(90);
+        robo.subir(90, ambiente);
         verificar("Altitude deve respeitar o novo limite", 
                  robo.getAltitude() == 100);
     }

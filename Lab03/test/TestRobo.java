@@ -40,20 +40,34 @@ public class TestRobo {
     private static void testarMovimento() {
         System.out.println("\n== Teste de Movimento ==");
         
-        // Teste 1: Movimento simples
-        Robo robo = new Robo("Claudinho", "Leste", 0, 0);
-        robo.mover(3, 4);
-        verificar("Posição X após movimento deve ser 3", 
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 10);
+        
+        // Teste 1: Movimento simples sem obstáculos
+        Robo robo = new Robo("Geraldinho", "Leste", 0, 0);
+        ambiente.adicionarRobo(robo);
+        robo.mover(3, 4, ambiente);
+        verificar("Posição X após movimento sem obstáculos deve ser 3", 
                  robo.getPosicaoX() == 3);
-        verificar("Posição Y após movimento deve ser 4", 
+        verificar("Posição Y após movimento sem obstáculos deve ser 4", 
                  robo.getPosicaoY() == 4);
         
-        // Teste 2: Movimento negativo
-        robo.mover(-1, -2);
-        verificar("Posição X após movimento negativo deve ser 2", 
-                 robo.getPosicaoX() == 2);
-        verificar("Posição Y após movimento negativo deve ser 2", 
-                 robo.getPosicaoY() == 2);
+        // Teste 2: Movimento com obstáculo no caminho
+        Robo roboObstaculo = new Robo("Obstáculo", "Oeste", 5, 4);
+        ambiente.adicionarRobo(roboObstaculo);
+        robo.mover(5, 0, ambiente);
+        verificar("Movimento deve parar antes do obstáculo", 
+                 robo.getPosicaoX() == 4);
+        verificar("Posição Y não deve mudar", 
+                 robo.getPosicaoY() == 4);
+        
+        // Teste 3: Movimento para fora dos limites do ambiente
+        Ambiente ambientePequeno = new Ambiente(5, 5, 5);
+        Robo roboLimite = new Robo("RoboLimite", "Norte", 3, 3);
+        ambientePequeno.adicionarRobo(roboLimite);
+        roboLimite.mover(3, 3, ambientePequeno);
+        verificar("Movimento deve parar nos limites do ambiente", 
+                 roboLimite.getPosicaoX() <= 5 && roboLimite.getPosicaoY() <= 5);
     }
     
     private static void testarIntegridade() {
