@@ -34,6 +34,56 @@ public class RoboAereo extends Robo {
         this.altitudeMaxima = hmax;
         this.barometro = new Barometro((double) h);
     }
+    
+    /**
+     * Realiza o movimento vertical (eixo Z) do robô aéreo.
+     * 
+     * @param passoZ O incremento (positivo) ou decremento (negativo) a ser aplicado em cada passo do movimento.
+     * @param metros A distância total a ser percorrida. O valor é subtraído da altitude atual para calcular a altitude alvo.
+     * @param ambiente O ambiente em que o robô está se movendo, usado para verificar colisões.
+     * 
+     * O método move o robô verticalmente, verificando:
+     * - Se a altitude máxima foi atingida (limitando o movimento quando necessário)
+     * - Se há colisões com outros objetos (robôs ou obstáculos)
+     * 
+     * O movimento é interrompido se houver colisão ou se a altitude máxima for atingida.
+     */
+    private void movimentoZ(int passo, int metros, Ambiente ambiente) {
+        // Calcula a altitude alvo baseada na direção do movimento
+        int altitudeAlvo = passo > 0 ? this.altitude + metros : this.altitude - metros;
+        
+        // Impede que a altitude alvo seja negativa (abaixo do solo)
+        if (altitudeAlvo < 0) {
+            System.out.println("Não é possível descer abaixo do nível do solo.");
+            altitudeAlvo = 0;
+        }
+        
+        // Impede que a altitude alvo exceda a altitude máxima
+        if (altitudeAlvo > this.altitudeMaxima) {
+            System.out.println("Altura máxima permitida é " + this.altitudeMaxima + " metros.");
+            altitudeAlvo = this.altitudeMaxima;
+        }
+        
+        // Realiza o movimento passo a passo
+        for (int z = this.altitude + passo; passo > 0 ? z <= altitudeAlvo : z >= altitudeAlvo; z += passo) {
+            Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), getPosicaoY(), z);
+            if (obj != null) {
+                System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
+                if (obj instanceof Robo) {
+                    System.out.println(((Robo)obj).getNome() + " na posição X:" + getPosicaoX() + 
+                                      " Y:" + getPosicaoY() + " Z:" + z);
+                } else {
+                    System.out.println(((Obstaculo)obj).getTipo() + " na posição X:" + getPosicaoX() + 
+                                      " Y:" + getPosicaoY() + " Z:" + z);
+                }
+                return; // Interrompe o movimento antes da colisão
+            }
+            this.altitude = z;
+        }
+        
+        // Atualiza o barômetro
+        this.barometro = new Barometro((double) this.altitude);
+    }
 
     /**
      * Aumenta a altitude do robô aéreo
@@ -41,11 +91,7 @@ public class RoboAereo extends Robo {
      * @param ambiente Ambiente onde o robô se encontra
      */
     public void subir(int metros, Ambiente ambiente) {
-        this.altitude += metros;
-        if (this.altitude > this.altitudeMaxima) {
-            System.out.println("Altura máxima foi atingida!");
-            this.altitude = this.altitudeMaxima;
-        }
+        this.movimentoZ(1, metros, ambiente);
     }
 
     /**
@@ -53,31 +99,7 @@ public class RoboAereo extends Robo {
      * @param metros Quantidade de metros a descer
      */
     public void descer(int metros, Ambiente ambiente) {
-            // Movimentação em linha reta no eixo Z
-            int Z = this.altitude-metros;
-            if (metros != 0) {
-                int passoZ = -1;
-                for (int z = altitude + passoZ; z != Z + passoZ; z += passoZ) {
-                    if (this.altitude > this.altitudeMaxima) {
-                        System.out.println("Altura máxima foi atingida!");
-                        this.altitude = this.altitudeMaxima;
-                        return;
-                    }else{
-                        Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), getPosicaoY(),z);
-                        if (obj != null) {
-                            System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
-                            if (obj instanceof Robo){
-                                System.out.println(((Robo)obj).getNome()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+z);
-                            }
-                            else{
-                                System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getPosicaoX()+" Y:"+getPosicaoY()+" Z:"+altitude);
-                            }
-                            return; // Para uma casa antes do obstáculo
-                        }
-                        this.altitude=z;
-                    }
-                }
-            }
+        this.movimentoZ(-1, metros, ambiente);
     }
 
     /**
