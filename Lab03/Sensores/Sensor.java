@@ -1,10 +1,11 @@
+package Sensores;
 /**
  * Classe abstrata genérica que representa um sensor básico para robôs.
  * Cada tipo de sensor específico pode retornar diferentes tipos de dados.
  * 
  * @param <T> O tipo de dado retornado pelo sensor ao ser acionado
  */
-abstract class Sensor<T> {
+public abstract class Sensor<T> {
     /** Indica se o sensor está ativo ou não */
     private boolean ativo;
 
