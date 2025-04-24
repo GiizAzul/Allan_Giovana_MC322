@@ -47,7 +47,9 @@ public class Ambiente {
      * Adiciona um robô ao ambiente
      */
     public void adicionarRobo(Robo robo) {
-        listaRobos.add(robo);
+        if (this.dentroDosLimites(robo.getPosicaoX(), robo.getPosicaoY())) {
+            listaRobos.add(robo);
+        }
     }
 
     public void removerRobo(Robo robo){
@@ -65,7 +67,11 @@ public class Ambiente {
      * Adiciona um obstáculo ao ambiente
      */
     public void adicionarObstaculo(Obstaculo obstaculo) {
-        listaObstaculos.add(obstaculo);
+        if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) && 
+            this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
+            listaObstaculos.add(obstaculo);
+        }
+            
     }
 
     public void removerObstaculo(Obstaculo obstaculo){
