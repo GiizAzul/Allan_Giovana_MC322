@@ -60,8 +60,11 @@ public class Robo {
                     System.out.print("O robô "+this.nome+" colidiu com o objeto: ");
                     if (obj instanceof Robo){
                         System.out.println(((Robo)obj).getNome()+" na posição X:"+x+" Y:"+posicaoY);
-                    }
-                    else{
+                    }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
+                        System.out.println("O robô "+this.nome+"caiu no buraco e foi destruido");
+                        ambiente.removerRobo(this);
+                    }else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
                     }
                     return; // Para uma casa antes do obstáculo
@@ -79,8 +82,11 @@ public class Robo {
                     System.out.print("O robô "+this.nome+" colidiu com o objeto: ");
                     if (obj instanceof Robo){
                         System.out.println(((Robo)obj).getNome()+" na posição X:"+posicaoX+" Y:"+y);
-                    }
-                    else{
+                    }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);
+                        System.out.println("O robô "+this.nome+"caiu no buraco e foi destruido");
+                        ambiente.removerRobo(this);
+                    }else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);
                     }
                     return; // Para uma casa antes do obstáculo
