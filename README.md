@@ -1,57 +1,35 @@
-# Simulador de Robôs 3D
+# Robolândia 
 
-Programa Java que simula um ambiente 3D com diferentes tipos de robôs, cada um com capacidades e funcionalidades específicas.
+Um simulador em Java que permite criar e controlar diferentes tipos de robôs em um ambiente tridimensional.
 
-## Funcionalidades
+## Pré-requisitos
 
-- Criação de um ambiente 3D com dimensões personalizadas
-- Adição de diferentes tipos de robôs:
-  - **Robôs Terrestres**:
-    - Tanque de Guerra: robô militar com capacidade de ataque
-    - Correios: robô de entrega de pacotes
-  - **Robôs Aéreos**:
-    - Drone de Ataque: drone militar com capacidade de ataque
-    - Drone de Vigilância: drone com capacidades avançadas de detecção e camuflagem
+- Java 21.0.6
+- IDE: Vscode
+- Terminal compatível com Linux (para os scripts shell)
 
-- Operações específicas para cada tipo de robô
-- Interface de menu interativa
+## Como Iniciar
 
-## Como usar
+### Executando a Aplicação
 
-1. Execute o programa
-2. Defina as dimensões do ambiente (X Y Z)
-3. Use o menu principal para:
-   - Criar novos robôs
-   - Realizar ações com robôs existentes
-   - Listar todos os robôs
-   - Remover robôs
+1. Clone o repositório ou baixe os arquivos
+2. Navegue até a pasta do lab que gostaria de executar
+3. Execute o script `start.sh`:
 
-## Tipos de Robôs e suas Ações
+```bash
+# Usando o script
+./start.sh
+```
 
-### Tanque de Guerra (Terrestre)
-- Atirar em alvos
-- Recarregar munição
-- Mover-se pelo ambiente
-- Identificar obstáculos na direção atual
-- Mudar direção
+### Executando os Testes
 
-### Correios (Terrestre)
-- Carregar pacotes
-- Entregar pacotes em locais específicos
-- Listar entregas
-- Mover-se pelo ambiente
-- Identificar obstáculos
-- Mudar direção
+Para verificar se todas as funcionalidades estão operando corretamente:
 
-### Drone de Ataque (Aéreo)
-- Atirar em alvos
-- Mover-se (incluindo controle de altitude)
-- Identificar obstáculos
-- Mudar direção
+```bash
+# Usando o script
+./test.sh
+```
 
-### Drone de Vigilância (Aéreo)
-- Mover-se (incluindo controle de altitude)
-- Identificar obstáculos em todas as direções
-- Mudar direção
-- Varrer área circular
-- Ativar/desativar camuflagem
+### Guia de Uso
+
+ Cada um dos Lab's possuem um conjunto de funcionalidades que podem ser exploradas após a execução do script `start.sh`. Um lab sempre possui todas as funcionalidades do anterior, podendo haver algumas alterações entre elas, de modo que cada lab é uma crescente de desenvolvimento em relação ao anterior.
