@@ -131,9 +131,9 @@ public class TestRoboTerrestre {
     // Método auxiliar para verificação de testes
     private static void verificar(String descricao, boolean condicao) {
         if (condicao) {
-            System.out.println("✓ PASSOU: " + descricao);
+            System.out.println("\033[1;32m✓ PASSOU:\033[0m " + descricao);
         } else {
-            System.out.println("✗ FALHOU: " + descricao);
+            System.out.println("\033[1;31m✗ FALHOU:\033[0m " + descricao);
         }
     }
 }

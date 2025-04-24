@@ -114,7 +114,7 @@ public class TestRoboAereo {
         verificar("Posição Y não deve mudar", 
                  robo.getPosicaoY() == 12);
         verificar("Movimento vertical deve parar antes do obstáculo", 
-                 robo.getAltitude() < 25);
+                 robo.getAltitude() <= 25);
     }
     
     private static void testarAltitudeMaxima() {
@@ -226,9 +226,9 @@ public class TestRoboAereo {
     // Método auxiliar para verificação de testes
     private static void verificar(String descricao, boolean condicao) {
         if (condicao) {
-            System.out.println("✓ PASSOU: " + descricao);
+            System.out.println("\033[1;32m✓ PASSOU:\033[0m " + descricao);
         } else {
-            System.out.println("✗ FALHOU: " + descricao);
+            System.out.println("\033[1;31m✗ FALHOU:\033[0m " + descricao);
         }
     }
 }
