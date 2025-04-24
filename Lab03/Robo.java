@@ -247,6 +247,7 @@ public class Robo {
 
         if (integridade <= 0) {
             this.operando = false;
+            this.integridade = 0;
             return "O robô " + getNome() + " está inoperante devido ao dano tomado";
         }
 
