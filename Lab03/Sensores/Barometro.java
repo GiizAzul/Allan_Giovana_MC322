@@ -3,14 +3,23 @@ package Sensores;
 public class Barometro extends Sensor<Double> {
     private double pressaoAtmosferica; // em hPa
 
+    /**
+     * Construtor padrão que inicializa o sensor com a pressão atmosférica padrão.
+     */
     public Barometro() {
         super();
         this.pressaoAtmosferica = 1013.25; // Pressão atmosférica padrão ao nível do mar
     }
 
+    /**
+     * Construtor que inicializa o sensor com uma altitude específica.
+     * 
+     * @param altitude A altitude em metros (pode ser um valor inteiro ou decimal)
+     */
+
     public Barometro(double altitude) {
         super();
-        this.pressaoAtmosferica = this.acionar(altitude); // Pressão atmosférica padrão ao nível do mar
+        this.pressaoAtmosferica = this.acionar(altitude);
     }
 
     /**
@@ -18,7 +27,7 @@ public class Barometro extends Sensor<Double> {
      * 
      * @param <E> O tipo do parâmetro que o sensor pode receber
      * @param altitude A altitude em metros (pode ser um valor inteiro ou decimal)
-     * @return true se o sensor estiver ativo, false caso contrário
+     * @return Double com a pressão atmosférica em hPa para a altitude informada
      */
     @Override
     public <E> Double acionar(E altitude) {
