@@ -1,3 +1,7 @@
+import ambiente.Ambiente;
+import robos.aereos.RoboAereo;
+import robos.terrestres.RoboTerrestre;
+
 public class TestRoboTerrestre {
     
     public static void main(String[] args) {

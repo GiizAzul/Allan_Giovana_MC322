@@ -1,6 +1,13 @@
+package robos.aereos;
 import java.util.ArrayList;
 import java.util.Comparator;
-import Sensores.*;
+
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import ambiente.TipoObstaculo;
+import robos.Robo;
+import robos.terrestres.RoboTerrestre;
+import sensores.*;
 
 /**
  * Classe que representa um robô aéreo, especialização de Robo

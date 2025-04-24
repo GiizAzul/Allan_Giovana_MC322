@@ -1,3 +1,6 @@
+import ambiente.Ambiente;
+import robos.Robo;
+
 public class TestRobo {
     
     public static void main(String[] args) {

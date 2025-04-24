@@ -1,6 +1,17 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import ambiente.TipoObstaculo;
+import robos.Robo;
+import robos.aereos.DroneAtaque;
+import robos.aereos.DroneVigilancia;
+import robos.aereos.RoboAereo;
+import robos.terrestres.Correios;
+import robos.terrestres.RoboTerrestre;
+import robos.terrestres.TanqueGuerra;
+
 public class Main {
 
     public static void main(String[] args) {

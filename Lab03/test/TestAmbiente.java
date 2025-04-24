@@ -1,5 +1,14 @@
 import java.util.ArrayList;
 
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import ambiente.TipoObstaculo;
+import robos.Robo;
+import robos.aereos.DroneAtaque;
+import robos.aereos.DroneVigilancia;
+import robos.terrestres.Correios;
+import robos.terrestres.TanqueGuerra;
+
 /**
  * Classe para testar as funcionalidades da classe Ambiente
  */

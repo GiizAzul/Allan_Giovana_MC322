@@ -1,3 +1,4 @@
+package ambiente;
 public class Obstaculo {
     private int x1;
     private int x2;

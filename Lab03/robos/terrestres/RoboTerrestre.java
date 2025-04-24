@@ -1,3 +1,8 @@
+package robos.terrestres;
+import ambiente.Ambiente;
+import robos.Robo;
+import robos.aereos.RoboAereo;
+
 /**
  * Classe que representa um robô terrestre, especialização de Robo
  * com capacidade de velocidade limitada

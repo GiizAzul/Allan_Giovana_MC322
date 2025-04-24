@@ -1,4 +1,4 @@
-package Sensores;
+package sensores;
 
 public class Barometro extends Sensor<Double> {
     private double pressaoAtmosferica; // em hPa

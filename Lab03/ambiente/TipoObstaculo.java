@@ -1,3 +1,5 @@
+package ambiente;
+
 public enum TipoObstaculo {
     PAREDE(3, 100, false),
     ARVORE(5, 50, false),

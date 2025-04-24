@@ -1,3 +1,8 @@
+package robos.terrestres;
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import robos.Robo;
+
 public class TanqueGuerra extends RoboTerrestre {
     private int municaoMax;
     private int municaoAtual;

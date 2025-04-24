@@ -1,4 +1,10 @@
+package robos.aereos;
 import java.util.ArrayList;
+
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import robos.Robo;
+import robos.terrestres.RoboTerrestre;
 
 public class DroneVigilancia extends RoboAereo {
 

@@ -1,4 +1,4 @@
-package Sensores;
+package sensores;
 /**
  * Classe abstrata genérica que representa um sensor básico para robôs.
  * Cada tipo de sensor específico pode retornar diferentes tipos de dados.

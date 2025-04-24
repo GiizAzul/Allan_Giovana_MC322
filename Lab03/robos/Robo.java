@@ -1,8 +1,11 @@
+package robos;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-// Importando classes dos sensores
-import Sensores.*;
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import ambiente.TipoObstaculo;
+import sensores.*;
 
 /**
  * Classe que representa um robô com funcionalidades básicas de movimento e

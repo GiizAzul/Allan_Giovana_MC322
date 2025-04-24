@@ -1,4 +1,7 @@
+package robos.terrestres;
 import java.util.ArrayList;
+
+import ambiente.Ambiente;
 
 public class Correios extends RoboTerrestre {
     private int capacidadeMax;

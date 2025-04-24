@@ -1,4 +1,12 @@
+package ambiente;
 import java.util.ArrayList;
+
+import robos.Robo;
+import robos.aereos.DroneAtaque;
+import robos.aereos.DroneVigilancia;
+import robos.aereos.RoboAereo;
+import robos.terrestres.Correios;
+import robos.terrestres.TanqueGuerra;
 
 public class Ambiente {
     // Dimensões do ambiente

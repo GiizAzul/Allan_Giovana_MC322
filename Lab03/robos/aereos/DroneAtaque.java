@@ -1,3 +1,9 @@
+package robos.aereos;
+import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import robos.Robo;
+import robos.terrestres.RoboTerrestre;
+
 public class DroneAtaque extends RoboAereo {
 
     private int municao;
