@@ -23,7 +23,7 @@ Um simulador em Java que permite criar e controlar diferentes tipos de robôs em
 
 ### Executando os Testes
 
-Para verificar se todas as funcionalidades estão operando corretamente:
+Para verificar se todas as funcionalidades estão operando corretamente **(Implementados a partir do Lab03)**:
 
 ```bash
 # Usando o script
