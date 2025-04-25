@@ -35,12 +35,17 @@ class Robo {
   - posicaoY : int
   - integridade : int
   - operando : boolean
-  - listaSensores : ArrayList<Sensor>
+  - gps : GPS
+  - listaSensores : ArrayList<Sensor<?>>
   # visivel : boolean
-  + mover(deltaX : int, deltaY : int) : void
+  + mover(deltaX : int, deltaY : int, ambiente Ambiente) : void
   + exibirPosicao() : String
+  + getPosicaoXInterna() : int
+  + getPosicaoYInterna() : int
   + getPosicaoX() : int
   + getPosicaoY() : int
+  + setPosicaoX(posicaoX : int) : void
+  + setPosicaoY(posicaoY : int) : void
   + getDirecao() : String
   + setDirecao(direcao : String) : void
   + getOperando() : boolean
@@ -50,16 +55,21 @@ class Robo {
   + getVisivel() : boolean
   + getIntegridade() : int
   + setIntegridade(integridade : int) : void
-  + identificarObstaculo(ambiente : Ambiente, direcao : String) : ArrayList<Robo>
+  + identificarRobo(ambiente : Ambiente, direcao : String) : ArrayList<Robo>
+  + identificarObstaculo(ambiente : Ambiente, direcao : String) : ArrayList<Obstaculo>
   + defender(dano : int) : String
   + distanciaRobo(robo : Robo) : double
+  + distanciaObstaculo(obstaculo : Obstaculo) : double
   + {static} getDirecoesPossiveis() : ArrayList<String>
+  + addSensor(sensor : Sensor<?>) : void
+  + getListaSensores() : ArrayList<Sensor<?>>
+  + getGPS() : GPS
 }
 
 ' Classe RoboTerrestre
 class RoboTerrestre {
   - velocidadeMaxima : int
-  + mover(deltaX : int, deltaY : int, vel : int) : void
+  + mover(deltaX : int, deltaY : int, vel : int, ambiente : Ambiente) : void
   + getVelocidadeMaxima() : int
   + setVelocidadeMaxima(vmax : int) : void
   + distanciaRobo(robo : RoboTerrestre) : double
@@ -70,15 +80,19 @@ class RoboTerrestre {
 class RoboAereo {
   - altitude : int
   - altitudeMaxima : int
-  + subir(metros : int) : void
-  + descer(metros : int) : void
+  - barometro : Barometro
+  + movimentoZ(passo : int, metros : int, ambiente : Ambiente)
+  + subir(metros : int, ambiente Ambiente) : void
+  + descer(metros : int, ambiente Ambiente) : void
   + getAltitude() : int
   + getAltitudeMaxima() : int
+  + getPressao() : double
   + setAltitudeMaxima(hMax : int) : void
   + distanciaRobo(robo : RoboTerrestre) : double
   + distanciaRobo(alvo : RoboAereo) : double
-  + mover(X : int, Y : int, Z : int) : void
-  + identificarObstaculo(ambiente : Ambiente, direcao : String) : ArrayList<Robo>
+  + mover(X : int, Y : int, Z : int, ambiente Ambiente) : void
+  + identificarRobo(ambiente : Ambiente, direcao : String) : ArrayList<Robo>
+  + identificarObstaculo(ambiente : Ambiente, direcao : String) : ArrayList<Obstaculo>
   + exibirPosicao() : String
 }
 
@@ -90,7 +104,8 @@ class Correios {
   - entregas : ArrayList<String>
   - pesos : ArrayList<Float>
   + carregarPacote(id : String, peso : float) : String
-  + entregarPacote(id : String, destinoX : int, destinoY : int) : String
+  + moverEntrega(deltaX : int, deltaY : int, ambiente : Ambiente)
+  + entregarPacote(id : String, destinoX : int, destinoY : int, ambiente : Ambiente) : String
   + listarEntregas() : String
 }
 
@@ -120,8 +135,9 @@ class DroneVigilancia {
   - camuflado : boolean
   - alcance_radar : float
   - angulo_camera : float
-  + identificarObstaculo(ambiente : Ambiente) : ArrayList<Robo>
-  + varrerArea(ambiente : Ambiente, centroX : int, centroY : int, raio : int) : ArrayList<Robo>
+  + identificarRobo(ambiente : Ambiente) : ArrayList<Robo>
+  + identificarObstaculo(ambiente : Ambiente) : ArrayList<Obstaculo>
+  + varrerArea(ambiente : Ambiente, centroX : int, centroY : int, raio : int) : ArrayList<Object>
   + isCamuflado() : boolean
   + acionarCamuflagem() : void
   + desabilitarCamuflagem() : void
@@ -140,14 +156,19 @@ class Obstaculo {
   - altura : int
   - tipo : TipoObstaculo
   - integridade : int
+  - indestrutivel :  boolean
   + getX1() : int
   + getX2() : int
   + getY1() : int
   + getY2() : int
   + getAltura() : int
+  + setAltura( altura : int) : void
   + getTipo() : TipoObstaculo
   + getIntegridade() : int
   + setIntegridade(integridade : int) : void
+  + isIndestrutivel() : boolean
+  + setIndestrutivel(indestrutivel : boolean) : void
+  + defender(dano : int, ambiente Ambiente) : String
 }
 
 ' Classe Ambiente
@@ -160,8 +181,10 @@ class Ambiente {
   + dentroDosLimites(x : int, y : int) : boolean
   + dentroDosLimites(x : int, y : int, z : int) : boolean
   + adicionarRobo(robo : Robo) : void
+  + removerRobo(robo : Robo) : void
   + getListaRobos() : ArrayList<Robo>
   + adicionarObstaculo(obstaculo : Obstaculo) : void
+  + removerObstaculo(obstaculo : Obstaculo) : void
   + getListaObstaculos() : ArrayList<Obstaculo>
   + getTamX() : int
   + getTamY() : int
