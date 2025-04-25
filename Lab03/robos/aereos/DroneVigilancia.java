@@ -1,4 +1,5 @@
 package robos.aereos;
+
 import java.util.ArrayList;
 
 import ambiente.Ambiente;
@@ -39,7 +40,8 @@ public class DroneVigilancia extends RoboAereo {
     }
 
     public ArrayList<Obstaculo> identificarObstaculo(Ambiente ambiente) {
-        // Busca todos os obstáculos que o Radar consegue alcançar com base na posição do
+        // Busca todos os obstáculos que o Radar consegue alcançar com base na posição
+        // do
         // Drone
         // Baseado no alcance do radar do robô
 
@@ -56,7 +58,7 @@ public class DroneVigilancia extends RoboAereo {
 
     }
 
-    public ArrayList<Robo> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
+    public ArrayList<Object> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura
         // Baseado na capacidade da câmera do drone
@@ -73,7 +75,8 @@ public class DroneVigilancia extends RoboAereo {
         }
 
         ArrayList<Robo> lista_robos = ambiente.getListaRobos();
-        ArrayList<Robo> robos_encontrados = new ArrayList<>();
+        ArrayList<Obstaculo> lista_obstaculos = ambiente.getListaObstaculos();
+        ArrayList<Object> objetos_encontrados = new ArrayList<>();
         for (Robo robo : lista_robos) {
             double distancia = robo.distanciaRobo(this);
             if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getAltitude(), 2))) {
@@ -94,12 +97,22 @@ public class DroneVigilancia extends RoboAereo {
             }
 
             if (robo.getVisivel()) {
-                robos_encontrados.add(robo);
+                objetos_encontrados.add(robo);
             }
 
         }
 
-        return robos_encontrados;
+        for (Obstaculo obstaculo : lista_obstaculos) {
+            double distancia = distanciaObstaculo(obstaculo);
+            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getAltitude(), 2))) {
+                continue;
+            }
+
+            objetos_encontrados.add(obstaculo);
+        }
+
+        return objetos_encontrados;
+
     }
 
     public boolean isCamuflado() {

@@ -618,7 +618,7 @@ public class Main {
                                     System.out.print("Obstáculos Encontrados!\n");
                                     for (Obstaculo obstaculo : obstaculosAlcanceRadar) {
                                         String info_obstaculo = String.format(
-                                                        "Tipo: %s\n" +
+                                                "Tipo: %s\n" +
                                                         "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
                                                 obstaculo.getTipo(),
                                                 obstaculo.getX1(), obstaculo.getX2(), obstaculo.getY1(),
@@ -643,31 +643,43 @@ public class Main {
                                 System.out.print("Digite o raio da varredura:");
                                 int raio = scanner.nextInt();
 
-                                ArrayList<Robo> robos_encontrados = roboEscolhido.varrerArea(ambiente, coordenadas[0],
+                                ArrayList<Object> objetos_encontrados = roboEscolhido.varrerArea(ambiente,
+                                        coordenadas[0],
                                         coordenadas[1], raio);
 
-                                if (robos_encontrados.size() == 0) {
-                                    System.out.println("Nenhum robô foi encontrado!");
+                                if (objetos_encontrados.size() == 0) {
+                                    System.out.println("Nenhum objeto foi encontrado!");
                                 } else {
-                                    System.out.println("Robôs encontrados!");
+                                    System.out.println("Objetos encontrados!");
                                     String info_obstaculo;
-                                    for (Robo robo : robos_encontrados) {
-                                        if (robo instanceof RoboAereo) {
-                                            info_obstaculo = String.format(
-                                                    "Nome: %s\n" +
-                                                            "Tipo: Robô Aéreo\n" +
-                                                            "X: %d\n" + "Y: %d\n" + "Altura: %d\n",
-                                                    robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY(),
-                                                    ((RoboAereo) robo).getAltitude());
-                                        } else if (robo instanceof RoboTerrestre) {
-                                            info_obstaculo = String.format(
-                                                    "Nome: %s (RoboTerrestre)\n" +
-                                                            "TIpo: Robô Terrestre\n" +
-                                                            "X: %d\n" + "Y: %d\n",
-                                                    robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY());
+                                    for (Object objeto : objetos_encontrados) {
+                                        if (objeto instanceof Robo) {
+                                            Robo robo = (Robo) objeto;
+                                            if (robo instanceof RoboAereo) {
+                                                info_obstaculo = String.format(
+                                                        "Nome: %s\n" +
+                                                                "Tipo: Robô Aéreo\n" +
+                                                                "X: %d\n" + "Y: %d\n" + "Altura: %d\n",
+                                                        robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY(),
+                                                        ((RoboAereo) robo).getAltitude());
+                                            } else if (robo instanceof RoboTerrestre) {
+                                                info_obstaculo = String.format(
+                                                        "Nome: %s (RoboTerrestre)\n" +
+                                                                "TIpo: Robô Terrestre\n" +
+                                                                "X: %d\n" + "Y: %d\n",
+                                                        robo.getNome(), robo.getPosicaoX(), robo.getPosicaoY());
+                                            } else {
+                                                info_obstaculo = "Robô de tipo não definido!";
+                                            }
                                         } else {
-                                            info_obstaculo = "Robô de tipo não definido!";
+                                            Obstaculo obstaculo = (Obstaculo) objeto;
+                                            info_obstaculo = String.format(
+                                                    "Tipo: %s\n" +
+                                                            "X1: %d X2: %d\n" + "Y1: %d Y2: %d\n" + "Altura: %d\n",
+                                                    obstaculo.getTipo(), obstaculo.getX1(), obstaculo.getX2(),
+                                                    obstaculo.getY1(), obstaculo.getY2(), obstaculo.getAltura());
                                         }
+
                                         System.out.println(info_obstaculo);
                                     }
                                 }
