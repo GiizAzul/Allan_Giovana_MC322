@@ -6,8 +6,8 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.Robo;
+import robos.equipamentos.sensores.*;
 import robos.terrestres.RoboTerrestre;
-import sensores.*;
 
 /**
  * Classe que representa um robô aéreo, especialização de Robo
@@ -32,7 +32,8 @@ public class RoboAereo extends Robo {
         super(n, d, x, y);
         this.altitude = h;
         this.altitudeMaxima = hmax;
-        this.barometro = new Barometro((double) h);
+        this.barometro = new Barometro(this);
+        this.addSensor(barometro);
     }
     
     /**
@@ -80,9 +81,8 @@ public class RoboAereo extends Robo {
             }
             this.altitude = z;
         }
-        
-        // Atualiza o barômetro
-        this.barometro = new Barometro((double) this.altitude);
+        // Atualiza a altitude final
+        this.altitude = altitudeAlvo;
     }
 
     /**
@@ -119,7 +119,7 @@ public class RoboAereo extends Robo {
     }
 
     public double getPressao() {
-        return this.barometro.acionar(this.getAltitude());
+        return this.barometro.acionar();
     }
 
     /**

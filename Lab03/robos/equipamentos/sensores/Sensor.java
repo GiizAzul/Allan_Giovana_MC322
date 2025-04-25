@@ -1,4 +1,4 @@
-package sensores;
+package robos.equipamentos.sensores;
 /**
  * Classe abstrata genérica que representa um sensor básico para robôs.
  * Cada tipo de sensor específico pode retornar diferentes tipos de dados.
@@ -12,21 +12,21 @@ public abstract class Sensor<T> {
     /**
      * Construtor padrão. Inicializa o sensor como ativo.
      */
-    Sensor() { 
+    public Sensor() { 
         this.ativo = true;
     }
 
     /**
      * Ativa o sensor para que possa ser acionado e retornar dados.
      */
-    void ativar() { 
+    public void ativar() { 
         this.ativo = true;
     }
 
     /**
      * Desativa o sensor, impedindo acionamento.
      */
-    void desativar() { 
+    public void desativar() { 
         this.ativo = false;
     }
 
@@ -35,7 +35,7 @@ public abstract class Sensor<T> {
      * 
      * @return true se o sensor estiver ativo, false caso contrário
      */
-    boolean isAtivo() { 
+    public boolean isAtivo() { 
         return this.ativo;
     }
 
@@ -45,5 +45,5 @@ public abstract class Sensor<T> {
      * 
      * @return Dados coletados pelo sensor
      */
-    abstract <E> T acionar(E dados);
+    abstract T acionar();
 }

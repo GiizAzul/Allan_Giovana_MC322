@@ -5,7 +5,7 @@ import java.util.Comparator;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import sensores.*;
+import robos.equipamentos.sensores.*;
 
 /**
  * Classe que representa um robô com funcionalidades básicas de movimento e
@@ -19,7 +19,10 @@ public class Robo {
     private int posicaoY; // Coordenada Y da posição do robô
     private int integridade; // Nível de integridade do robô (0-100)
     private boolean operando; // Estado de operação do robô (true = operando, false = inoperante)
-    private ArrayList<Sensor<?>> listaSensores; // Lista de sensores acoplados ao robô
+    
+    // Lista de sensores do robô padrões
+    private GPS gps; // Sensor de GPS -> Informar a posição dos Robôs
+    private ArrayList<Sensor<?>> listaSensores; // Lista de sensores do robô
 
     // Acessível somente para subclasses
     protected boolean visivel = true; // Indica se o robô está visível para outros robôs
@@ -39,7 +42,9 @@ public class Robo {
         this.posicaoY = posicaoY;
         this.operando = true;
         this.integridade = 100;
-        this.listaSensores = new ArrayList<Sensor<?>>();
+        this.gps = new GPS(this);
+        this.listaSensores = new ArrayList<>();
+        this.listaSensores.add(gps);
     }
 
     /**
@@ -105,33 +110,61 @@ public class Robo {
      * @return String formatada com nome e posição do robô
      */
     public String exibirPosicao() {
-        return this.nome + " está na posição X:" + this.posicaoX + " Y:" + this.posicaoY;
+        return this.nome + " está na posição X:" + this.getPosicaoX() + " Y:" + this.getPosicaoY();
     }
 
     /**
-     * Obtém a coordenada X atual do robô
+     * Método interno para acesso direto à posição X
+     * Este método é usado apenas pelo GPS e internamente
+     */
+    public int getPosicaoXInterna() {
+        return this.posicaoX;
+    }
+    
+    /**
+     * Método interno para acesso direto à posição Y
+     * Este método é usado apenas pelo GPS e internamente
+     */
+    public int getPosicaoYInterna() {
+        return this.posicaoY;
+    }
+    
+    /**
+     * Obtém a coordenada X atual do robô através do sensor GPS
      * 
      * @return Posição X
      */
     public int getPosicaoX() {
-        return posicaoX;
+        // Verificar se o GPS está disponível e ativo
+        if (this.gps != null && this.gps.isAtivo()) {
+            return this.gps.obterPosicaoX();
+        } else {
+            // Retornar -1 se o GPS não estiver disponível ou ativo
+            return -1;
+        }
     }
-
-    public void setPosicaoX(int posicaoX){
-        this.posicaoX=posicaoX;
-    }
-
+    
     /**
-     * Obtém a coordenada Y atual do robô
+     * Obtém a coordenada Y atual do robô através do sensor GPS
      * 
      * @return Posição Y
      */
     public int getPosicaoY() {
-        return posicaoY;
+        // Verificar se o GPS está disponível e ativo
+        if (this.gps != null && this.gps.isAtivo()) {
+            return this.gps.obterPosicaoY();
+        } else {
+            // Retornar -1 se o GPS não estiver disponível ou ativo
+            return -1;
+        }
     }
 
-    public void setPosicaoY(int posicaoY){
-        this.posicaoY=posicaoY;
+    protected void setPosicaoX(int posicaoX) {
+        this.posicaoX = posicaoX;
+    }
+
+    protected void setPosicaoY(int posicaoY) {
+        this.posicaoY = posicaoY;
     }
 
     /**
@@ -387,5 +420,12 @@ public class Robo {
 
     public ArrayList<Sensor<?>> getListaSensores() {
         return listaSensores;
+    }
+
+    /**
+     * Retorna o GPS do robô, se existir
+     */
+    public GPS getGPS() {
+        return this.gps;
     }
 }
