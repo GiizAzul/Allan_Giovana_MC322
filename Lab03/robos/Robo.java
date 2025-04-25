@@ -70,7 +70,7 @@ public class Robo {
                         System.out.println(((Robo)obj).getNome()+" na posição X:"+x+" Y:"+posicaoY);
                     }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
-                        System.out.println("O robô "+this.nome+"caiu no buraco e foi destruido");
+                        System.out.println("O robô "+this.nome+" caiu no buraco e foi destruido");
                         ambiente.removerRobo(this);
                     }else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
@@ -92,7 +92,7 @@ public class Robo {
                         System.out.println(((Robo)obj).getNome()+" na posição X:"+posicaoX+" Y:"+y);
                     }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);
-                        System.out.println("O robô "+this.nome+"caiu no buraco e foi destruido");
+                        System.out.println("O robô "+this.nome+" caiu no buraco e foi destruido");
                         ambiente.removerRobo(this);
                     }else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);

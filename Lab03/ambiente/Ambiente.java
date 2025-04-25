@@ -141,7 +141,7 @@ public class Ambiente {
                                                 velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
                         int capacidadeMax = (Integer) atributo[5];
-                        int pesoMaximo = (Integer) atributo[6];
+                        float pesoMaximo = (Float) atributo[6];
                         return new Correios(nome, direcao, posX, posY, 
                                            velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
