@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
-import robos.Robo;
+import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
 
 public class DroneVigilancia extends RoboAereo {
@@ -13,8 +14,8 @@ public class DroneVigilancia extends RoboAereo {
     private float alcance_radar;
     private float angulo_camera;
 
-    public DroneVigilancia(String nome, String dir, int x, int y, int vel, int h, int hmax, float alc_rad, float ang_cam) {
-        super(nome, dir, x, y, vel, h, hmax);
+    public DroneVigilancia(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente amb, float alc_rad, float ang_cam) {
+        super(nome, dir, m, x, y, vel, h, hmax, amb);
         this.alcance_radar = alc_rad;
         this.angulo_camera = ang_cam;
         this.camuflado = false;

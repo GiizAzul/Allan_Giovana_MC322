@@ -5,8 +5,9 @@ import java.util.Comparator;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import robos.Robo;
 import robos.equipamentos.sensores.*;
+import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
 
 /**
@@ -17,7 +18,8 @@ public class RoboAereo extends Robo {
 
     private int altitude = -1;        // Altitude atual do robô aéreo
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
-    private Barometro barometro;      // Sensor de pressão atmosférica
+    private Barometro sensorBarometro;      // Sensor de pressão atmosférica
+    private Radar sensorRadar;
 
     /**
      * Construtor de RoboAereo
@@ -28,12 +30,14 @@ public class RoboAereo extends Robo {
      * @param h Altura inicial
      * @param hmax Altura máxima permitida
      */
-    public RoboAereo(String n, String d, int x, int y, int vel, int h, int hmax) {
-        super(n, d, x, y, vel);
+    public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente) {
+        super(n, d, m, x, y, vel);
         this.altitude = h;
         this.altitudeMaxima = hmax;
-        this.barometro = new Barometro(this);
-        this.addSensor(barometro);
+        this.sensorBarometro = new Barometro(this);
+        this.sensorRadar = new Radar(this, ambiente, 100, 30);
+        this.addSensor(sensorBarometro);
+        this.addSensor(sensorRadar);
     }
     
     /**
@@ -119,7 +123,7 @@ public class RoboAereo extends Robo {
     }
 
     public double getPressao() {
-        return this.barometro.acionar();
+        return this.sensorBarometro.acionar();
     }
 
     /**

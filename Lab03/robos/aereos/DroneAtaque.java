@@ -1,7 +1,8 @@
 package robos.aereos;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
-import robos.Robo;
+import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
 
 public class DroneAtaque extends RoboAereo {
@@ -10,10 +11,10 @@ public class DroneAtaque extends RoboAereo {
     private int alcance;
     private int escudo;
 
-    public DroneAtaque(String nome, String dir, int x, int y, int vel, int alt, int altMax,
+    public DroneAtaque(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int alt, int altMax, Ambiente amb,
             int muni, int alc) {
 
-        super(nome, dir, x, y, alt, vel, altMax);
+        super(nome, dir, m, x, y, alt, vel, altMax, amb);
         this.municao = muni;
         this.alcance = alc;
         this.escudo = 100;

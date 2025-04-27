@@ -1,4 +1,4 @@
-package robos;
+package robos.geral;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -20,7 +20,8 @@ public class Robo {
     private int integridade; // Nível de integridade do robô (0-100)
     private int velocidade; // Velocidade do robô
     private boolean operando; // Estado de operação do robô (true = operando, false = inoperante)
-    
+    private MateriaisRobo material; // Material do robô
+
     // Lista de sensores do robô padrões
     private GPS gps; // Sensor de GPS -> Informar a posição dos Robôs
     private ArrayList<Sensor<?>> listaSensores; // Lista de sensores do robô
@@ -37,9 +38,10 @@ public class Robo {
      * @param posicaoY Posição inicial Y
      * @param velocidade Velocidade inicial do robô
      */
-    public Robo(String nome, String direcao, int posicaoX, int posicaoY, int velocidade) {
+    public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade) {
         this.nome = nome;
         this.direcao = direcao;
+        this.material = material;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
         this.operando = true;
@@ -167,6 +169,14 @@ public class Robo {
             // Retornar -1 se o GPS não estiver disponível ou ativo
             return -1;
         }
+    }
+
+    public int getVelocidade() {
+        return this.velocidade;
+    }
+
+    public MateriaisRobo getMateriaisRobo() {
+        return this.material;
     }
 
     protected void setPosicaoX(int posicaoX) {

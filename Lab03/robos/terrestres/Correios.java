@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import robos.Robo;
+import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 
 public class Correios extends RoboTerrestre {
     private int capacidadeMax;
@@ -14,9 +15,9 @@ public class Correios extends RoboTerrestre {
     private ArrayList<String> entregas;
     private ArrayList<Float> pesos;
 
-    public Correios(String nome, String direcao, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima, int capacidadeMax,
+    public Correios(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima, int capacidadeMax,
             float pesoMax) {
-        super(nome, direcao, posicaoX, posicaoY, velocidade, velocidadeMaxima);
+        super(nome, direcao, material, posicaoX, posicaoY, velocidade, velocidadeMaxima);
         this.capacidadeMax = capacidadeMax;
         this.pesoMax = pesoMax;
         pesoAtual = 0;

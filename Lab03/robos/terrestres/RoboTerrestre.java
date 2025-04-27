@@ -1,7 +1,8 @@
 package robos.terrestres;
 import ambiente.Ambiente;
-import robos.Robo;
 import robos.aereos.RoboAereo;
+import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 
 /**
  * Classe que representa um robô terrestre, especialização de Robo
@@ -18,8 +19,8 @@ public class RoboTerrestre extends Robo {
      * @param posicaoY Posição Y inicial
      * @param velocidadeMaxima Velocidade máxima do robô
      */
-    public RoboTerrestre(String nome, String direcao, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
-        super(nome, direcao, posicaoX, posicaoY, velocidade);
+    public RoboTerrestre(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
+        super(nome, direcao, material, posicaoX, posicaoY, velocidade);
         this.velocidadeMaxima = velocidadeMaxima;
     }
 

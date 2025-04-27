@@ -1,10 +1,11 @@
 package ambiente;
 import java.util.ArrayList;
 
-import robos.Robo;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.aereos.RoboAereo;
+import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
 
@@ -116,9 +117,10 @@ public class Ambiente {
             // Extrair parâmetros comuns
             String nome = (String) atributo[0];
             String direcao = (String) atributo[1];
-            int posX = (Integer) atributo[2];
-            int posY = (Integer) atributo[3];
-            int velocidade = (Integer) atributo[4];
+            MateriaisRobo material = (MateriaisRobo) atributo[2];
+            int posX = (Integer) atributo[3];
+            int posY = (Integer) atributo[4];
+            int velocidade = (Integer) atributo[5];
             
             // Verificar se a posição está dentro dos limites
             if (!dentroDosLimites(posX, posY)) {
@@ -134,22 +136,22 @@ public class Ambiente {
             // Criar robô baseado no tipo e subcategoria
             switch (tipo) {
                 case 1: // Robôs terrestres
-                    int velocidadeMaxima = (Integer) atributo[5];
+                    int velocidadeMaxima = (Integer) atributo[6];
                     if (subcategoria == 1) { // TanqueGuerra
-                        int municaoMax = (Integer) atributo[6];
-                        int alcance = (Integer) atributo[7];
-                        return new TanqueGuerra(nome, direcao, posX, posY, velocidade,
+                        int municaoMax = (Integer) atributo[7];
+                        int alcance = (Integer) atributo[8];
+                        return new TanqueGuerra(nome, direcao, material, posX, posY, velocidade,
                                                 velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
-                        int capacidadeMax = (Integer) atributo[6];
-                        float pesoMaximo = (Float) atributo[7];
-                        return new Correios(nome, direcao, posX, posY, velocidade,
+                        int capacidadeMax = (Integer) atributo[7];
+                        float pesoMaximo = (Float) atributo[8];
+                        return new Correios(nome, direcao, material, posX, posY, velocidade,
                                            velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
                     
                 case 2: // Robôs aéreos
-                    int altitude = (Integer) atributo[5];
-                    int altitudeMaxima = (Integer) atributo[6];
+                    int altitude = (Integer) atributo[6];
+                    int altitudeMaxima = (Integer) atributo[7];
                     
                     // Verificar se altitude está dentro dos limites
                     if (!dentroDosLimites(posX, posY, altitude)) {
@@ -158,15 +160,15 @@ public class Ambiente {
                     }
                     
                     if (subcategoria == 1) { // DroneAtaque
-                        int municao = (Integer) atributo[7];
-                        int alcance = (Integer) atributo[8];
-                        return new DroneAtaque(nome, direcao, posX, posY, velocidade,
-                                              altitude, altitudeMaxima, municao, alcance);
+                        int municao = (Integer) atributo[8];
+                        int alcance = (Integer) atributo[9];
+                        return new DroneAtaque(nome, direcao, material, posX, posY, velocidade,
+                                              altitude, altitudeMaxima, this, municao, alcance);
                     } else { // DroneVigilancia
-                        float alcanceRadar = (Float) atributo[6];
-                        float anguloCamera = (Float) atributo[7];
-                        return new DroneVigilancia(nome, direcao, posX, posY, velocidade,
-                                                 altitude, altitudeMaxima, alcanceRadar, anguloCamera);
+                        float alcanceRadar = (Float) atributo[7];
+                        float anguloCamera = (Float) atributo[8];
+                        return new DroneVigilancia(nome, direcao, material, posX, posY, velocidade,
+                                                 altitude, altitudeMaxima, this, alcanceRadar, anguloCamera);
                     }
                     
                 default:
