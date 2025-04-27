@@ -106,11 +106,18 @@ public class Robo {
 
     /**
      * Retorna uma string com a posição atual do robô
+     * Se o GPS estiver inativo ou não disponível, retorna uma mensagem de erro
      * 
      * @return String formatada com nome e posição do robô
      */
     public String exibirPosicao() {
-        return this.nome + " está na posição X:" + this.getPosicaoX() + " Y:" + this.getPosicaoY();
+        int x = this.getPosicaoX();
+        int y = this.getPosicaoY();
+        if (x == -1 || y == -1) {
+            return this.nome + " está com o GPS inativo ou não disponível";
+        } else {
+            return this.nome + " está na posição X:" + x + " Y:" + y;
+        }    
     }
 
     /**
