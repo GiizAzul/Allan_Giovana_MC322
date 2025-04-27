@@ -85,7 +85,7 @@ public class TestAmbiente {
         }
         
         // Teste de robô terrestre - Correios
-        Robo correio = ambiente.criarRobo(1, 2, "C1", "Sul", 4, 5, 3, 50, 25);
+        Robo correio = ambiente.criarRobo(1, 2, "C1", "Sul", 4, 5, 3, 50, 25.0f);
         verificar("Correios deve ser criado com sucesso", 
                  correio != null && correio instanceof Correios);
         if (correio != null) {
