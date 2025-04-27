@@ -118,6 +118,7 @@ public class Ambiente {
             String direcao = (String) atributo[1];
             int posX = (Integer) atributo[2];
             int posY = (Integer) atributo[3];
+            int velocidade = (Integer) atributo[4];
             
             // Verificar se a posição está dentro dos limites
             if (!dentroDosLimites(posX, posY)) {
@@ -133,22 +134,22 @@ public class Ambiente {
             // Criar robô baseado no tipo e subcategoria
             switch (tipo) {
                 case 1: // Robôs terrestres
-                    int velocidadeMaxima = (Integer) atributo[4];
+                    int velocidadeMaxima = (Integer) atributo[5];
                     if (subcategoria == 1) { // TanqueGuerra
-                        int municaoMax = (Integer) atributo[5];
-                        int alcance = (Integer) atributo[6];
-                        return new TanqueGuerra(nome, direcao, posX, posY,
+                        int municaoMax = (Integer) atributo[6];
+                        int alcance = (Integer) atributo[7];
+                        return new TanqueGuerra(nome, direcao, posX, posY, velocidade,
                                                 velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
-                        int capacidadeMax = (Integer) atributo[5];
-                        float pesoMaximo = (Float) atributo[6];
-                        return new Correios(nome, direcao, posX, posY, 
+                        int capacidadeMax = (Integer) atributo[6];
+                        float pesoMaximo = (Float) atributo[7];
+                        return new Correios(nome, direcao, posX, posY, velocidade,
                                            velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
                     
                 case 2: // Robôs aéreos
-                    int altitude = (Integer) atributo[4];
-                    int altitudeMaxima = (Integer) atributo[5];
+                    int altitude = (Integer) atributo[5];
+                    int altitudeMaxima = (Integer) atributo[6];
                     
                     // Verificar se altitude está dentro dos limites
                     if (!dentroDosLimites(posX, posY, altitude)) {
@@ -157,14 +158,14 @@ public class Ambiente {
                     }
                     
                     if (subcategoria == 1) { // DroneAtaque
-                        int municao = (Integer) atributo[6];
-                        int alcance = (Integer) atributo[7];
-                        return new DroneAtaque(nome, direcao, posX, posY, 
+                        int municao = (Integer) atributo[7];
+                        int alcance = (Integer) atributo[8];
+                        return new DroneAtaque(nome, direcao, posX, posY, velocidade,
                                               altitude, altitudeMaxima, municao, alcance);
                     } else { // DroneVigilancia
                         float alcanceRadar = (Float) atributo[6];
                         float anguloCamera = (Float) atributo[7];
-                        return new DroneVigilancia(nome, direcao, posX, posY, 
+                        return new DroneVigilancia(nome, direcao, posX, posY, velocidade,
                                                  altitude, altitudeMaxima, alcanceRadar, anguloCamera);
                     }
                     

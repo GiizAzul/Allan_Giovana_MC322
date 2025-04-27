@@ -28,8 +28,8 @@ public class RoboAereo extends Robo {
      * @param h Altura inicial
      * @param hmax Altura máxima permitida
      */
-    public RoboAereo(String n, String d, int x, int y, int h, int hmax) {
-        super(n, d, x, y);
+    public RoboAereo(String n, String d, int x, int y, int vel, int h, int hmax) {
+        super(n, d, x, y, vel);
         this.altitude = h;
         this.altitudeMaxima = hmax;
         this.barometro = new Barometro(this);

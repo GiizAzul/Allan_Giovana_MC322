@@ -18,6 +18,7 @@ public class Robo {
     private int posicaoX; // Coordenada X da posição do robô
     private int posicaoY; // Coordenada Y da posição do robô
     private int integridade; // Nível de integridade do robô (0-100)
+    private int velocidade; // Velocidade do robô
     private boolean operando; // Estado de operação do robô (true = operando, false = inoperante)
     
     // Lista de sensores do robô padrões
@@ -34,14 +35,16 @@ public class Robo {
      * @param direcao  Direção inicial do robô
      * @param posicaoX Posição inicial X
      * @param posicaoY Posição inicial Y
+     * @param velocidade Velocidade inicial do robô
      */
-    public Robo(String nome, String direcao, int posicaoX, int posicaoY) {
+    public Robo(String nome, String direcao, int posicaoX, int posicaoY, int velocidade) {
         this.nome = nome;
         this.direcao = direcao;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
         this.operando = true;
         this.integridade = 100;
+        this.velocidade = velocidade;
         this.gps = new GPS(this);
         this.listaSensores = new ArrayList<>();
         this.listaSensores.add(gps);

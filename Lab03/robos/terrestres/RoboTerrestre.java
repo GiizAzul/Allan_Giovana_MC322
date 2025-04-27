@@ -18,8 +18,8 @@ public class RoboTerrestre extends Robo {
      * @param posicaoY Posição Y inicial
      * @param velocidadeMaxima Velocidade máxima do robô
      */
-    public RoboTerrestre(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima) {
-        super(nome, direcao, posicaoX, posicaoY);
+    public RoboTerrestre(String nome, String direcao, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
+        super(nome, direcao, posicaoX, posicaoY, velocidade);
         this.velocidadeMaxima = velocidadeMaxima;
     }
 

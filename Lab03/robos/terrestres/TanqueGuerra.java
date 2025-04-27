@@ -8,9 +8,9 @@ public class TanqueGuerra extends RoboTerrestre {
     private int municaoAtual;
     private int alcance;
 
-    public TanqueGuerra(String nome, String direcao, int posicaoX, int posicaoY, int velocidadeMaxima, int municaoMax,
+    public TanqueGuerra(String nome, String direcao, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima, int municaoMax,
             int alcance) {
-        super(nome, direcao, posicaoX, posicaoY, velocidadeMaxima);
+        super(nome, direcao, posicaoX, posicaoY, velocidade, velocidadeMaxima);
 
         this.municaoMax = municaoMax;
         this.municaoAtual = municaoMax;

@@ -13,8 +13,8 @@ public class DroneVigilancia extends RoboAereo {
     private float alcance_radar;
     private float angulo_camera;
 
-    public DroneVigilancia(String nome, String dir, int x, int y, int h, int hmax, float alc_rad, float ang_cam) {
-        super(nome, dir, x, y, h, hmax);
+    public DroneVigilancia(String nome, String dir, int x, int y, int vel, int h, int hmax, float alc_rad, float ang_cam) {
+        super(nome, dir, x, y, vel, h, hmax);
         this.alcance_radar = alc_rad;
         this.angulo_camera = ang_cam;
         this.camuflado = false;
