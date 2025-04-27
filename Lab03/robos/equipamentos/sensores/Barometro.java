@@ -1,7 +1,7 @@
 package robos.equipamentos.sensores;
 
-import robos.Robo;
 import robos.aereos.RoboAereo;
+import robos.geral.Robo;
 
 public class Barometro extends Sensor<Double> {
     private double pressaoAtmosferica; // em hPa

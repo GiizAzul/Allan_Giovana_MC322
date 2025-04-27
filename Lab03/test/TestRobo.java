@@ -1,5 +1,5 @@
 import ambiente.Ambiente;
-import robos.Robo;
+import robos.geral.Robo;
 
 public class TestRobo {
     

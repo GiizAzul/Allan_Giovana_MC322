@@ -1,5 +1,5 @@
 package robos.equipamentos.sensores;
-import robos.Robo;
+import robos.geral.Robo;
 
 public class GPS extends Sensor<int[]> {
     private Robo robo;
