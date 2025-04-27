@@ -132,4 +132,20 @@ public class Radar extends Sensor<ArrayList<Object>> {
         return this.raioAlcance * robo.getMateriaisRobo().getFatorReducaoAlcanceRadar();
     }
 
+    public int getRaioAlcance() {
+        return raioAlcance;
+    }
+
+    public void setRaioAlcance(int alcanceRadar) {
+        this.raioAlcance = alcanceRadar;
+    }
+
+    public int getAnguloAlcance() {
+        return anguloAlcance;
+    }
+
+    public void setAnguloAlcance(int anguloAlcance) {
+        this.anguloAlcance = anguloAlcance;
+    }
+
 }

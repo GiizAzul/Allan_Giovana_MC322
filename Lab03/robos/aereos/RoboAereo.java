@@ -39,6 +39,16 @@ public class RoboAereo extends Robo {
         this.addSensor(sensorBarometro);
         this.addSensor(sensorRadar);
     }
+
+    public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, int alc_radar, int ang_radar) {
+        super(n, d, m, x, y, vel);
+        this.altitude = h;
+        this.altitudeMaxima = hmax;
+        this.sensorBarometro = new Barometro(this);
+        this.sensorRadar = new Radar(this, ambiente, alc_radar, ang_radar);
+        this.addSensor(sensorBarometro);
+        this.addSensor(sensorRadar);
+    }
     
     /**
      * Realiza o movimento vertical (eixo Z) do robô aéreo.
@@ -220,104 +230,30 @@ public class RoboAereo extends Robo {
     }
 
     /**
-     * Sobrescreve o método da classe pai para identificar obstáculos
-     * considerando apenas robôs aéreos na mesma altitude
-     * @param ambiente Ambiente onde os robôs estão
-     * @param direcao Direção a verificar
-     * @return Lista de robôs que são obstáculos na direção indicada
+     * Sobrescreve o método da classe pai para identificar Robôs
+     * @return Lista de robôs que são encontrados por meio do sensor de Radar
      */
     @Override
-    public ArrayList<Robo> identificarRobo(Ambiente ambiente, String direcao) {
-
-        ArrayList<Robo> listaRobo = ambiente.getListaRobos();
-        ArrayList<Robo> robos = new ArrayList<>();
-        ArrayList<RoboAereo> robosAereos = new ArrayList<>();
-
-        // Filtra apenas robôs aéreos na mesma altitude
-        for (Robo robo : listaRobo) {
-            if (robo instanceof RoboAereo && robo.getVisivel()) {
-                RoboAereo roboAir = (RoboAereo) robo;
-                if (roboAir.getAltitude() == this.getAltitude()) {
-                    robosAereos.add(roboAir);
-                }
+    public ArrayList<Robo> identificarRobo() {
+        ArrayList<Object> objetosEncontrados = this.sensorRadar.acionar();
+        ArrayList<Robo> robosEncontrados = new ArrayList<Robo>();
+        for (Object objectEnc : objetosEncontrados) {
+            if (objectEnc instanceof Robo) {
+                robosEncontrados.add((Robo) objectEnc);
             }
         }
-
-        if (direcao.equals("Norte")) {
-            // Identifica robôs ao norte (mesmo X, Y maior)
-            for (RoboAereo robo : robosAereos) {
-                if (robo.getPosicaoX() == this.getPosicaoX() && robo.getPosicaoY() > this.getPosicaoY()) {
-                    robos.add(robo);
-                }
-            }
-            // Ordena por Y crescente
-            robos.sort(Comparator.comparingInt(Robo::getPosicaoY));
-        } else if (direcao.equals("Sul")) {
-            // Identifica robôs ao sul (mesmo X, Y menor)
-            for (RoboAereo robo : robosAereos) {
-                if (robo.getPosicaoX() == this.getPosicaoX() && robo.getPosicaoY() < this.getPosicaoY()) {
-                    robos.add(robo);
-                }
-                // Ordena por Y decrescente
-                robos.sort(Comparator.comparingInt(Robo::getPosicaoY).reversed());
-            }
-        } else if (direcao.equals("Leste")) {
-            // Identifica robôs ao leste (mesmo Y, X maior)
-            for (RoboAereo robo : robosAereos) {
-                if (robo.getPosicaoY() == this.getPosicaoY() && robo.getPosicaoX() > this.getPosicaoX()) {
-                    robos.add(robo);
-                }
-                // Ordena por X crescente
-                robos.sort(Comparator.comparingInt(Robo::getPosicaoX));
-            }
-        } else if (direcao.equals("Oeste")) {
-            // Identifica robôs ao oeste (mesmo Y, X menor)
-            for (RoboAereo robo : robosAereos) {
-                if (robo.getPosicaoY() == this.getPosicaoY() && robo.getPosicaoX() < this.getPosicaoX()) {
-                    robos.add(robo);
-                }
-                // Ordena por X decrescente
-                robos.sort(Comparator.comparingInt(Robo::getPosicaoX).reversed());
-            }
-        }
-        return robos;
+        return robosEncontrados;
     }
 
-    public ArrayList<Obstaculo> identificarobstaculo(Ambiente ambiente, String direcao) {
-
-        ArrayList<Obstaculo> listaObstaculo = ambiente.getListaObstaculos();
-        ArrayList<Obstaculo> obstaculosVistos = new ArrayList<>();
-
-        if (direcao.equals("Norte")) {
-            for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getX1() <= this.getPosicaoX() && obstaculo.getX2()>=this.getPosicaoX() && obstaculo.getY1() > this.getPosicaoY() && obstaculo.getAltura() >= this.altitude) {
-                    obstaculosVistos.add(obstaculo);
-                }
+    public ArrayList<Obstaculo> identificarobstaculo() {
+        ArrayList<Object> objetosEncontrados = this.sensorRadar.acionar();
+        ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
+        for (Object objectEnc : objetosEncontrados) {
+            if (objectEnc instanceof Obstaculo) {
+                obstaculosEncontrados.add((Obstaculo) objectEnc);
             }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o) -> o.getY1()));
-        } else if (direcao.equals("Sul")) {
-            for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getX1() <= this.getPosicaoX() && obstaculo.getX2()>=this.getPosicaoX() && obstaculo.getY2() < this.getPosicaoY() && obstaculo.getAltura() >= this.altitude) {
-                    obstaculosVistos.add(obstaculo);
-                }
-            }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getY1()).reversed());
-        } else if (direcao.equals("Leste")) {
-            for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getY1() <= this.getPosicaoY() && obstaculo.getY2()>=this.getPosicaoY() && obstaculo.getX1() > this.getPosicaoX() && obstaculo.getAltura() >= this.altitude) {
-                    obstaculosVistos.add(obstaculo);
-                }
-            }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()));
-        } else if (direcao.equals("Oeste")) {
-            for (Obstaculo obstaculo : listaObstaculo) {
-                if (obstaculo.getY1() <= this.getPosicaoY() && obstaculo.getY2()>=this.getPosicaoY() && obstaculo.getX1() < this.getPosicaoX() && obstaculo.getAltura() >= this.altitude) {
-                    obstaculosVistos.add(obstaculo);
-                }
-            }
-            obstaculosVistos.sort(Comparator.comparingInt((Obstaculo o)-> o.getX1()).reversed());
         }
-        return obstaculosVistos;
+        return obstaculosEncontrados;
     }
 
     /**
@@ -328,5 +264,9 @@ public class RoboAereo extends Robo {
     public String exibirPosicao() {
         return String.format("%s está em (%d, %d, %d)", super.getNome(), super.getPosicaoX(), super.getPosicaoY(),
                 this.getAltitude());
+    }
+
+    public Radar getRadar() {
+        return this.sensorRadar;
     }
 }

@@ -165,10 +165,11 @@ public class Ambiente {
                         return new DroneAtaque(nome, direcao, material, posX, posY, velocidade,
                                               altitude, altitudeMaxima, this, municao, alcance);
                     } else { // DroneVigilancia
-                        float alcanceRadar = (Float) atributo[7];
-                        float anguloCamera = (Float) atributo[8];
+                        int alcanceRadar = (int) atributo[7];
+                        int anguloRadar = (int) atributo[8];
+                        float anguloCamera = (Float) atributo[9];
                         return new DroneVigilancia(nome, direcao, material, posX, posY, velocidade,
-                                                 altitude, altitudeMaxima, this, alcanceRadar, anguloCamera);
+                                                 altitude, altitudeMaxima, this, alcanceRadar, anguloRadar, anguloCamera);
                     }
                     
                 default:

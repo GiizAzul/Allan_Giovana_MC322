@@ -14,49 +14,10 @@ public class DroneVigilancia extends RoboAereo {
     private float alcance_radar;
     private float angulo_camera;
 
-    public DroneVigilancia(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente amb, float alc_rad, float ang_cam) {
-        super(nome, dir, m, x, y, vel, h, hmax, amb);
-        this.alcance_radar = alc_rad;
+    public DroneVigilancia(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente amb, int alc_rad, int ang_radar, float ang_cam) {
+        super(nome, dir, m, x, y, vel, h, hmax, amb, alc_rad, ang_radar);
         this.angulo_camera = ang_cam;
         this.camuflado = false;
-    }
-
-    public ArrayList<Robo> identificarRobo(Ambiente ambiente) {
-        // Busca todos os robos que o Radar consegue alcançar com base na posição do
-        // Drone
-        // Sistema de Radar encontra até Drones camuflados
-        // Baseado no alcance do radar do robô
-
-        ArrayList<Robo> robos_ambiente = ambiente.getListaRobos();
-        ArrayList<Robo> encontrados = new ArrayList<>();
-
-        for (Robo robo : robos_ambiente) {
-            if (robo.distanciaRobo(this) < this.alcance_radar) {
-                encontrados.add(robo);
-            }
-        }
-
-        return encontrados;
-
-    }
-
-    public ArrayList<Obstaculo> identificarObstaculo(Ambiente ambiente) {
-        // Busca todos os obstáculos que o Radar consegue alcançar com base na posição
-        // do
-        // Drone
-        // Baseado no alcance do radar do robô
-
-        ArrayList<Obstaculo> obstaculos_ambiente = ambiente.getListaObstaculos();
-        ArrayList<Obstaculo> encontrados = new ArrayList<>();
-
-        for (Obstaculo obstaculo : obstaculos_ambiente) {
-            if (distanciaObstaculo(obstaculo) < this.alcance_radar) {
-                encontrados.add(obstaculo);
-            }
-        }
-
-        return encontrados;
-
     }
 
     public ArrayList<Object> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
