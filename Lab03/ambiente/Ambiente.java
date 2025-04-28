@@ -140,12 +140,12 @@ public class Ambiente {
                     if (subcategoria == 1) { // TanqueGuerra
                         int municaoMax = (Integer) atributo[7];
                         int alcance = (Integer) atributo[8];
-                        return new TanqueGuerra(nome, direcao, material, posX, posY, velocidade,
+                        return new TanqueGuerra(nome, direcao, this, material, posX, posY, velocidade,
                                                 velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
                         int capacidadeMax = (Integer) atributo[7];
                         float pesoMaximo = (Float) atributo[8];
-                        return new Correios(nome, direcao, material, posX, posY, velocidade,
+                        return new Correios(nome, direcao, this, material, posX, posY, velocidade,
                                            velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
                     

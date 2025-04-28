@@ -18,7 +18,7 @@ public class RoboAereo extends Robo {
     private int altitude = -1;        // Altitude atual do robô aéreo
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
     private Barometro sensorBarometro;      // Sensor de pressão atmosférica
-    private Radar sensorRadar;
+    private Radar sensorRadar; // Sensor de radar para detecção de objetos
 
     /**
      * Construtor de RoboAereo

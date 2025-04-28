@@ -1,6 +1,7 @@
 package robos.terrestres;
 import ambiente.Ambiente;
 import robos.aereos.RoboAereo;
+import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
@@ -10,6 +11,7 @@ import robos.geral.Robo;
  */
 public class RoboTerrestre extends Robo {
     private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
+    private Colisao sensorColisao; // Sensor de colisão
 
     /**
      * Construtor de RoboTerrestre
@@ -19,9 +21,10 @@ public class RoboTerrestre extends Robo {
      * @param posicaoY Posição Y inicial
      * @param velocidadeMaxima Velocidade máxima do robô
      */
-    public RoboTerrestre(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
+    public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
         super(nome, direcao, material, posicaoX, posicaoY, velocidade);
         this.velocidadeMaxima = velocidadeMaxima;
+        this.sensorColisao = new Colisao(this, ambiente); // Inicializa o sensor de colisão
     }
 
     /**

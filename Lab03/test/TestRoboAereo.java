@@ -134,7 +134,7 @@ public class TestRoboAereo {
         
         // Criar robôs para teste
         RoboAereo roboAereo = new RoboAereo("DroneA", "Norte", MateriaisRobo.ALUMINIO, 0, 0, 5, 10, 50, ambiente);
-        RoboTerrestre roboTerrestre = new RoboTerrestre("Terrestre", "Sul", MateriaisRobo.ACO, 3, 4, 6, 10);
+        RoboTerrestre roboTerrestre = new RoboTerrestre("Terrestre", "Sul", ambiente, MateriaisRobo.ACO, 3, 4, 6, 10);
         
         // Calculando distância
         double distancia = roboAereo.distanciaRobo(roboTerrestre);

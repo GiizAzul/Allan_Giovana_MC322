@@ -24,8 +24,12 @@ public class TestRoboTerrestre {
     private static void testarConstrutor() {
         System.out.println("\n== Teste do Construtor ==");
         
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 100);
+
         // Teste 1: Criação básica de um robô terrestre
-        RoboTerrestre robo = new RoboTerrestre("Tank01", "Norte", MateriaisRobo.ACO, 5, 5, 7, 10);
+        RoboTerrestre robo = new RoboTerrestre("Tank01", "Norte", ambiente, MateriaisRobo.ACO, 5, 5, 7, 10);
+
         verificar("Nome do robô deve ser Tank01", 
                  robo.getNome().equals("Tank01"));
         verificar("Posição X inicial deve ser 5", 
@@ -53,7 +57,7 @@ public class TestRoboTerrestre {
         Ambiente ambiente = new Ambiente(20, 20, 10);
         
         // Teste 1: Movimento com velocidade dentro do limite
-        RoboTerrestre robo = new RoboTerrestre("Trator", "Leste", MateriaisRobo.ALUMINIO, 0, 0, 5, 10);
+        RoboTerrestre robo = new RoboTerrestre("Trator", "Leste", ambiente, MateriaisRobo.ALUMINIO, 0, 0, 5, 10);
         ambiente.adicionarRobo(robo);
         robo.mover(3, 4, 8, ambiente);
         verificar("Posição X após movimento deve ser 3", 
@@ -67,7 +71,7 @@ public class TestRoboTerrestre {
                  robo.getPosicaoX() == 3 && robo.getPosicaoY() == 4);
         
         // Teste 3: Movimento com obstáculo no caminho
-        RoboTerrestre roboObstaculo = new RoboTerrestre("Obstáculo", "Oeste", MateriaisRobo.PLASTICO, 6, 4, 3, 5);
+        RoboTerrestre roboObstaculo = new RoboTerrestre("Obstáculo", "Oeste", ambiente, MateriaisRobo.PLASTICO, 6, 4, 3, 5);
         ambiente.adicionarRobo(roboObstaculo);
         robo.mover(5, 0, 10, ambiente);
         verificar("Movimento deve parar antes do obstáculo", 
@@ -83,7 +87,7 @@ public class TestRoboTerrestre {
         Ambiente ambiente = new Ambiente(20, 20, 100);
 
         // Teste 1: Alteração da velocidade máxima
-        RoboTerrestre robo = new RoboTerrestre("Escavadora", "Sul", MateriaisRobo.FIBRA_VIDRO, 10, 10, 3, 5);
+        RoboTerrestre robo = new RoboTerrestre("Escavadora", "Sul", ambiente, MateriaisRobo.FIBRA_VIDRO, 10, 10, 3, 5);
         verificar("Velocidade inicial deve ser 3", 
                  robo.getVelocidade() == 3);
         verificar("Velocidade máxima inicial deve ser 5", 
@@ -104,16 +108,18 @@ public class TestRoboTerrestre {
     private static void testarDistanciaEntreRobosTerrestre() {
         System.out.println("\n== Teste de Distância Entre Robôs Terrestres ==");
         
+        Ambiente ambiente = new Ambiente(30, 30, 50);
+
         // Teste 1: Distância entre dois robôs terrestres
-        RoboTerrestre robo1 = new RoboTerrestre("Trator1", "Norte", MateriaisRobo.ACO, 0, 0, 4, 5);
-        RoboTerrestre robo2 = new RoboTerrestre("Trator2", "Sul", MateriaisRobo.ALUMINIO, 3, 4, 6, 8);
+        RoboTerrestre robo1 = new RoboTerrestre("Trator1", "Norte", ambiente, MateriaisRobo.ACO, 0, 0, 4, 5);
+        RoboTerrestre robo2 = new RoboTerrestre("Trator2", "Sul", ambiente, MateriaisRobo.ALUMINIO, 3, 4, 6, 8);
         
         double distancia = robo1.distanciaRobo(robo2);
         verificar("Distância entre dois robôs terrestres deve ser 5.0", 
                  Math.abs(distancia - 5.0) < 0.001);
         
         // Teste 2: Distância entre robôs na mesma posição
-        RoboTerrestre robo3 = new RoboTerrestre("Trator3", "Oeste", MateriaisRobo.PLASTICO, 0, 0, 7, 10);
+        RoboTerrestre robo3 = new RoboTerrestre("Trator3", "Oeste", ambiente, MateriaisRobo.PLASTICO, 0, 0, 7, 10);
         verificar("Distância entre robôs terrestres na mesma posição deve ser 0", 
                  robo1.distanciaRobo(robo3) == 0.0);
     }
@@ -125,7 +131,7 @@ public class TestRoboTerrestre {
         
         // Simulação de robôs para teste
         RoboAereo drone = new RoboAereo("Drone1", "Norte", MateriaisRobo.FIBRA_CARBONO, 3, 4, 4, 10, 50, ambiente);
-        RoboTerrestre trator = new RoboTerrestre("Trator4", "Leste", MateriaisRobo.ACO, 0, 0, 5, 7);
+        RoboTerrestre trator = new RoboTerrestre("Trator4", "Leste", ambiente, MateriaisRobo.ACO, 0, 0, 5, 7);
         
         double distancia = trator.distanciaRobo(drone);
         verificar("Distância 3D entre terrestre e aéreo deve ser aproximadamente 11.66", 
