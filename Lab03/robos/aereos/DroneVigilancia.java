@@ -27,6 +27,11 @@ public class DroneVigilancia extends RoboAereo {
         // Sistema de varredura não encontra drones camuflados
 
         // Move o drone para ficar sobre a região central
+        if (!this.getGPS().isAtivo()) {
+            System.out.println("GPS não está ativo, não é possível varrer a área!");
+            return new ArrayList<>();
+        }
+
         this.mover(centroX - this.getPosicaoX(), centroY - this.getPosicaoY(), ambiente);
 
         // Verifica se a câmera possui abertura para fazer a varredura
