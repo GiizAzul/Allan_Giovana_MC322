@@ -59,8 +59,12 @@ public class RoboTerrestre extends Robo {
      * @return Distância euclidiana 2D
      */
     public double distanciaRobo(RoboTerrestre robo) {
-        return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2)
-                + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
+        if (!this.getGPS().isAtivo()) {
+            return -1;
+        }
+
+        return Math.sqrt(Math.pow(robo.getPosicaoXInterna() - this.getPosicaoX(), 2)
+                + Math.pow(robo.getPosicaoYInterna() - this.getPosicaoY(), 2));
     }
 
     /**
@@ -69,7 +73,11 @@ public class RoboTerrestre extends Robo {
      * @return Distância euclidiana 3D (considerando altitude do robô aéreo)
      */
     public double distanciaRobo(RoboAereo alvo) {
-        return Math.sqrt(Math.pow(alvo.getPosicaoX() - this.getPosicaoX(), 2)
-                + Math.pow(alvo.getPosicaoY() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - 0, 2));
+        if (!this.getGPS().isAtivo()) {
+            return -1;
+        }
+
+        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getPosicaoX(), 2)
+                + Math.pow(alvo.getPosicaoYInterna() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - 0, 2));
     }
 }
