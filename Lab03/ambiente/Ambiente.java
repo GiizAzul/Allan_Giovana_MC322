@@ -186,7 +186,7 @@ public class Ambiente {
      */
     public Object identificarObjetoPosicao(int posX, int posY) {
         for (Robo robo : this.listaRobos) {
-            if (robo.getPosicaoX() == posX && robo.getPosicaoY() == posY) {
+            if (robo.getPosicaoXInterna() == posX && robo.getPosicaoYInterna() == posY) {
                 return robo;
             }
         }
@@ -209,7 +209,7 @@ public class Ambiente {
         for (Robo robo : this.listaRobos) {
             if (robo instanceof RoboAereo) {
                 RoboAereo roboAir = (RoboAereo) robo;
-                if (roboAir.getPosicaoX() == posX && roboAir.getPosicaoY() == posY && roboAir.getAltitude() == posZ) {
+                if (roboAir.getPosicaoXInterna() == posX && roboAir.getPosicaoYInterna() == posY && roboAir.getAltitude() == posZ) {
                     return robo;
                 }
             }

@@ -6,6 +6,7 @@ import ambiente.TipoObstaculo;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.Robo;
+import robos.geral.MateriaisRobo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
 
@@ -76,7 +77,7 @@ public class TestAmbiente {
         Ambiente ambiente = new Ambiente(20, 20, 10);
         
         // Teste de robô terrestre - TanqueGuerra
-        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", 2, 3, 5, 100, 10);
+        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 2, 5, 100, 10);
         verificar("TanqueGuerra deve ser criado com sucesso", 
                  tanque != null && tanque instanceof TanqueGuerra);
         if (tanque != null) {
@@ -85,7 +86,7 @@ public class TestAmbiente {
         }
         
         // Teste de robô terrestre - Correios
-        Robo correio = ambiente.criarRobo(1, 2, "C1", "Sul", 4, 5, 3, 50, 25.0f);
+        Robo correio = ambiente.criarRobo(1, 2, "C1", "Sul", MateriaisRobo.PLASTICO, 4, 5, 1, 3, 50, 25.0f);
         verificar("Correios deve ser criado com sucesso", 
                  correio != null && correio instanceof Correios);
         if (correio != null) {
@@ -94,7 +95,7 @@ public class TestAmbiente {
         }
         
         // Teste de robô aéreo - DroneAtaque
-        Robo droneAtaque = ambiente.criarRobo(2, 1, "DA1", "Leste", 6, 7, 2, 4, 200, 5);
+        Robo droneAtaque = ambiente.criarRobo(2, 1, "DA1", "Leste", MateriaisRobo.FIBRA_CARBONO, 6, 7, 1, 2, 4, 200, 5);
         verificar("DroneAtaque deve ser criado com sucesso", 
                  droneAtaque != null && droneAtaque instanceof DroneAtaque);
         if (droneAtaque != null) {
@@ -103,7 +104,7 @@ public class TestAmbiente {
         }
         
         // Teste de robô aéreo - DroneVigilancia
-        Robo droneVigilancia = ambiente.criarRobo(2, 2, "DV1", "Oeste", 8, 1, 3, 4, 10.5f, 180.0f);
+        Robo droneVigilancia = ambiente.criarRobo(2, 2, "DV1", "Oeste", MateriaisRobo.PLASTICO, 8, 1, 3, 5, 8, 30, 60.0f, 90.0f);
         verificar("DroneVigilancia deve ser criado com sucesso", 
                  droneVigilancia != null && droneVigilancia instanceof DroneVigilancia);
         if (droneVigilancia != null) {
@@ -112,12 +113,12 @@ public class TestAmbiente {
         }
         
         // Teste de criação de robô com parâmetros inválidos
-        Robo roboInvalido = ambiente.criarRobo(1, 1, "X1", "Norte", 25, 25, 5, 100, 10);
+        Robo roboInvalido = ambiente.criarRobo(1, 1, "X1", "Norte", MateriaisRobo.FIBRA_VIDRO, 25, 25, 1, 5, 100, 10);
         verificar("Deve retornar null para robô fora dos limites", 
                  roboInvalido == null);
         
         // Teste de tipo inválido
-        Robo tipoInvalido = ambiente.criarRobo(3, 1, "I1", "Norte", 5, 5, 5, 100, 10);
+        Robo tipoInvalido = ambiente.criarRobo(3, 1, "I1", "Norte", MateriaisRobo.ACO, 5, 5, 1, 5, 100, 10);
         verificar("Deve retornar null para tipo de robô inválido", 
                  tipoInvalido == null);
     }
@@ -127,9 +128,9 @@ public class TestAmbiente {
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
         
-        Robo robo1 = new Robo("R1", "Norte", 1, 1);
-        Robo robo2 = new Robo("R2", "Sul", 2, 2);
-        Robo robo3 = new Robo("R3", "Leste", 3, 3);
+        Robo robo1 = new Robo("R1", "Norte", MateriaisRobo.ACO, 1, 1, 5);
+        Robo robo2 = new Robo("R2", "Sul", MateriaisRobo.ACO, 2, 2, 5);
+        Robo robo3 = new Robo("R3", "Leste", MateriaisRobo.ACO,  3, 3, 5);
         
         // Adicionar robôs
         ambiente.adicionarRobo(robo1);
@@ -147,7 +148,7 @@ public class TestAmbiente {
                  robos.contains(robo3));
         
         // Teste de adição de robô fora dos limites
-        Robo roboFora = new Robo("Fora", "Oeste", 15, 15);
+        Robo roboFora = new Robo("Fora", "Oeste", MateriaisRobo.PLASTICO, 15, 15, 0);
         ambiente.adicionarRobo(roboFora);
         verificar("Não deve adicionar robô fora dos limites", 
                  !ambiente.getListaRobos().contains(roboFora));
@@ -159,10 +160,10 @@ public class TestAmbiente {
         Ambiente ambiente = new Ambiente(10, 10, 5);
         
         // Adicionar robôs em posições conhecidas
-        Robo roboTerrestre = new Robo("RT", "Norte", 2, 3);
+        Robo roboTerrestre = new Robo("RT", "Norte", MateriaisRobo.FIBRA_CARBONO, 2, 3, 5);
         ambiente.adicionarRobo(roboTerrestre);
         
-        DroneAtaque roboAereo = new DroneAtaque("RA", "Leste", 6, 7, 2, 4, 200, 5);
+        DroneAtaque roboAereo = new DroneAtaque("RA", "Leste", MateriaisRobo.PLASTICO, 6, 7, 5, 2, 4, ambiente, 200, 5);
         ambiente.adicionarRobo(roboAereo);
         
         // Teste de identificação 2D
@@ -213,7 +214,7 @@ public class TestAmbiente {
                  !ambiente.getListaObstaculos().contains(obstaculoFora));
         
         // Verificar colisão com obstáculo
-        Robo robo = new Robo("R1", "Norte", 1, 1);
+        Robo robo = new Robo("R1", "Norte", MateriaisRobo.FIBRA_VIDRO, 1, 1, 0);
         ambiente.adicionarRobo(robo);
         
         // Uso do método identificarObjetoPosicao para verificar colisão
