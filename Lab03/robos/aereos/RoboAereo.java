@@ -276,4 +276,8 @@ public class RoboAereo extends Robo {
     public Radar getRadar() {
         return this.sensorRadar;
     }
+
+    public Barometro getBarometro() {
+        return this.sensorBarometro;
+    }
 }

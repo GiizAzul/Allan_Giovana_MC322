@@ -21,6 +21,7 @@ public class TestRoboAereo {
         testarDistanciaEntreRoboAereoTerrestre();
         testarDistanciaEntreRobosAereos();
         testarExibirPosicao();
+        testarBarometro();
         
         System.out.println("\nTodos os testes foram concluídos!");
     }
@@ -167,6 +168,84 @@ public class TestRoboAereo {
         verificar("Exibição de posição deve incluir coordenadas X, Y e Z", 
                  posicao.contains("15") && posicao.contains("25") && posicao.contains("30"));
     }
+
+    private static void testarBarometro() {
+        System.out.println("\n== Teste do Barômetro ==");
+        
+        Ambiente ambiente = new Ambiente(50, 50, 100);
+        
+        // Teste 1: Verificar se o barômetro é criado por padrão em todos os tipos de robôs aéreos
+        RoboAereo roboAereo = new RoboAereo("DroneB", "Norte", MateriaisRobo.ALUMINIO, 10, 10, 5, 20, 80, ambiente);
+        verificar("RoboAereo deve ter um barômetro", 
+                 roboAereo.getBarometro() != null);
+        verificar("Barômetro deve estar ativo por padrão", 
+                 roboAereo.getBarometro().isAtivo());
+        
+        DroneVigilancia droneVigilancia = new DroneVigilancia("Vigilante", "Leste", MateriaisRobo.FIBRA_CARBONO, 
+                                                             20, 20, 8, 50, 150, ambiente, 200, 45, 90.0f);
+        verificar("DroneVigilancia deve ter um barômetro", 
+                 droneVigilancia.getBarometro() != null);
+        
+        DroneAtaque droneAtaque = new DroneAtaque("Atacante", "Sul", MateriaisRobo.ACO, 
+                                                 30, 30, 10, 20, 80, ambiente, 150, 35);
+        verificar("DroneAtaque deve ter um barômetro", 
+                 droneAtaque.getBarometro() != null);
+        
+        // Teste 2: Verificar se o barômetro retorna pressão atmosférica de acordo com a altitude
+        double pressaoInicial = roboAereo.getBarometro().acionar();
+        verificar("Pressão com altitude 20m deve ser menor que 1013.25 hPa", 
+                 pressaoInicial < 1013.25);
+        
+        // Teste 3: Comparar pressão em diferentes altitudes
+        RoboAereo roboAltitude10 = new RoboAereo("Baixo", "Norte", MateriaisRobo.ALUMINIO, 1, 1, 5, 10, 80, ambiente);
+        RoboAereo roboAltitude50 = new RoboAereo("Medio", "Norte", MateriaisRobo.ALUMINIO, 2, 2, 5, 50, 80, ambiente);
+        
+        double pressaoAltitude10 = roboAltitude10.getBarometro().acionar();
+        double pressaoAltitude50 = roboAltitude50.getBarometro().acionar();
+        
+        verificar("Pressão deve diminuir com o aumento da altitude", 
+                 pressaoAltitude10 > pressaoAltitude50);
+        
+        // Teste 4: Verificar mudança de pressão após alteração de altitude do robô
+        double pressaoAntes = roboAereo.getPressao();
+        int altitudeAntes = roboAereo.getAltitude();
+        
+        roboAereo.mover(10, 10, 70, ambiente); // Muda altitude para 70
+        double pressaoDepois = roboAereo.getPressao();
+        int altitudeDepois = roboAereo.getAltitude();
+        
+        verificar("Altitude deve ter aumentado", altitudeDepois > altitudeAntes);
+        verificar("Pressão deve diminuir após aumento de altitude", 
+                 pressaoAntes > pressaoDepois);
+        
+        // Teste 5: Desativar o barômetro e verificar comportamento
+        roboAereo.getBarometro().desativar();
+        verificar("Barômetro desativado deve estar inativo", 
+                 !roboAereo.getBarometro().isAtivo());
+        verificar("getPressao() com barômetro desativado deve retornar -1.0", 
+                 roboAereo.getPressao() == -1.0);
+        
+        // Teste 6: Reativar o barômetro
+        roboAereo.getBarometro().ativar();
+        verificar("Barômetro reativado deve estar ativo", 
+                 roboAereo.getBarometro().isAtivo());
+        verificar("getPressao() com barômetro reativado deve retornar valor positivo", 
+                 roboAereo.getPressao() > 0.0);
+        
+        // Teste 7: Verificar relação entre altitude e pressão em robôs diferentes
+        RoboAereo roboNaAltitude100 = new RoboAereo("Alto", "Norte", MateriaisRobo.ALUMINIO, 3, 3, 5, 100, 150, ambiente);
+        double pressaoAltitude100 = roboNaAltitude100.getBarometro().acionar();
+        
+        verificar("Pressão em 100m deve ser menor que em 50m", 
+                 pressaoAltitude100 < pressaoAltitude50);
+        
+        double razaoAlt10Para50 = pressaoAltitude10 / pressaoAltitude50;
+        double razaoAlt50Para100 = pressaoAltitude50 / pressaoAltitude100;
+        
+        verificar("Relação de pressão deve seguir o mesmo padrão em diferentes altitudes", 
+                 Math.abs(razaoAlt10Para50 - razaoAlt50Para100) < 0.1);
+    }
+
     
     // Método auxiliar para verificação de testes
     private static void verificar(String descricao, boolean condicao) {
