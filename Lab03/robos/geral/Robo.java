@@ -50,7 +50,7 @@ public class Robo {
         this.listaSensores = new ArrayList<>();
         this.listaSensores.add(gps);
     }
-
+    
     /**
      * Move o robô de acordo com o delta especificado
      * 
@@ -64,49 +64,55 @@ public class Robo {
         int destinoY = posicaoY + deltaY > ambiente.getTamY() ? ambiente.getTamY() : posicaoY + deltaY;
 
         // Movimentação em linha reta no eixo X
+        int x = this.posicaoX;
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
-            for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
+            for (x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
                 Object obj = ambiente.identificarObjetoPosicao(x, posicaoY);
                 if (obj != null) {
-                    System.out.print("O robô "+this.nome+" colidiu com o objeto: ");
-                    if (obj instanceof Robo){
-                        System.out.println(((Robo)obj).getNome()+" na posição X:"+x+" Y:"+posicaoY);
-                    }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
-                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
-                        System.out.println("O robô "+this.nome+" caiu no buraco e foi destruido");
+                    if (obj instanceof Obstaculo && ((Obstaculo)obj).getTipo() == TipoObstaculo.BURACO) {
+                        // Tratamento especial para buraco
+                        System.out.println("O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY);
+                        System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
                         ambiente.removerRobo(this);
-                    }else{
-                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+posicaoY);
+                        break;
+                    } else {
+                        // Para outros obstáculos ou robôs, apenas para o movimento
+                        System.out.println("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + x + " Y:" + posicaoY);
+                        
+                        // Ainda pode se movimentar no outro eixo
+                        break;
                     }
-                    return; // Para uma casa antes do obstáculo
                 }
-                this.posicaoX = x;
             }
         }
 
         // Movimentação em linha reta no eixo Y
+        int y = this.posicaoY;
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
-            for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
+            for (y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
                 Object obj = ambiente.identificarObjetoPosicao(posicaoX, y);
                 if (obj != null) {
-                    System.out.print("O robô "+this.nome+" colidiu com o objeto: ");
-                    if (obj instanceof Robo){
-                        System.out.println(((Robo)obj).getNome()+" na posição X:"+posicaoX+" Y:"+y);
-                    }else if(((Obstaculo)obj).getTipo()==TipoObstaculo.BURACO){
-                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);
-                        System.out.println("O robô "+this.nome+" caiu no buraco e foi destruido");
+                    if (obj instanceof Obstaculo && ((Obstaculo)obj).getTipo() == TipoObstaculo.BURACO) {
+                        // Tratamento especial para buraco
+                        System.out.println("O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y);
+                        System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
                         ambiente.removerRobo(this);
-                    }else{
-                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+posicaoX+" Y:"+y);
+                        break;
+                    } else {
+                        // Para outros obstáculos ou robôs, apenas para o movimento
+                        System.out.println("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + posicaoX + " Y:" + y);
+                        break; // Para a movimentação
                     }
-                    return; // Para uma casa antes do obstáculo
                 }
-                this.posicaoY = y;
             }
         }
+        // Atualiza a posição do robô
+        this.posicaoX = x;
+        this.posicaoY = y;
     }
+
 
     /**
      * Retorna uma string com a posição atual do robô

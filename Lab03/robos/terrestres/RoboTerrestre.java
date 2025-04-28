@@ -1,5 +1,6 @@
 package robos.terrestres;
 import ambiente.Ambiente;
+import ambiente.TipoObstaculo;
 import robos.aereos.RoboAereo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
@@ -28,15 +29,62 @@ public class RoboTerrestre extends Robo {
     }
 
     /**
-     * Move o robô terrestre respeitando a velocidade máxima
-     * @param deltaX Deslocamento X
-     * @param deltaY Deslocamento Y
-     * @param vel Velocidade desejada
-     * @param ambiente Ambiente onde o robô se encontra
+     * Move o robô de acordo com o delta especificado
+     * 
+     * @param deltaX Deslocamento na direção X
+     * @param deltaY Deslocamento na direção Y
+     * @param ambiente Ambiente onde o robô está
      */
-    public void mover(int deltaX, int deltaY, int vel, Ambiente ambiente) {
-        if (vel <= velocidadeMaxima) {
-            super.mover(deltaX, deltaY, ambiente);
+    @Override
+    public void mover(int deltaX, int deltaY, Ambiente ambiente) {
+        // Robo Terrestre não precisa do GPS para se movimentar (v*t)
+        int posicaoX = this.getPosicaoXInterna();
+        int posicaoY = this.getPosicaoYInterna();
+
+        // Verifica se o robô está dentro dos limites do ambiente
+        int destinoX = posicaoX + deltaX > ambiente.getTamX() ? ambiente.getTamX() : posicaoX + deltaX;
+        int destinoY = posicaoY + deltaY > ambiente.getTamY() ? ambiente.getTamY() : posicaoY + deltaY;
+
+        // Movimentação em linha reta no eixo X
+        if (deltaX != 0) {
+            int passoX = deltaX > 0 ? 1 : -1;
+            for (int x = posicaoY + passoX; x != destinoX + passoX; x += passoX) {
+                int detectado = sensorColisao.acionar();
+                if (detectado == 1) {
+                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
+                    break; // Para uma casa antes do obstáculo
+                } else if (detectado == 2) {
+                    if (sensorColisao.getUltimoObstaculoColidido().getTipo() == TipoObstaculo.BURACO) {
+                        System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
+                        ambiente.removerRobo(this);
+                    } else {
+                        System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: " + sensorColisao.getUltimoObstaculoColidido().getTipo() + " na posição X:" + x + " Y:" + posicaoY);
+                    }
+                    break; // Para uma casa antes do obstáculo
+                }
+                this.setPosicaoX(x);
+            }
+        }
+
+        // Movimentação em linha reta no eixo Y
+        if (deltaY != 0) {
+            int passoY = deltaY > 0 ? 1 : -1;
+            for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
+                int detectado = sensorColisao.acionar();
+                if (detectado == 1) {
+                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:"+ posicaoX + " Y:" + y);
+                    break; // Para uma casa antes do obstáculo
+                } else if (detectado == 2) {
+                    if (sensorColisao.getUltimoObstaculoColidido().getTipo() == TipoObstaculo.BURACO) {
+                        System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
+                        ambiente.removerRobo(this);
+                    } else {
+                        System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: " + sensorColisao.getUltimoObstaculoColidido().getTipo() + " na posição X:" + posicaoX + " Y:" + y);
+                    }
+                    break; // Para uma casa antes do obstáculo
+                }
+                this.setPosicaoY(y);
+            }
         }
     }
 
@@ -82,5 +130,9 @@ public class RoboTerrestre extends Robo {
 
         return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getPosicaoX(), 2)
                 + Math.pow(alvo.getPosicaoYInterna() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - 0, 2));
+    }
+
+    public Colisao getSensorColisao() {
+        return sensorColisao;
     }
 }

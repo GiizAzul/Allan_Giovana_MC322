@@ -5,8 +5,10 @@ import robos.geral.Robo;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 
-public class Colisao extends Sensor<Boolean> {
+public class Colisao extends Sensor<Integer> {
     private RoboTerrestre robo;
+    private Robo ultimoRoboColidido;
+    private Obstaculo ultimoObstaculoColidido;
     private Ambiente ambiente;
 
     public Colisao(RoboTerrestre robo, Ambiente ambiente) {
@@ -15,7 +17,7 @@ public class Colisao extends Sensor<Boolean> {
         this.ambiente = ambiente;
     }
 
-    public Boolean acionar() {
+    public Integer acionar() {
         int posX = this.robo.getPosicaoXInterna();
         int posY = this.robo.getPosicaoYInterna();
         
@@ -23,16 +25,26 @@ public class Colisao extends Sensor<Boolean> {
         ArrayList<Obstaculo> listaObstaculos = ambiente.getListaObstaculos();
         for (Robo colRobo : listaRobos) {
             if (colRobo != this.robo && colRobo.getPosicaoXInterna() == posX && colRobo.getPosicaoY() == posY) {
-                return true; // Colisão com outro robô
+                this.ultimoRoboColidido = colRobo;
+                return 1; // Colisão com outro robô
             }
         }
         for (Obstaculo obstaculo : listaObstaculos) {
             if (obstaculo.getX1() <= this.robo.getPosicaoX() && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
-                   return true; // Colisão com obstáculo
+                this.ultimoObstaculoColidido = obstaculo;
+                return 2; // Colisão com obstáculo
             }
         }
 
-        return false;
+        return 0; // Sem colisão
+    }
+
+    public Robo getUltimoRoboColidido() {
+        return ultimoRoboColidido;
+    }
+    
+    public Obstaculo getUltimoObstaculoColidido() {
+        return ultimoObstaculoColidido;
     }
 
 }
