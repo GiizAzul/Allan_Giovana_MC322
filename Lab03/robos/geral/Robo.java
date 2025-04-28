@@ -81,7 +81,7 @@ public class Robo {
                     }
                     return; // Para uma casa antes do obstáculo
                 }
-                posicaoX = x;
+                this.posicaoX = x;
             }
         }
 
@@ -103,7 +103,7 @@ public class Robo {
                     }
                     return; // Para uma casa antes do obstáculo
                 }
-                posicaoY = y;
+                this.posicaoY = y;
             }
         }
     }
@@ -321,8 +321,11 @@ public class Robo {
      * @return Distância calculada
      */
     public double distanciaRobo(Robo robo) {
-        return Math.sqrt(Math.pow(robo.getPosicaoX() - this.getPosicaoX(), 2)
-                + Math.pow(robo.getPosicaoY() - this.getPosicaoY(), 2));
+        if (!this.getGPS().isAtivo()) {
+            return -1;
+        }
+        return Math.sqrt(Math.pow(robo.getPosicaoXInterna() - this.getPosicaoX(), 2)
+                + Math.pow(robo.getPosicaoYInterna() - this.getPosicaoY(), 2));
     }
 
     /**
