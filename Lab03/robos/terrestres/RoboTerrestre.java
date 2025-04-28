@@ -35,8 +35,12 @@ public class RoboTerrestre extends Robo {
      * @param deltaY Deslocamento na direção Y
      * @param ambiente Ambiente onde o robô está
      */
-    @Override
-    public void mover(int deltaX, int deltaY, Ambiente ambiente) {
+    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) {
+        if (velocidade> this.velocidadeMaxima) {
+            System.out.println("A velocidade do robô " + this.getNome() + " ultrapassa a velocidade máxima permitida.");
+            return;
+        }
+
         // Robo Terrestre não precisa do GPS para se movimentar (v*t)
         int posicaoX = this.getPosicaoXInterna();
         int posicaoY = this.getPosicaoYInterna();
