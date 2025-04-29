@@ -176,9 +176,7 @@ public class TestRoboTerrestre {
         ambiente.adicionarRobo(roboAlvo);
         
         // Movendo para colidir
-        System.out.println(robo.getPosicaoX() + " " + robo.getPosicaoY()); 
         robo.mover(0, 1, 5, ambiente);
-        System.out.println(robo.getPosicaoX() + " " + robo.getPosicaoY()); 
 
         verificar("Movimento deve ser interrompido antes de colidir", 
                  robo.getPosicaoY() == 5);
