@@ -4,7 +4,6 @@ import ambiente.TipoObstaculo;
 import robos.aereos.RoboAereo;
 import robos.terrestres.RoboTerrestre;
 import robos.geral.MateriaisRobo;
-import robos.geral.Robo;
 
 public class TestRoboTerrestre {
     

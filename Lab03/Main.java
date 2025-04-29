@@ -9,7 +9,6 @@ import robos.aereos.DroneVigilancia;
 import robos.aereos.RoboAereo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
-import robos.terrestres.RoboTerrestre;
 import robos.terrestres.TanqueGuerra;
 
 public class Main {

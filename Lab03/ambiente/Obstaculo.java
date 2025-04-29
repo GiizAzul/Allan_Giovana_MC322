@@ -4,10 +4,10 @@ public class Obstaculo {
     private final int x2;
     private final int y1;
     private final int y2;
-    private final int altura;
+    private int altura;
     private final TipoObstaculo tipo;
     private int integridade;
-    private final boolean indestrutivel;
+    private boolean indestrutivel;
 
     public Obstaculo(TipoObstaculo tipo, int x1, int x2, int y1, int y2) {
         this.tipo = tipo;
