@@ -1,13 +1,13 @@
 package ambiente;
 public class Obstaculo {
-    private int x1;
-    private int x2;
-    private int y1;
-    private int y2;
-    private int altura;
-    private TipoObstaculo tipo;
+    private final int x1;
+    private final int x2;
+    private final int y1;
+    private final int y2;
+    private final int altura;
+    private final TipoObstaculo tipo;
     private int integridade;
-    private boolean indestrutivel;
+    private final boolean indestrutivel;
 
     public Obstaculo(TipoObstaculo tipo, int x1, int x2, int y1, int y2) {
         this.tipo = tipo;

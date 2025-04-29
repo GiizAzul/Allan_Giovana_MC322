@@ -130,7 +130,7 @@ class Obstaculo {
   - y1 : final int
   - y2 : final int
   - altura : final int
-  - tipo : TipoObstaculo
+  - tipo : final TipoObstaculo
   - integridade : int
   - indestrutivel :  final boolean
   + defender(dano : int, ambiente : Ambiente) : String

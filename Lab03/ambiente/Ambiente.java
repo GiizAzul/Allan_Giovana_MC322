@@ -11,9 +11,9 @@ import robos.terrestres.TanqueGuerra;
 
 public class Ambiente {
     // Dimensões do ambiente
-    private int tamX;
-    private int tamY;
-    private int tamZ;
+    private final int tamX;
+    private final int tamY;
+    private final int tamZ;
 
     // Listas para armazenar robôs e obstáculos
     private ArrayList<Robo> listaRobos;
