@@ -136,15 +136,15 @@ public class Ambiente {
             // Criar robô baseado no tipo e subcategoria
             switch (tipo) {
                 case 1: // Robôs terrestres
-                    int velocidadeMaxima = (Integer) atributo[6];
+                    int velocidadeMaxima = (Integer) atributo[5];
                     if (subcategoria == 1) { // TanqueGuerra
-                        int municaoMax = (Integer) atributo[7];
-                        int alcance = (Integer) atributo[8];
+                        int municaoMax = (Integer) atributo[6];
+                        int alcance = (Integer) atributo[7];
                         return new TanqueGuerra(nome, direcao, this, material, posX, posY, velocidade,
                                                 velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
-                        int capacidadeMax = (Integer) atributo[7];
-                        float pesoMaximo = (Float) atributo[8];
+                        int capacidadeMax = (Integer) atributo[6];
+                        float pesoMaximo = (Float) atributo[7];
                         return new Correios(nome, direcao, this, material, posX, posY, velocidade,
                                            velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
