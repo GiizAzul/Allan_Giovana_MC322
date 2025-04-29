@@ -107,9 +107,8 @@ Define altura, integridade, fator de redução do alcançe do sensor radar e ind
 - Inclue Parede, Árvore, Prédio, Buraco e outros
 - O obstáculo Buraco é indestrutível, além de poder ser coberto pelo Correios e destruir qualquer robô que passe por ele
 
-## Ambiente de Simulação
+### Ambiente de Simulação
 A classe `Ambiente` gerencia:
 - Dimensões do espaço simulado
 - Gerenciamento de obstáculos e robôs
-- Interações com o teclado
-- Todas as ações do Simulador
+- Identificação de objetos em determinadas posições
