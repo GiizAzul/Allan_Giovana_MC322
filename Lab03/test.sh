@@ -11,19 +11,19 @@ find . -name "*.java" -not -path "./out/*" -not -name "Main.java" | xargs javac 
 
 echo "===== Executando testes do simulador de robôs ====="
 
-# # Teste da Classe Ambiente
-# echo -e "\n\033[1;34m>> Teste da Classe Ambiente\033[0m"
-# java -cp out TestAmbiente
+# Teste da Classe Ambiente
+echo -e "\n\033[1;34m>> Teste da Classe Ambiente\033[0m"
+java -cp out TestAmbiente
 
-# # Teste da Classe Robo
-# echo -e "\n\033[1;34m>> Teste da Classe Robo\033[0m"
-# java -cp out TestRobo
+# Teste da Classe Robo
+echo -e "\n\033[1;34m>> Teste da Classe Robo\033[0m"
+java -cp out TestRobo
 
-# # Teste da Classe RoboAereo
-# echo -e "\n\033[1;34m>> Teste da Classe RoboAereo\033[0m"
-# java -cp out TestRoboAereo
+# Teste da Classe RoboAereo
+echo -e "\n\033[1;34m>> Teste da Classe RoboAereo\033[0m"
+java -cp out TestRoboAereo
 
-# Teste da Classe RoboTerrestre
+# # Teste da Classe RoboTerrestre
 echo -e "\n\033[1;34m>> Teste da Classe RoboTerrestre\033[0m"
 java -cp out TestRoboTerrestre
 

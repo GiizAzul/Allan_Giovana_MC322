@@ -1,7 +1,10 @@
 import ambiente.Ambiente;
+import ambiente.Obstaculo;
+import ambiente.TipoObstaculo;
 import robos.aereos.RoboAereo;
 import robos.terrestres.RoboTerrestre;
 import robos.geral.MateriaisRobo;
+import robos.geral.Robo;
 
 public class TestRoboTerrestre {
     
@@ -17,6 +20,9 @@ public class TestRoboTerrestre {
         testarAlteracaoVelocidadeMaxima();
         testarDistanciaEntreRobosTerrestre();
         testarDistanciaComRoboAereo();
+        testarSensorColisao();  // Novo teste para o sensor de colisão
+        testarColisaoComObstaculos(); // Novo teste para colisões com obstáculos
+        testarColisaoComBuraco();  // Novo teste para o caso especial de buraco
         
         System.out.println("\nTodos os testes para RoboTerrestre foram concluídos!");
     }
@@ -73,10 +79,12 @@ public class TestRoboTerrestre {
         // Teste 3: Movimento com obstáculo no caminho
         RoboTerrestre roboObstaculo = new RoboTerrestre("Obstáculo", "Oeste", ambiente, MateriaisRobo.PLASTICO, 6, 4, 3, 5);
         ambiente.adicionarRobo(roboObstaculo);
+
         robo.mover(5, 0, 10, ambiente);
-        verificar("Movimento deve parar antes do obstáculo", 
+
+        verificar("Robo deve ocupar uma posição antes do obstáculo", 
                  robo.getPosicaoX() == 5);
-        verificar("Posição Y não deve mudar", 
+        verificar("Posição Y não deve mudar pois ficou parado", 
                  robo.getPosicaoY() == 4);
     }
     
@@ -142,6 +150,114 @@ public class TestRoboTerrestre {
         distancia = trator.distanciaRobo(droneCima);
         verificar("Distância com drone diretamente acima deve ser 10.0", 
                  Math.abs(distancia - 10.0) < 0.001);
+    }
+    
+    private static void testarSensorColisao() {
+        System.out.println("\n== Teste de Sensor de Colisão ==");
+        
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 10);
+        
+        // Teste 1: Verificar se o sensor é inicializado
+        RoboTerrestre robo = new RoboTerrestre("Trator5", "Norte", ambiente, MateriaisRobo.ACO, 5, 5, 5, 10);
+        verificar("Sensor de colisão deve ser inicializado", 
+                 robo.getSensorColisao() != null);
+        verificar("Sensor de colisão deve estar ativo por padrão", 
+                 robo.getSensorColisao().isAtivo());
+        
+        // Teste 2: Detectar sem colisões
+        ambiente.adicionarRobo(robo);
+        int resultadoSemColisao = robo.getSensorColisao().acionar();
+        verificar("Sem objetos próximos, sensor deve retornar 0", 
+                 resultadoSemColisao == 0);
+        
+        // Teste 3: Detectar colisão com outro robô
+        RoboTerrestre roboAlvo = new RoboTerrestre("Alvo", "Sul", ambiente, MateriaisRobo.ALUMINIO, 5, 6, 4, 8);
+        ambiente.adicionarRobo(roboAlvo);
+        
+        // Movendo para colidir
+        System.out.println(robo.getPosicaoX() + " " + robo.getPosicaoY()); 
+        robo.mover(0, 1, 5, ambiente);
+        System.out.println(robo.getPosicaoX() + " " + robo.getPosicaoY()); 
+
+        verificar("Movimento deve ser interrompido antes de colidir", 
+                 robo.getPosicaoY() == 5);
+        verificar("Movimento deve ser interrompido antes de colidir", 
+                 robo.getPosicaoY() < 6);
+        
+        // Teste 4: Verificar objeto colidido
+        robo.getSensorColisao().acionar(); // Acionar sensor para detectar colisão
+        verificar("Último robô colidido deve ser o robô alvo", 
+                 robo.getSensorColisao().getUltimoRoboColidido() == roboAlvo);
+    }
+    
+    private static void testarColisaoComObstaculos() {
+        System.out.println("\n== Teste de Colisão com Obstáculos ==");
+        
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 10);
+        
+        // Cria robô e obstáculos
+        RoboTerrestre robo = new RoboTerrestre("Trator6", "Leste", ambiente, MateriaisRobo.PLASTICO, 5, 5, 5, 10);
+        ambiente.adicionarRobo(robo);
+        
+        // Adiciona obstáculo parede
+        Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 8, 9, 5, 6);
+        ambiente.adicionarObstaculo(parede);
+        
+        // Teste 1: Detecção de obstáculo
+        robo.mover(3, 0, 5, ambiente);
+        verificar("Movimento deve parar antes do obstáculo", 
+                 robo.getPosicaoX() == 7);
+        verificar("Posição Y não deve mudar", 
+                 robo.getPosicaoY() == 5);
+        
+        // Forçar acionar o sensor
+        // Sensor só é acionado quando o robô está com a mesma coordenada
+        // do obstáculo, então o mover retrocede o robô para a posição
+        int tipoColisao = robo.getSensorColisao().acionar();
+        verificar("Sensor não deve detectar obstáculo", 
+                 tipoColisao == 0);
+        
+        // Teste 2: Colisão em outra direção
+        Obstaculo predio = new Obstaculo(TipoObstaculo.PREDIO, 5, 6, 1, 3);
+        ambiente.adicionarObstaculo(predio);
+        
+        // Em vez de usar setPosicaoX/Y (protected), remover o robô antigo e criar um novo
+        ambiente.removerRobo(robo);
+        RoboTerrestre novoRobo = new RoboTerrestre("Trator6-B", "Leste", ambiente, MateriaisRobo.PLASTICO, 5, 1, 5, 10);
+        ambiente.adicionarRobo(novoRobo);
+        
+        // Usar o novo robô para o teste
+        novoRobo.mover(0, 2, 5, ambiente);
+        verificar("Movimento no eixo Y deve detectar obstáculo", 
+                 novoRobo.getPosicaoY() == 1);
+    }
+    
+    private static void testarColisaoComBuraco() {
+        System.out.println("\n== Teste de Colisão com Buraco ==");
+        
+        // Configuração do ambiente
+        Ambiente ambiente = new Ambiente(20, 20, 10);
+        
+        // Cria robô e buraco
+        RoboTerrestre robo = new RoboTerrestre("Trator7", "Norte", ambiente, MateriaisRobo.FIBRA_VIDRO, 5, 5, 5, 10);
+        ambiente.adicionarRobo(robo);
+        
+        // Adiciona um buraco
+        Obstaculo buraco = new Obstaculo(TipoObstaculo.BURACO, 5, 6, 7, 8);
+        ambiente.adicionarObstaculo(buraco);
+        
+        // Verifica que o robô está no ambiente antes do movimento
+        verificar("Robô deve estar no ambiente antes de cair no buraco", 
+                 ambiente.getListaRobos().contains(robo));
+        
+        // Tenta mover para o buraco
+        robo.mover(0, 3, 5, ambiente);
+        
+        // Verifica que o robô foi removido do ambiente
+        verificar("Robô deve ser removido do ambiente após cair no buraco", 
+                 !ambiente.getListaRobos().contains(robo));
     }
     
     // Método auxiliar para verificação de testes

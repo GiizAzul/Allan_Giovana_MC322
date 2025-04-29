@@ -52,8 +52,11 @@ public class RoboTerrestre extends Robo {
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
-            for (int x = posicaoY + passoX; x != destinoX + passoX; x += passoX) {
-                int detectado = sensorColisao.acionar();
+            int x = 0;
+            int detectado = 0;
+            for (x = posicaoY + passoX; x != destinoX + passoX; x += passoX) {
+                this.setPosicaoX(x);
+                detectado = sensorColisao.acionar();
                 if (detectado == 1) {
                     System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
                     break; // Para uma casa antes do obstáculo
@@ -66,15 +69,19 @@ public class RoboTerrestre extends Robo {
                     }
                     break; // Para uma casa antes do obstáculo
                 }
-                this.setPosicaoX(x);
+            }
+            if (detectado != 0) {
+                this.setPosicaoX(x - passoX); // Corrige a posição do robô
             }
         }
 
         // Movimentação em linha reta no eixo Y
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
-            for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
-                int detectado = sensorColisao.acionar();
+            int y = 0, detectado = 0;
+            for (y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
+                this.setPosicaoY(y);
+                detectado = sensorColisao.acionar();
                 if (detectado == 1) {
                     System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:"+ posicaoX + " Y:" + y);
                     break; // Para uma casa antes do obstáculo
@@ -87,7 +94,9 @@ public class RoboTerrestre extends Robo {
                     }
                     break; // Para uma casa antes do obstáculo
                 }
-                this.setPosicaoY(y);
+            }
+            if (detectado != 0) {
+                this.setPosicaoY(y - passoY); // Corrige a posição do robô
             }
         }
     }
