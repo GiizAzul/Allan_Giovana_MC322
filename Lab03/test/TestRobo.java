@@ -61,6 +61,7 @@ public class TestRobo {
         Robo robo = new Robo("Geraldinho", "Leste", MateriaisRobo.ALUMINIO, 0, 0, 5);
         ambiente.adicionarRobo(robo);
         robo.mover(3, 4, ambiente);
+
         verificar("Posição X após movimento sem obstáculos deve ser 3", 
                  robo.getPosicaoX() == 3);
         verificar("Posição Y após movimento sem obstáculos deve ser 4", 
@@ -70,6 +71,7 @@ public class TestRobo {
         Robo roboObstaculo = new Robo("Obstáculo", "Oeste", MateriaisRobo.ACO, 5, 4, 3);
         ambiente.adicionarRobo(roboObstaculo);
         robo.mover(5, 0, ambiente);
+        System.out.println(robo.getPosicaoX());
         verificar("Movimento deve parar antes do obstáculo", 
                  robo.getPosicaoX() == 4);
         verificar("Posição Y não deve mudar", 
@@ -258,24 +260,39 @@ public class TestRobo {
         
         // Tentar mover robo1 para colidir com robo2
         robo1.mover(5, 0, ambiente);
-        
-        // Corrigido para usar getPosicaoXInterna diretamente para validação do teste 
-        // já que o movimento ocorre mesmo com GPS desativado
         verificar("Movimento deve parar antes da colisão", 
-                robo1.getPosicaoXInterna() == 7);
+                robo1.getPosicaoX() == 7);
+        verificar("Posição Y não deve mudar", 
+                robo1.getPosicaoY() == 5);
+        
+        // Teste para movimento no eixo Y após bloqueio no eixo X
+        robo1.mover(5, 3, ambiente);
+        verificar("Movimento em X deve ser bloqueado mas permitido em Y", 
+                robo1.getPosicaoX() == 7 && robo1.getPosicaoY() == 8);
         
         // Testar colisão com obstáculo
-        Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 5, 8, 5, 10);
+        Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 5, 12, 9, 13);
         ambiente.adicionarObstaculo(parede);
         
-        robo1.mover(0, 5, ambiente);
+        robo1.mover(0, 10, ambiente);
         verificar("Movimento deve parar antes do obstáculo", 
-                robo1.getPosicaoYInterna() == 5);
+                robo1.getPosicaoY() == 8);
+        
+        // Testar movimento diagonal com bloqueio parcial
+        Obstaculo predio = new Obstaculo(TipoObstaculo.PREDIO, 3, 4, 4, 10);
+        ambiente.adicionarObstaculo(predio);
+        
+        // Criar novo robô para teste de movimento diagonal
+        Robo robo3 = new Robo("Robo3", "Leste", MateriaisRobo.FIBRA_VIDRO, 5, 9, 6);
+        ambiente.adicionarRobo(robo3);
+        
+        // Tentar movimento diagonal (bloqueado em X, livre em Y)
+        robo3.mover(-3, -2, ambiente);
+        verificar("Com obstáculo em X, movimento deve ocorrer apenas em Y", 
+                robo3.getPosicaoX() == 5 && robo3.getPosicaoY() == 7);
         
         // Desativar GPS para testar movimento sem GPS
         robo1.getGPS().desativar();
-        
-        // Posição atual do robô sem GPS
         verificar("GPS desativado deve retornar -1", 
                 robo1.getPosicaoX() == -1);
                 
@@ -285,15 +302,25 @@ public class TestRobo {
         // Reativa GPS para consultar posições
         robo1.getGPS().ativar();
         verificar("Movimento sem GPS deve funcionar corretamente", 
-                robo1.getPosicaoY() == 3);
-        
+                robo1.getPosicaoY() == 6);
+ 
+        // Novo ambiente para testar colisão com buraco
+        Ambiente ambienteBuraco = new Ambiente(20, 20, 10);
+
         // Testar colisão com buraco
         Obstaculo buraco = new Obstaculo(TipoObstaculo.BURACO, 1, 1, 3, 3);
-        ambiente.adicionarObstaculo(buraco);
+        ambienteBuraco.adicionarObstaculo(buraco);
         
-        robo1.mover(-10, 0, ambiente);
+        // Novo robô para teste de buraco
+        Robo roboBuraco = new Robo("RoboBuraco", "Norte", MateriaisRobo.ACO, 2, 2, 5);
+        ambienteBuraco.adicionarRobo(roboBuraco);
+
+        verificar("Robô deve estar no ambiente antes do teste", 
+                ambienteBuraco.getListaRobos().contains(roboBuraco));
+        
+        roboBuraco.mover(-1, 1, ambienteBuraco);
         verificar("Robô deve ser removido do ambiente após cair em buraco", 
-                !ambiente.getListaRobos().contains(robo1));
+                !ambienteBuraco.getListaRobos().contains(roboBuraco));
     }
 
     private static void testarExibirPosicao() {

@@ -58,16 +58,16 @@ public class Robo {
      * @param deltaY Deslocamento na direção Y
      * @param ambiente Ambiente onde o robô está
      */
+    
     public void mover(int deltaX, int deltaY, Ambiente ambiente) {
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = posicaoX + deltaX > ambiente.getTamX() ? ambiente.getTamX() : posicaoX + deltaX;
         int destinoY = posicaoY + deltaY > ambiente.getTamY() ? ambiente.getTamY() : posicaoY + deltaY;
 
         // Movimentação em linha reta no eixo X
-        int x = this.posicaoX;
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
-            for (x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
+            for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
                 Object obj = ambiente.identificarObjetoPosicao(x, posicaoY);
                 if (obj != null) {
                     if (obj instanceof Obstaculo && ((Obstaculo)obj).getTipo() == TipoObstaculo.BURACO) {
@@ -84,14 +84,14 @@ public class Robo {
                         break;
                     }
                 }
+                posicaoX = x; // Atualiza a posição X antes da colisão
             }
         }
-
+        
         // Movimentação em linha reta no eixo Y
-        int y = this.posicaoY;
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
-            for (y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
+            for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
                 Object obj = ambiente.identificarObjetoPosicao(posicaoX, y);
                 if (obj != null) {
                     if (obj instanceof Obstaculo && ((Obstaculo)obj).getTipo() == TipoObstaculo.BURACO) {
@@ -106,11 +106,9 @@ public class Robo {
                         break; // Para a movimentação
                     }
                 }
+                posicaoY = y; // Atualiza a posição Y antes da colisão
             }
         }
-        // Atualiza a posição do robô
-        this.posicaoX = x;
-        this.posicaoY = y;
     }
 
 
