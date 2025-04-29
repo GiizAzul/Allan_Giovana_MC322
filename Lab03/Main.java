@@ -34,7 +34,7 @@ public class Main {
                 tamX, tamY, tamZ);
         System.out.println(mensagem);
 
-        Object[] atributos = new Object[8];
+        Object[] atributos = new Object[10];
         ArrayList<Robo> listaRobo;
 
         while (true) {
@@ -167,40 +167,45 @@ public class Main {
                     System.out.println();
 
                     do {
-                        System.out.print("Altura Máxima (não pode ultrapassar " + ambiente.getTamZ() + "): ");
+                        System.out.print("Velocidade Máxima: ");
                         atributos[5] = scanner.nextInt();
-                    } while ((Integer) atributos[5] > ambiente.getTamZ() || (Integer) atributos[5] <= 0);
+                    } while ((Integer) atributos[5] < 0);
+
+                    do {
+                        System.out.print("Altura Máxima (não pode ultrapassar " + ambiente.getTamZ() + "): ");
+                        atributos[7] = scanner.nextInt();
+                    } while ((Integer) atributos[7] > ambiente.getTamZ() || (Integer) atributos[7] <= 0);
 
                     do {
                         System.out.print("Altura Inicial (Menor do que Altura Máxima): ");
-                        atributos[4] = scanner.nextInt();
-                    } while ((Integer) atributos[4] > ambiente.getTamZ()
-                            || (Integer) atributos[4] > (Integer) atributos[5]
-                            || (Integer) atributos[4] <= 0);
+                        atributos[6] = scanner.nextInt();
+                    } while ((Integer) atributos[6] > ambiente.getTamZ()
+                            || (Integer) atributos[6] > (Integer) atributos[7]
+                            || (Integer) atributos[6] <= 0);
 
                     if (categoria == 1) {
                         // Atributos específicos do Drone de Ataque
                         do {
                             System.out.print("Munição: ");
-                            atributos[6] = scanner.nextInt();
-                        } while ((Integer) atributos[6] < 0);
+                            atributos[8] = scanner.nextInt();
+                        } while ((Integer) atributos[8] < 0);
 
                         do {
                             System.out.print("Alcance: ");
-                            atributos[7] = scanner.nextInt();
-                        } while ((Integer) atributos[7] < 0);
+                            atributos[9] = scanner.nextInt();
+                        } while ((Integer) atributos[9] < 0);
 
                     } else if (categoria == 2) {
                         // Atributos específicos do Drone de Vigilância
                         do {
                             System.out.print("Alcance do Radar (número decimal, use ponto): ");
-                            atributos[6] = scanner.nextFloat();
-                        } while ((Float) atributos[6] < 0);
+                            atributos[7] = scanner.nextFloat();
+                        } while ((Float) atributos[7] < 0);
 
                         do {
                             System.out.print("Ângulo de abertura da câmera (graus, número decimal): ");
-                            atributos[7] = scanner.nextFloat();
-                        } while ((Float) atributos[7] < 0);
+                            atributos[8] = scanner.nextFloat();
+                        } while ((Float) atributos[8] < 0);
                     }
                     ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
                     Main.limparTerminal();
