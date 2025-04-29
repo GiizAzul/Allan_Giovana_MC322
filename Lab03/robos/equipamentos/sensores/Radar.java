@@ -46,7 +46,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
         return resultado;
     }
 
-    public boolean verificacaoObstaculo(Obstaculo obstaculo) {
+    private boolean verificacaoObstaculo(Obstaculo obstaculo) {
         float xObstaculo = (obstaculo.getX1() + obstaculo.getX2()) / 2;
         float yObstaculo = (obstaculo.getY1() + obstaculo.getY2()) / 2;
         float zObstaculo = 0; // Por padrão
@@ -58,7 +58,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
 
     }
 
-    public boolean verificacaoRobo(Robo roboAmbiente) {
+    private boolean verificacaoRobo(Robo roboAmbiente) {
         int xRoboAmbiente = roboAmbiente.getPosicaoXInterna();
         int yRoboAmbiente = roboAmbiente.getPosicaoYInterna();
         int zRoboAmbiente = 0;
