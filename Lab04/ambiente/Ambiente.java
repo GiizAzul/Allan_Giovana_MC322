@@ -1,13 +1,14 @@
 package ambiente;
+
 import java.util.ArrayList;
 
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
-import robos.aereos.RoboAereo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
+import interfaces.*;
 
 public class Ambiente {
     // Dimensões do ambiente
@@ -48,12 +49,12 @@ public class Ambiente {
      * Adiciona um robô ao ambiente
      */
     public void adicionarRobo(Robo robo) {
-        if (this.dentroDosLimites(robo.getPosicaoX(), robo.getPosicaoY())) {
+        if (this.dentroDosLimites(robo.getX(), robo.getY(), robo.getZ())) {
             listaRobos.add(robo);
         }
     }
 
-    public void removerRobo(Robo robo){
+    public void removerRobo(Robo robo) {
         listaRobos.remove(robo);
     }
 
@@ -68,14 +69,14 @@ public class Ambiente {
      * Adiciona um obstáculo ao ambiente
      */
     public void adicionarObstaculo(Obstaculo obstaculo) {
-        if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) && 
-            this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
+        if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) &&
+                this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
             listaObstaculos.add(obstaculo);
         }
-            
+
     }
 
-    public void removerObstaculo(Obstaculo obstaculo){
+    public void removerObstaculo(Obstaculo obstaculo) {
         listaObstaculos.remove(obstaculo);
     }
 
@@ -101,9 +102,11 @@ public class Ambiente {
 
     /**
      * Cria um robô baseado no tipo e subcategoria
-     * @param tipo Tipo de robô (1: Terrestre, 2: Aéreo)
-     * @param subcategoria Subtipo do robô (1: TanqueGuerra/DroneAtaque, 2: Correios/DroneVigilancia)
-     * @param atributo Array de atributos específicos para cada tipo de robô
+     * 
+     * @param tipo         Tipo de robô (1: Terrestre, 2: Aéreo)
+     * @param subcategoria Subtipo do robô (1: TanqueGuerra/DroneAtaque, 2:
+     *                     Correios/DroneVigilancia)
+     * @param atributo     Array de atributos específicos para cada tipo de robô
      * @return Instância de Robo criada ou null se houver algum problema
      */
     public Robo criarRobo(int tipo, int subcategoria, Object... atributo) {
@@ -112,7 +115,7 @@ public class Ambiente {
             System.out.println("Tipo ou subcategoria inválidos");
             return null;
         }
-        
+
         try {
             // Extrair parâmetros comuns
             String nome = (String) atributo[0];
@@ -120,19 +123,20 @@ public class Ambiente {
             MateriaisRobo material = (MateriaisRobo) atributo[2];
             int posX = (Integer) atributo[3];
             int posY = (Integer) atributo[4];
-            int velocidade = (Integer) atributo[5];
-            
+            int posZ = (Integer) atributo[5];
+            int velocidade = (Integer) atributo[6];
+
             // Verificar se a posição está dentro dos limites
             if (!dentroDosLimites(posX, posY)) {
                 System.out.println("Posição fora dos limites do ambiente");
                 return null;
             }
 
-            if (identificarObjetoPosicao(posX, posY)!=null){
+            if (identificarObjetoPosicao(posX, posY, posZ) != null) {
                 System.out.println("Já existe um objeto nesta posição");
                 return null;
             }
-            
+
             // Criar robô baseado no tipo e subcategoria
             switch (tipo) {
                 case 1: // Robôs terrestres
@@ -141,37 +145,37 @@ public class Ambiente {
                         int municaoMax = (Integer) atributo[6];
                         int alcance = (Integer) atributo[7];
                         return new TanqueGuerra(nome, direcao, this, material, posX, posY, velocidade,
-                                                velocidadeMaxima, municaoMax, alcance);
+                                velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
                         int capacidadeMax = (Integer) atributo[6];
                         float pesoMaximo = (Float) atributo[7];
                         return new Correios(nome, direcao, this, material, posX, posY, velocidade,
-                                           velocidadeMaxima, capacidadeMax, pesoMaximo);
+                                velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
-                    
+
                 case 2: // Robôs aéreos
                     int altitude = (Integer) atributo[6];
                     int altitudeMaxima = (Integer) atributo[7];
-                    
+
                     // Verificar se altitude está dentro dos limites
                     if (!dentroDosLimites(posX, posY, altitude)) {
                         System.out.println("Altitude fora dos limites do ambiente");
                         return null;
                     }
-                    
+
                     if (subcategoria == 1) { // DroneAtaque
                         int municao = (Integer) atributo[8];
                         int alcance = (Integer) atributo[9];
                         return new DroneAtaque(nome, direcao, material, posX, posY, velocidade,
-                                              altitude, altitudeMaxima, this, municao, alcance);
+                                altitude, altitudeMaxima, this, municao, alcance);
                     } else { // DroneVigilancia
                         int alcanceRadar = (int) atributo[7];
                         int anguloRadar = (int) atributo[8];
                         float anguloCamera = (Float) atributo[9];
                         return new DroneVigilancia(nome, direcao, material, posX, posY, velocidade,
-                                                 altitude, altitudeMaxima, this, alcanceRadar, anguloRadar, anguloCamera);
+                                altitude, altitudeMaxima, this, alcanceRadar, anguloRadar, anguloCamera);
                     }
-                    
+
                 default:
                     return null;
             }
@@ -182,40 +186,19 @@ public class Ambiente {
     }
 
     /**
-     * Identifica um objeto na posição 2D específica (no plano do solo)
-     */
-    public Object identificarObjetoPosicao(int posX, int posY) {
-        for (Robo robo : this.listaRobos) {
-            if (robo.getPosicaoXInterna() == posX && robo.getPosicaoYInterna() == posY) {
-                return robo;
-            }
-        }
-        for (Obstaculo obstaculo : this.listaObstaculos) {
-            if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
-                return obstaculo;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Identifica um objeto na posição 3D específica
      * Se posZ for 0, busca no plano do solo
      */
-    public Object identificarObjetoPosicao(int posX, int posY, int posZ) {
-        if (posZ == 0) {
-            return this.identificarObjetoPosicao(posX, posY);
-        }
+    public Entidade identificarObjetoPosicao(int posX, int posY, int posZ) {
         for (Robo robo : this.listaRobos) {
-            if (robo instanceof RoboAereo) {
-                RoboAereo roboAir = (RoboAereo) robo;
-                if (roboAir.getPosicaoXInterna() == posX && roboAir.getPosicaoYInterna() == posY && roboAir.getAltitude() == posZ) {
-                    return robo;
-                }
+            if (robo.getPosicaoXInterna() == posX && robo.getPosicaoYInterna() == posY && robo.getZ() == posZ) {
+                return robo;
             }
+
         }
         for (Obstaculo obstaculo : this.listaObstaculos) {
-            if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY && obstaculo.getY2() >= posY && obstaculo.getAltura()>= posZ) {
+            if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY
+                    && obstaculo.getY2() >= posY && obstaculo.getAltura() >= posZ) {
                 return obstaculo;
             }
         }

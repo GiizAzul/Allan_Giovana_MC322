@@ -49,9 +49,9 @@ public class DroneAtaque extends RoboAereo {
         }
 
         // Verifica se alvo está no alcance
-        int dX = this.getPosicaoX() - alvoX;
-        int dY = this.getPosicaoY() - alvoY;
-        int dZ = this.getAltitude() - alvoZ;
+        int dX = this.getX() - alvoX;
+        int dY = this.getY() - alvoY;
+        int dZ = this.getZ() - alvoZ;
 
         return executarTiro(dX, dY, dZ, alvoX, alvoY, alvoZ, nTiros, ambiente);
 
@@ -64,10 +64,10 @@ public class DroneAtaque extends RoboAereo {
         }
 
         // Verifica se alvo está no alcance
-        int dX = this.getPosicaoX() - alvoX;
-        int dY = this.getPosicaoY() - alvoY;
+        int dX = this.getX() - alvoX;
+        int dY = this.getY() - alvoY;
 
-        return executarTiro(dX, dY, this.getAltitude(), alvoX, alvoY, 0, nTiros, ambiente);
+        return executarTiro(dX, dY, this.getZ(), alvoX, alvoY, 0, nTiros, ambiente);
 
     }
 
@@ -77,11 +77,11 @@ public class DroneAtaque extends RoboAereo {
         }
 
         if (robo instanceof RoboTerrestre) {
-            String result = this.atirar(robo.getPosicaoX(), robo.getPosicaoY(), nTiros, ambiente);
+            String result = this.atirar(robo.getX(), robo.getY(), nTiros, ambiente);
             return result;
         } else if (robo instanceof RoboAereo) {
             RoboAereo roboAereo = (RoboAereo) robo;
-            String result = this.atirar(roboAereo.getPosicaoX(), roboAereo.getPosicaoY(), roboAereo.getAltitude(),
+            String result = this.atirar(roboAereo.getX(), roboAereo.getY(), roboAereo.getZ(),
                     nTiros, ambiente);
             return result;
         } else {

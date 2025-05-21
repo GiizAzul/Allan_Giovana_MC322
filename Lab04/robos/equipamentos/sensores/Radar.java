@@ -3,6 +3,7 @@ package robos.equipamentos.sensores;
 import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import interfaces.Entidade;
 import robos.geral.Robo;
 import robos.aereos.RoboAereo;
 
@@ -10,10 +11,10 @@ import robos.aereos.RoboAereo;
  * Classe que implementa um sensor de Radar para robôs aéreos.
  * O Radar é capaz de detectar tanto obstáculos quanto outros robôs em um determinado
  * raio de alcance e ângulo de abertura a partir da posição do robô equipado.
- * Estende a classe Sensor com tipo parametrizado ArrayList<Object> para retornar
+ * Estende a classe Sensor com tipo parametrizado ArrayList<Entidade> para retornar
  * os objetos detectados.
  */
-public class Radar extends Sensor<ArrayList<Object>> {
+public class Radar extends Sensor<ArrayList<Entidade>> {
     private RoboAereo robo;         // Robô aéreo ao qual o radar está acoplado
     private Ambiente ambiente;      // Ambiente onde o radar realiza a detecção
     private int raioAlcance;        // Alcance máximo do radar em unidades de distância
@@ -44,7 +45,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
      * 
      * @return ArrayList contendo todos os objetos (obstáculos e robôs) detectados pelo radar
      */
-    public ArrayList<Object> acionar() {
+    public ArrayList<Entidade> acionar() {
         ArrayList<Obstaculo> obstaculosAmbiente = ambiente.getListaObstaculos();
         ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
         
@@ -65,7 +66,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
         }
 
         // Combina os resultados em uma única lista
-        ArrayList<Object> resultado = new ArrayList<Object>();
+        ArrayList<Entidade> resultado = new ArrayList<Entidade>();
         resultado.addAll(obstaculosEncontrados);
         resultado.addAll(robosEncontrados);
         
@@ -103,12 +104,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
         // Obtém a posição do robô no ambiente
         int xRoboAmbiente = roboAmbiente.getPosicaoXInterna();
         int yRoboAmbiente = roboAmbiente.getPosicaoYInterna();
-        int zRoboAmbiente = 0;
-        
-        // Se for um robô aéreo, considera também sua altitude
-        if (roboAmbiente instanceof RoboAereo) {
-            zRoboAmbiente = ((RoboAereo) roboAmbiente).getAltitude();
-        } 
+        int zRoboAmbiente = roboAmbiente.getZ();
 
         // Verifica se o robô está visível - robôs camuflados não são detectados
         if (!roboAmbiente.getVisivel()) {
@@ -161,7 +157,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
         double r = this.getDistanciaPontoRadar2D(pontoRotacionado[0], pontoRotacionado[1]);
         
         // Calcula o ângulo vertical entre o robô e o objeto
-        double anguloObjeto = Math.atan((this.robo.getAltitude() - z) / (r));
+        double anguloObjeto = Math.atan((this.robo.getZ() - z) / (r));
         
         // Verifica se o ângulo está dentro do ângulo de abertura do radar
         if (Math.abs(anguloObjeto) > this.anguloAlcance) {
@@ -196,7 +192,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
      * @return Distância 2D entre o robô e o ponto
      */
     public double getDistanciaPontoRadar2D(double x, double y) {
-        return Math.sqrt(Math.pow(x - robo.getPosicaoX(), 2) + Math.pow(y - robo.getPosicaoY(), 2));
+        return Math.sqrt(Math.pow(x - robo.getX(), 2) + Math.pow(y - robo.getY(), 2));
     }
 
     /**
@@ -208,7 +204,7 @@ public class Radar extends Sensor<ArrayList<Object>> {
      * @return Distância 3D entre o robô e o ponto
      */
     public double getDistanciaPontoRadar3D(double x, double y, double z) {
-        return Math.sqrt(Math.pow(x - robo.getPosicaoX(), 2) + Math.pow(y - robo.getPosicaoY(), 2) + Math.pow(z - robo.getAltitude(), 2));
+        return Math.sqrt(Math.pow(x - robo.getX(), 2) + Math.pow(y - robo.getY(), 2) + Math.pow(z - robo.getZ(), 2));
     }
 
     /**

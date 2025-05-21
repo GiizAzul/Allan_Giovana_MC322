@@ -1,6 +1,4 @@
 package robos.equipamentos.sensores;
-
-import robos.aereos.RoboAereo;
 import robos.geral.Robo;
 
 public class Barometro extends Sensor<Double> {
@@ -47,7 +45,7 @@ public class Barometro extends Sensor<Double> {
             return -1.0; // Código de erro: sensor inativo
         }   
         
-        double alt = robo instanceof RoboAereo ? ((RoboAereo) robo).getAltitude() : 0.0;
+        double alt = robo.getZ();
         this.pressaoAtmosferica = 1013.25 * Math.pow(1 - (0.0065 * alt) / 288.15, 5.25588);
         return this.pressaoAtmosferica;
     }

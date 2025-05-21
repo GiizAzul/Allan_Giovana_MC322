@@ -32,11 +32,11 @@ public class DroneVigilancia extends RoboAereo {
             return new ArrayList<>();
         }
 
-        this.mover(centroX - this.getPosicaoX(), centroY - this.getPosicaoY(), ambiente);
+        this.mover(centroX - this.getX(), centroY - this.getY(), ambiente);
 
         // Verifica se a câmera possui abertura para fazer a varredura
         double ang_rad = Math.toRadians(this.angulo_camera);
-        if (raio > this.getAltitude() * Math.tan(ang_rad / 2)) {
+        if (raio > this.getZ() * Math.tan(ang_rad / 2)) {
             System.out.println("Não é possível varrer tal raio com a câmera atual!");
             return new ArrayList<>();
         }
@@ -46,14 +46,14 @@ public class DroneVigilancia extends RoboAereo {
         ArrayList<Object> objetos_encontrados = new ArrayList<>();
         for (Robo robo : lista_robos) {
             double distancia = robo.distanciaRobo(this);
-            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getAltitude(), 2))) {
+            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {
                 continue;
             }
 
-            double hMax = this.getAltitude() - distancia * Math.cos(ang_rad);
+            double hMax = this.getZ() - distancia * Math.cos(ang_rad);
             if (robo instanceof RoboAereo) {
                 RoboAereo roboAereo = (RoboAereo) robo;
-                if (roboAereo.getAltitude() > hMax) {
+                if (roboAereo.getZ() > hMax) {
                     // Fora da região de visualização da câmera
                     continue;
                 }
@@ -71,7 +71,7 @@ public class DroneVigilancia extends RoboAereo {
 
         for (Obstaculo obstaculo : lista_obstaculos) {
             double distancia = distanciaObstaculo(obstaculo);
-            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getAltitude(), 2))) {
+            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {
                 continue;
             }
 

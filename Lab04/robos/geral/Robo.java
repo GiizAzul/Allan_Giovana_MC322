@@ -1,25 +1,29 @@
 package robos.geral;
+
 import java.util.ArrayList;
 
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
+import interfaces.*;
 
 /**
  * Classe que representa um robô com funcionalidades básicas de movimento e
  * sensoriamento.
  */
-public class Robo {
+public class Robo implements Entidade {
     // Propriedades
     private String nome; // Nome do robô
     private String direcao; // Direção atual do robô (Norte, Sul, Leste, Oeste)
     private int posicaoX; // Coordenada X da posição do robô
     private int posicaoY; // Coordenada Y da posição do robô
+    private int posicaoZ;
     private int integridade; // Nível de integridade do robô (0-100)
     private int velocidade; // Velocidade do robô
     private boolean operando; // Estado de operação do robô (true = operando, false = inoperante)
     private MateriaisRobo material; // Material do robô
+    private TipoEntidade tipo;
 
     // Lista de sensores do robô padrões
     private GPS gps; // Sensor de GPS -> Informar a posição dos Robôs
@@ -31,34 +35,37 @@ public class Robo {
     /**
      * Construtor que inicializa um robô com parâmetros básicos
      * 
-     * @param nome     Nome do robô
-     * @param direcao  Direção inicial do robô
-     * @param posicaoX Posição inicial X
-     * @param posicaoY Posição inicial Y
+     * @param nome       Nome do robô
+     * @param direcao    Direção inicial do robô
+     * @param posicaoX   Posição inicial X
+     * @param posicaoY   Posição inicial Y
      * @param velocidade Velocidade inicial do robô
      */
-    public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade) {
+    public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int posicaoZ,
+            int velocidade) {
         this.nome = nome;
         this.direcao = direcao;
         this.material = material;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
+        this.posicaoZ = posicaoZ;
         this.operando = true;
         this.integridade = 100;
         this.velocidade = velocidade;
         this.gps = new GPS(this);
         this.listaSensores = new ArrayList<>();
         this.listaSensores.add(gps);
+        this.tipo = TipoEntidade.ROBO;
     }
-    
+
     /**
      * Move o robô de acordo com o delta especificado
      * 
-     * @param deltaX Deslocamento na direção X
-     * @param deltaY Deslocamento na direção Y
+     * @param deltaX   Deslocamento na direção X
+     * @param deltaY   Deslocamento na direção Y
      * @param ambiente Ambiente onde o robô está
      */
-    
+
     public void mover(int deltaX, int deltaY, Ambiente ambiente) {
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = posicaoX + deltaX > ambiente.getTamX() ? ambiente.getTamX() : posicaoX + deltaX;
@@ -68,18 +75,20 @@ public class Robo {
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
             for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
-                Object obj = ambiente.identificarObjetoPosicao(x, posicaoY);
+                Object obj = ambiente.identificarObjetoPosicao(x, posicaoY, posicaoZ);
                 if (obj != null) {
-                    if (obj instanceof Obstaculo && ((Obstaculo)obj).getTipo() == TipoObstaculo.BURACO) {
+                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
-                        System.out.println("O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY);
+                        System.out.println(
+                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY);
                         System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
                         ambiente.removerRobo(this);
                         break;
                     } else {
                         // Para outros obstáculos ou robôs, apenas para o movimento
-                        System.out.println("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + x + " Y:" + posicaoY);
-                        
+                        System.out.println("O robô " + this.nome
+                                + " interrompeu o movimento devido a um objeto na posição X:" + x + " Y:" + posicaoY);
+
                         // Ainda pode se movimentar no outro eixo
                         break;
                     }
@@ -87,22 +96,24 @@ public class Robo {
                 posicaoX = x; // Atualiza a posição X antes da colisão
             }
         }
-        
+
         // Movimentação em linha reta no eixo Y
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
             for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
-                Object obj = ambiente.identificarObjetoPosicao(posicaoX, y);
+                Object obj = ambiente.identificarObjetoPosicao(posicaoX, y, posicaoZ);
                 if (obj != null) {
-                    if (obj instanceof Obstaculo && ((Obstaculo)obj).getTipo() == TipoObstaculo.BURACO) {
+                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
-                        System.out.println("O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y);
+                        System.out.println(
+                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y);
                         System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
                         ambiente.removerRobo(this);
                         break;
                     } else {
                         // Para outros obstáculos ou robôs, apenas para o movimento
-                        System.out.println("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + posicaoX + " Y:" + y);
+                        System.out.println("O robô " + this.nome
+                                + " interrompeu o movimento devido a um objeto na posição X:" + posicaoX + " Y:" + y);
                         break; // Para a movimentação
                     }
                 }
@@ -111,7 +122,6 @@ public class Robo {
         }
     }
 
-
     /**
      * Retorna uma string com a posição atual do robô
      * Se o GPS estiver inativo ou não disponível, retorna uma mensagem de erro
@@ -119,13 +129,21 @@ public class Robo {
      * @return String formatada com nome e posição do robô
      */
     public String exibirPosicao() {
-        int x = this.getPosicaoX();
-        int y = this.getPosicaoY();
+        int x = this.getX();
+        int y = this.getY();
         if (x == -1 || y == -1) {
             return this.nome + " está com o GPS inativo ou não disponível";
         } else {
             return this.nome + " está na posição X:" + x + " Y:" + y;
-        }    
+        }
+    }
+
+    public String getDescricao(){
+        return "Robo" + nome + "na posição" + "X: " + getX() + "Y: " + getY() + "Z: " + getZ();
+    }
+
+    public char getRepresentacao(){
+        return '#';
     }
 
     /**
@@ -135,7 +153,7 @@ public class Robo {
     public int getPosicaoXInterna() {
         return this.posicaoX;
     }
-    
+
     /**
      * Método interno para acesso direto à posição Y
      * Este método é usado apenas pelo GPS e internamente
@@ -143,13 +161,13 @@ public class Robo {
     public int getPosicaoYInterna() {
         return this.posicaoY;
     }
-    
+
     /**
      * Obtém a coordenada X atual do robô através do sensor GPS
      * 
      * @return Posição X
      */
-    public int getPosicaoX() {
+    public int getX() {
         // Verificar se o GPS está disponível e ativo
         if (this.gps != null && this.gps.isAtivo()) {
             return this.gps.obterPosicaoX();
@@ -158,13 +176,13 @@ public class Robo {
             return -1;
         }
     }
-    
+
     /**
      * Obtém a coordenada Y atual do robô através do sensor GPS
      * 
      * @return Posição Y
      */
-    public int getPosicaoY() {
+    public int getY() {
         // Verificar se o GPS está disponível e ativo
         if (this.gps != null && this.gps.isAtivo()) {
             return this.gps.obterPosicaoY();
@@ -172,6 +190,15 @@ public class Robo {
             // Retornar -1 se o GPS não estiver disponível ou ativo
             return -1;
         }
+    }
+
+    /**
+     * Obtém a coordenada Z atual
+     * 
+     * @return Posição Z
+     */
+    public int getZ() {
+        return this.posicaoZ;
     }
 
     public int getVelocidade() {
@@ -188,6 +215,10 @@ public class Robo {
 
     protected void setPosicaoY(int posicaoY) {
         this.posicaoY = posicaoY;
+    }
+
+    protected void setPosicaoZ(int posicaoZ) {
+        this.posicaoZ = posicaoZ;
     }
 
     /**
@@ -280,10 +311,12 @@ public class Robo {
 
     /**
      * Identifica outros robôs na direção especificada.
-     * Na implementação base, um robô genérico não possui capacidade de detectar outros robôs.
+     * Na implementação base, um robô genérico não possui capacidade de detectar
+     * outros robôs.
      * Subclasses equipadas com sensores apropriados devem sobrescrever este método.
      * 
-     * @return Lista vazia na classe base; em subclasses, retorna robôs detectados pelos sensores
+     * @return Lista vazia na classe base; em subclasses, retorna robôs detectados
+     *         pelos sensores
      */
     public ArrayList<Robo> identificarRobo() {
         return new ArrayList<Robo>();
@@ -291,10 +324,12 @@ public class Robo {
 
     /**
      * Identifica obstáculos não-robóticos na direção especificada.
-     * Na implementação base, um robô genérico não possui capacidade de detectar obstáculos.
+     * Na implementação base, um robô genérico não possui capacidade de detectar
+     * obstáculos.
      * Subclasses equipadas com sensores apropriados devem sobrescrever este método.
      * 
-     * @return Lista vazia na classe base; em subclasses, retorna obstáculos detectados pelos sensores
+     * @return Lista vazia na classe base; em subclasses, retorna obstáculos
+     *         detectados pelos sensores
      */
     public ArrayList<Obstaculo> identificarObstaculo() {
         return new ArrayList<Obstaculo>();
@@ -328,8 +363,8 @@ public class Robo {
         if (!this.getGPS().isAtivo()) {
             return -1;
         }
-        return Math.sqrt(Math.pow(robo.getPosicaoXInterna() - this.getPosicaoX(), 2)
-                + Math.pow(robo.getPosicaoYInterna() - this.getPosicaoY(), 2));
+        return Math.sqrt(Math.pow(robo.getPosicaoXInterna() - this.getX(), 2)
+                + Math.pow(robo.getPosicaoYInterna() - this.getY(), 2));
     }
 
     /**
@@ -339,17 +374,19 @@ public class Robo {
      * @return Distância calculada
      */
     public double distanciaObstaculo(Obstaculo obstaculo) {
-        if (getPosicaoX()<=obstaculo.getX1()&&getPosicaoX()<=obstaculo.getX2()){
-            return Math.min(Math.abs(getPosicaoY()-obstaculo.getY1()), Math.abs(getPosicaoY()-obstaculo.getY2()));
-        }
-        else if (getPosicaoY()<=obstaculo.getY1()&&getPosicaoY()<=obstaculo.getY2()){
-            return Math.min(Math.abs(getPosicaoX()-obstaculo.getX1()), Math.abs(getPosicaoX()-obstaculo.getX2()));
-        } else{
-            return Math.min(Math.min(Math.sqrt(Math.pow(obstaculo.getX1() - this.getPosicaoX(), 2)
-            + Math.pow(obstaculo.getY1() - this.getPosicaoY(), 2)),Math.sqrt(Math.pow(obstaculo.getX2() - this.getPosicaoX(), 2)
-            + Math.pow(obstaculo.getY1() - this.getPosicaoY(), 2))),Math.min(Math.sqrt(Math.pow(obstaculo.getX1() - this.getPosicaoX(), 2)
-            + Math.pow(obstaculo.getY2() - this.getPosicaoY(), 2)),Math.sqrt(Math.pow(obstaculo.getX2() - this.getPosicaoX(), 2)
-            + Math.pow(obstaculo.getY2() - this.getPosicaoY(), 2))));
+        if (getX() <= obstaculo.getX1() && getX() <= obstaculo.getX2()) {
+            return Math.min(Math.abs(getY() - obstaculo.getY1()), Math.abs(getY() - obstaculo.getY2()));
+        } else if (getY() <= obstaculo.getY1() && getY() <= obstaculo.getY2()) {
+            return Math.min(Math.abs(getX() - obstaculo.getX1()), Math.abs(getX() - obstaculo.getX2()));
+        } else {
+            return Math.min(Math.min(Math.sqrt(Math.pow(obstaculo.getX1() - this.getX(), 2)
+                    + Math.pow(obstaculo.getY1() - this.getY(), 2)),
+                    Math.sqrt(Math.pow(obstaculo.getX2() - this.getX(), 2)
+                            + Math.pow(obstaculo.getY1() - this.getY(), 2))),
+                    Math.min(Math.sqrt(Math.pow(obstaculo.getX1() - this.getX(), 2)
+                            + Math.pow(obstaculo.getY2() - this.getY(), 2)),
+                            Math.sqrt(Math.pow(obstaculo.getX2() - this.getX(), 2)
+                                    + Math.pow(obstaculo.getY2() - this.getY(), 2))));
         }
     }
 
@@ -380,5 +417,9 @@ public class Robo {
      */
     public GPS getGPS() {
         return this.gps;
+    }
+
+    public TipoEntidade getTipo() {
+        return this.tipo;
     }
 }

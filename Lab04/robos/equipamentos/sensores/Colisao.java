@@ -47,7 +47,7 @@ public class Colisao extends Sensor<Integer> {
         ArrayList<Robo> listaRobos = ambiente.getListaRobos();
         ArrayList<Obstaculo> listaObstaculos = ambiente.getListaObstaculos();
         for (Robo colRobo : listaRobos) {
-            if (colRobo != this.robo && colRobo.getPosicaoXInterna() == posX && colRobo.getPosicaoY() == posY) {
+            if (colRobo != this.robo && colRobo.getPosicaoXInterna() == posX && colRobo.getY() == posY) {
                 this.ultimoRoboColidido = colRobo;
                 return 1; // Colisão com outro robô
             }
@@ -55,7 +55,7 @@ public class Colisao extends Sensor<Integer> {
         
         // Procura colisões com obstáculos
         for (Obstaculo obstaculo : listaObstaculos) {
-            if (obstaculo.getX1() <= this.robo.getPosicaoX() && obstaculo.getX2() >= posX && 
+            if (obstaculo.getX1() <= this.robo.getX() && obstaculo.getX2() >= posX && 
                 obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
                 this.ultimoObstaculoColidido = obstaculo;
                 return 2; // Colisão com obstáculo

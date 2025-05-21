@@ -1,7 +1,6 @@
 package robos.terrestres;
 import ambiente.Ambiente;
 import ambiente.TipoObstaculo;
-import robos.aereos.RoboAereo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
@@ -23,7 +22,7 @@ public class RoboTerrestre extends Robo {
      * @param velocidadeMaxima Velocidade máxima do robô
      */
     public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
-        super(nome, direcao, material, posicaoX, posicaoY, velocidade);
+        super(nome, direcao, material, posicaoX, posicaoY, 0, velocidade);
         this.velocidadeMaxima = velocidadeMaxima;
         this.sensorColisao = new Colisao(this, ambiente); // Inicializa o sensor de colisão
     }
@@ -118,31 +117,17 @@ public class RoboTerrestre extends Robo {
     }
 
     /**
-     * Calcula a distância entre este robô terrestre e outro
-     * @param robo Robô terrestre alvo
-     * @return Distância euclidiana 2D
-     */
-    public double distanciaRobo(RoboTerrestre robo) {
-        if (!this.getGPS().isAtivo()) {
-            return -1;
-        }
-
-        return Math.sqrt(Math.pow(robo.getPosicaoXInterna() - this.getPosicaoX(), 2)
-                + Math.pow(robo.getPosicaoYInterna() - this.getPosicaoY(), 2));
-    }
-
-    /**
-     * Calcula a distância entre este robô terrestre e um robô aéreo
+     * Calcula a distância entre este robô terrestre e um robô
      * @param alvo Robô aéreo alvo
-     * @return Distância euclidiana 3D (considerando altitude do robô aéreo)
+     * @return Distância euclidiana 3D (considerando altitude do robô)
      */
-    public double distanciaRobo(RoboAereo alvo) {
+    public double distanciaRobo(Robo alvo) {
         if (!this.getGPS().isAtivo()) {
             return -1;
         }
 
-        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getPosicaoX(), 2)
-                + Math.pow(alvo.getPosicaoYInterna() - this.getPosicaoY(), 2) + Math.pow(alvo.getAltitude() - 0, 2));
+        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getX(), 2)
+                + Math.pow(alvo.getPosicaoYInterna() - this.getY(), 2) + Math.pow(alvo.getZ() - 0, 2));
     }
 
     public Colisao getSensorColisao() {

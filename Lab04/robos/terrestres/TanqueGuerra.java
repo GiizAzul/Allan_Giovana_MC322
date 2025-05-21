@@ -3,6 +3,7 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import interfaces.*;
 
 public class TanqueGuerra extends RoboTerrestre {
     private int municaoMax;
@@ -20,16 +21,16 @@ public class TanqueGuerra extends RoboTerrestre {
     }
 
     public String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
-        Object alvo = (Object) ambiente.identificarObjetoPosicao(alvoX, alvoY);
+        Entidade alvo = ambiente.identificarObjetoPosicao(alvoX, alvoY, 0);
         if (municaoAtual < nTiros) {
             return "Munição insuficiente";
 
-        } else if (alvoX == getPosicaoX() && alvoY == getPosicaoY()) {
+        } else if (alvoX == getX() && alvoY == getY()) {
             return "Não é possível atirar na própria posição";
 
         } else {
-            int dX = getPosicaoX() - alvoX;
-            int dY = getPosicaoY() - alvoY;
+            int dX = getX() - alvoX;
+            int dY = getY() - alvoY;
             if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(alcance, 2)) {
                 municaoAtual -= nTiros;
                 if (alvo == null) {
@@ -37,7 +38,7 @@ public class TanqueGuerra extends RoboTerrestre {
                             alvoY);
                 } else {
                     String result = null;
-                    if (alvo instanceof Robo) {
+                    if (alvo.getTipo() == TipoEntidade.ROBO) {
                         Robo alvodef = (Robo) alvo;
                         String defesa = alvodef.defender(nTiros);
                         result = String.format(
@@ -45,7 +46,7 @@ public class TanqueGuerra extends RoboTerrestre {
                                         "Robô %s foi atingido!\n" +
                                         defesa,
                                 alvoX, alvoY, alvodef.getNome());
-                    } else if (alvo instanceof Obstaculo) {
+                    } else if (alvo.getTipo() == TipoEntidade.OBSTACULO) {
                         Obstaculo alvodef = (Obstaculo) alvo;
                         String defesa = alvodef.defender(nTiros, ambiente);
                         result = String.format(

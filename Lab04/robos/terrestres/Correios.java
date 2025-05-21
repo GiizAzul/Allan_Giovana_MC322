@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
+import interfaces.Entidade;
+import interfaces.TipoEntidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
@@ -42,24 +44,24 @@ public class Correios extends RoboTerrestre {
 
     public boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) {
         // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = getPosicaoX() + deltaX > ambiente.getTamX() ? ambiente.getTamX() : getPosicaoX() + deltaX;
-        int destinoY = getPosicaoY() + deltaY > ambiente.getTamY() ? ambiente.getTamY() : getPosicaoY() + deltaY;
+        int destinoX = getX() + deltaX > ambiente.getTamX() ? ambiente.getTamX() : getX() + deltaX;
+        int destinoY = getY() + deltaY > ambiente.getTamY() ? ambiente.getTamY() : getY() + deltaY;
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
-            for (int x = getPosicaoX() + passoX; x != destinoX + passoX; x += passoX) {
-                Object obj = ambiente.identificarObjetoPosicao(x, getPosicaoY());
+            for (int x = getX() + passoX; x != destinoX + passoX; x += passoX) {
+                Entidade obj = ambiente.identificarObjetoPosicao(x, getY(), 0);
                 if (obj != null) {
-                    if (obj instanceof Robo) {
+                    if (obj.getTipo() == TipoEntidade.ROBO) {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getPosicaoY());
+                        System.out.println(((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getY());
                         return false;
                     } else if (((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + x + " Y:" + getPosicaoY());
+                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + x + " Y:" + getY());
                         return false;
                     }
                 }
@@ -70,18 +72,18 @@ public class Correios extends RoboTerrestre {
         // Movimentação em linha reta no eixo Y
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
-            for (int y = getPosicaoY() + passoY; y != destinoY + passoY; y += passoY) {
-                Object obj = ambiente.identificarObjetoPosicao(getPosicaoX(), y);
+            for (int y = getY() + passoY; y != destinoY + passoY; y += passoY) {
+                Entidade obj = ambiente.identificarObjetoPosicao(getX(), y, 0);
                 if (obj != null) {
-                    if (obj instanceof Robo) {
+                    if (obj.getTipo() == TipoEntidade.ROBO) {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Robo) obj).getNome() + " na posição X:" + getPosicaoX() + " Y:" + y);
+                        System.out.println(((Robo) obj).getNome() + " na posição X:" + getX() + " Y:" + y);
                         return false;
                     } else if (((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + getPosicaoX() + " Y:" + y);
+                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + getX() + " Y:" + y);
                         return false;
                     }
                 }
@@ -96,9 +98,9 @@ public class Correios extends RoboTerrestre {
             return ("Pacote " + id + " não encontrado na carga.");
         }
         int i = entregas.indexOf(id);
-        Object objeto_posicao = ambiente.identificarObjetoPosicao(destinoX, destinoY);
-        if (moverEntrega(destinoX - getPosicaoX(), destinoY - getPosicaoY(), ambiente)) {
-            if (objeto_posicao instanceof Obstaculo && ((Obstaculo) objeto_posicao).getTipo() == TipoObstaculo.BURACO) {
+        Entidade objeto_posicao = ambiente.identificarObjetoPosicao(destinoX, destinoY, 0);
+        if (moverEntrega(destinoX - getX(), destinoY - getY(), ambiente)) {
+            if (objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipo() == TipoObstaculo.BURACO) {
                 pesoAtual -= pesos.get(i);
                 entregas.remove(i);
                 pesos.remove(i);
