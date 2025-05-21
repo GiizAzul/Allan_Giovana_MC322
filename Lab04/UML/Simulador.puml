@@ -1,0 +1,219 @@
+@startuml Simulador de Robôs
+
+' Definição do título do diagrama
+title Simulador de Robôs - Diagrama de Classes
+
+' Configurações de estilo para melhorar a visualização
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classBackgroundColor LightBlue
+skinparam classArrowColor Navy
+skinparam classBorderColor Navy
+
+' Enumeração TipoObstaculo (implícita no seu código)
+enum TipoObstaculo {
+  - alturaPadrao: final int
+  - integridade: final int
+  - indestrutivel: final boolean
+  - fatorReducaoAlcanceRadar: final float
+}
+
+enum MateriaisRobo {
+  - fatorReducaoAlcanceRadar : final float
+}
+
+' Classe Sensor (implícita no seu código)
+class Sensor {
+  - ativo : boolean
+  + {abstract} acionar() : T
+}
+
+' Classe principal Robo
+class Robo {
+  - nome : String
+  - direcao : String
+  - posicaoX : int
+  - posicaoY : int
+  - integridade : int
+  - velocidade : int
+  - operando : boolean
+  - material : MateriaisRobo
+  - gps : GPS
+  - listaSensores : ArrayList<Sensor<?>>
+  # visivel : boolean
+  + mover(deltaX : int, deltaY : int, ambiente Ambiente) : void
+  + exibirPosicao() : String
+  + identificarRobo() : ArrayList<Robo>
+  + identificarObstaculo() : ArrayList<Obstaculo>
+  + defender(dano : int) : String
+  + distanciaRobo(robo : Robo) : double
+  + distanciaObstaculo(obstaculo : Obstaculo) : double
+  + {static} getDirecoesPossiveis() : ArrayList<String>
+  + addSensor(sensor : Sensor<?>) : void
+}
+
+' Classe RoboTerrestre
+class RoboTerrestre {
+  - velocidadeMaxima : int
+  - sensorColisao : Colisao
+  + mover(deltaX : int, deltaY : int, vel : int, ambiente : Ambiente) : void
+  + distanciaRobo(robo : RoboTerrestre) : double
+  + distanciaRobo(alvo : RoboAereo) : double
+}
+
+' Classe RoboAereo
+class RoboAereo {
+  - altitude : int
+  - altitudeMaxima : int
+  - barometro : Barometro
+  - sensorRadar : Radar
+  - movimentoZ(passo : int, metros : int, ambiente : Ambiente)
+  + subir(metros : int, ambiente Ambiente) : void
+  + descer(metros : int, ambiente Ambiente) : void
+  + distanciaRobo(robo : RoboTerrestre) : double
+  + distanciaRobo(alvo : RoboAereo) : double
+  + mover(X : int, Y : int, Z : int, ambiente Ambiente) : void
+  + identificarRobo(ambiente : Ambiente, direcao : String) : ArrayList<Robo>
+  + identificarObstaculo(ambiente : Ambiente, direcao : String) : ArrayList<Obstaculo>
+  + exibirPosicao() : String
+}
+
+' Classe Correios
+class Correios {
+  - capacidadeMax : int
+  - pesoMax : float
+  - pesoAtual : float
+  - entregas : ArrayList<String>
+  - pesos : ArrayList<Float>
+  + carregarPacote(id : String, peso : float) : String
+  + moverEntrega(deltaX : int, deltaY : int, ambiente : Ambiente)
+  + entregarPacote(id : String, destinoX : int, destinoY : int, ambiente : Ambiente) : String
+  + listarEntregas() : String
+}
+
+' Classe TanqueGuerra (implícita no seu código)
+class TanqueGuerra {
+  - municaoMax : int
+  - municaoAtual : int
+  - alcance : int
+  + atirar(alvoX: int, alvoY: int, nTiros: int, ambiente: Ambiente): String
+  + recarregar(nBalas: int): String
+}
+
+' Classe DroneAtaque
+class DroneAtaque {
+  - municao : int
+  - alcance : int
+  - escudo : int
+  + defender(dano : int) : String
+  + atirar(alvoX : int, alvoY : int, alvoZ : int, nTiros : int, ambiente : Ambiente) : String
+  + atirar(alvoX : int, alvoY : int, nTiros : int, ambiente : Ambiente) : String
+  + atirar(robo : Robo, nTiros : int, ambiente : Ambiente) : String
+  - executarTiro(dX : int, dY : int, dZ : int, aX : int, aY : int, aZ : int, nTiros : int, ambiente : Ambiente) : String
+}
+
+' Classe DroneVigilancia
+class DroneVigilancia {
+  - camuflado : boolean
+  - alcance_radar : float
+  - angulo_camera : float
+  + identificarObstaculo(ambiente : Ambiente) : ArrayList<Obstaculo>
+  + varrerArea(ambiente : Ambiente, centroX : int, centroY : int, raio : int) : ArrayList<Object>
+  + acionarCamuflagem() : void
+  + desabilitarCamuflagem() : void
+}
+
+' Classe Obstaculo
+class Obstaculo {
+  - x1 : final int
+  - x2 : final int
+  - y1 : final int
+  - y2 : final int
+  - altura : int
+  - tipo : final TipoObstaculo
+  - integridade : int
+  - indestrutivel : boolean
+  + defender(dano : int, ambiente : Ambiente) : String
+}
+
+' Classe Ambiente
+class Ambiente {
+  - tamX : final int
+  - tamY : final int
+  - tamZ : final int
+  - listaRobos : ArrayList<Robo>
+  - listaObstaculos : ArrayList<Obstaculo>
+  + dentroDosLimites(x : int, y : int) : boolean
+  + dentroDosLimites(x : int, y : int, z : int) : boolean
+  + adicionarRobo(robo : Robo) : void
+  + removerRobo(robo : Robo) : void
+  + adicionarObstaculo(obstaculo : Obstaculo) : void
+  + removerObstaculo(obstaculo : Obstaculo) : void
+  + criarRobo(tipo : int, subcategoria : int, atributo : Object...) : Robo
+  + identificarObjetoPosicao(posX : int, posY : int) : Object
+  + identificarObjetoPosicao(posX : int, posY : int, posZ : int) : Object
+}
+
+class GPS {
+  - robo : Robo
+  + acionar() : int[]
+  + obterPosicaoX() : int
+  + obterPosicaoY() : int
+  + vincularRobo(robo : Robo) : void
+}
+
+class Barometro {
+  - pressaoAtmosferica : double
+  - robo Robo:
+  - acionar() : double
+}
+
+class Radar {
+  - robo : RoboAereo
+  - ambiente : Ambiente
+  - raioAlcance : int
+  - anguloAlcance : int
+  + acionar() : ArrayList<Object>
+  + verificacaoObstaculo(obstaculo : Obstaculo) : boolean
+  + verificacaoRobo(roboAmbiente: Robo) : boolean
+  - nucleoComumVerificacao(x : float, y : float, z : float) : boolean
+  - rotacionarPonto(xP : float, yP : float, angulo : float) : double[]
+  + getDistanciaPontoRadar2D(x : double, y : double) : double
+  + getDistanciaPontoRadar2D(x : double, y : double, z : double) : double
+  + getAlcanceCorrigido(obstaculo Obstaculo) : double
+  + getAlcanceCorrigido(robo Robo) : double
+}
+
+class Colisao {
+  - robo : RoboTerrestre
+  - ultimoRoboColidido : Robo
+  - ultimoObstaculoColidido : Obstaculo
+  - ambiente : Ambiente
+  + acionar() : int
+}
+
+' Relações de herança
+Robo <|-- RoboTerrestre
+Robo <|-- RoboAereo
+Sensor <|-- GPS
+Sensor <|-- Barometro
+Sensor <|-- Radar
+Sensor <|-- Colisao
+
+RoboTerrestre <|-- Correios
+RoboTerrestre <|-- TanqueGuerra
+RoboAereo <|-- DroneAtaque
+RoboAereo <|-- DroneVigilancia
+
+' Relações de associação
+Obstaculo --> TipoObstaculo
+Robo --> MateriaisRobo
+Robo o--> "1..*" Sensor : possui
+Robo o--> "1" GPS : possui
+RoboAereo o--> "1" Barometro : possui
+RoboAereo o--> "1" Radar : possui
+RoboTerrestre o--> "1" Colisao : possui
+Ambiente o--> "0..*" Robo : contém
+Ambiente o--> "0..*" Obstaculo : contém
+
+@enduml
