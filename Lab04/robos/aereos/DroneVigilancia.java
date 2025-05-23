@@ -7,6 +7,7 @@ import ambiente.Obstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
+import interfaces.*;
 
 public class DroneVigilancia extends RoboAereo {
 
@@ -20,7 +21,7 @@ public class DroneVigilancia extends RoboAereo {
         this.camuflado = false;
     }
 
-    public ArrayList<Object> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
+    public ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura
         // Baseado na capacidade da câmera do drone
@@ -43,7 +44,7 @@ public class DroneVigilancia extends RoboAereo {
 
         ArrayList<Robo> lista_robos = ambiente.getListaRobos();
         ArrayList<Obstaculo> lista_obstaculos = ambiente.getListaObstaculos();
-        ArrayList<Object> objetos_encontrados = new ArrayList<>();
+        ArrayList<Entidade> objetos_encontrados = new ArrayList<>();
         for (Robo robo : lista_robos) {
             double distancia = robo.distanciaRobo(this);
             if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {

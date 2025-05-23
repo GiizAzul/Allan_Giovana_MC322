@@ -57,7 +57,7 @@ public class Correios extends RoboTerrestre {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
                         System.out.println(((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getY());
                         return false;
-                    } else if (((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
+                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
@@ -79,7 +79,7 @@ public class Correios extends RoboTerrestre {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
                         System.out.println(((Robo) obj).getNome() + " na posição X:" + getX() + " Y:" + y);
                         return false;
-                    } else if (((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
+                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
@@ -100,7 +100,7 @@ public class Correios extends RoboTerrestre {
         int i = entregas.indexOf(id);
         Entidade objeto_posicao = ambiente.identificarObjetoPosicao(destinoX, destinoY, 0);
         if (moverEntrega(destinoX - getX(), destinoY - getY(), ambiente)) {
-            if (objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipo() == TipoObstaculo.BURACO) {
+            if (objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
                 pesoAtual -= pesos.get(i);
                 entregas.remove(i);
                 pesos.remove(i);

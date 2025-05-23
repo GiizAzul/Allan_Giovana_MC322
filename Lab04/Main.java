@@ -7,11 +7,11 @@ import ambiente.TipoObstaculo;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.aereos.RoboAereo;
-import robos.geral.MateriaisRobo.*;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
+import interfaces.*;
 
 public class Main {
 
@@ -318,8 +318,8 @@ public class Main {
                                 int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                                 System.out.print("Digite a velocidade do movimento: ");
                                 int vel = scanner.nextInt();
-                                roboEscolhido.mover(coordenadas[0] - roboSelecionado.getPosicaoX(),
-                                        coordenadas[1] - roboSelecionado.getPosicaoY(), vel, ambiente);
+                                roboEscolhido.mover(coordenadas[0] - roboSelecionado.getX(),
+                                        coordenadas[1] - roboSelecionado.getY(), vel, ambiente);
                                 System.out.println(roboEscolhido.exibirPosicao());
                             } else if (acao == 5) {
                                 System.out.print("Digite a nova direção (Norte/Sul/Leste/Oeste): ");
@@ -372,8 +372,8 @@ public class Main {
                                 int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                                 System.out.print("Digite a velocidade do movimento: ");
                                 int vel = scanner.nextInt();
-                                roboEscolhido.mover(coordenadas[0] - roboSelecionado.getPosicaoX(),
-                                        coordenadas[1] - roboSelecionado.getPosicaoY(), vel, ambiente);
+                                roboEscolhido.mover(coordenadas[0] - roboSelecionado.getX(),
+                                        coordenadas[1] - roboSelecionado.getY(), vel, ambiente);
                             } else if (acao == 6) {
                                 System.out.print("Digite a nova direção (Norte/Sul/Leste/Oeste): ");
                                 String direcao;
@@ -420,19 +420,19 @@ public class Main {
                                 roboEscolhido.mover(coordenadas[0], coordenadas[1], nAlt, ambiente);
                                 System.out.println(roboEscolhido.exibirPosicao());
                             } else if (acao == 4) {
-                                ArrayList<Object> listaObjetosVistos = roboEscolhido.getRadar().acionar();
+                                ArrayList<Entidade> listaObjetosVistos = roboEscolhido.getRadar().acionar();
                                 if (listaObjetosVistos.isEmpty()) {
                                     System.out.println("Nenhum objeto encontrado!");
                                     continue;
                                 } else {
-                                    for (Object elemento : listaObjetosVistos) {
+                                    for (Entidade elemento : listaObjetosVistos) {
                                         if (elemento instanceof Robo) {
                                             if (elemento instanceof RoboAereo) {
                                                 RoboAereo r = (RoboAereo) elemento;
                                                 ;
                                                 System.out.printf("Robô encontrado: %s, X: %d, Y: %d, Altura: %d%n",
                                                         r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(),
-                                                        r.getAltitude());
+                                                        r.getZ());
                                             } else if (elemento instanceof Obstaculo) {
                                                 Obstaculo o = (Obstaculo) elemento;
                                                 System.out.printf(
@@ -489,19 +489,19 @@ public class Main {
                                 roboEscolhido.mover(coordenadas[0], coordenadas[1], nAlt, ambiente);
                                 System.out.println(roboEscolhido.exibirPosicao());
                             } else if (acao == 3) {
-                                ArrayList<Object> listaObjetosVistos = roboEscolhido.getRadar().acionar();
+                                ArrayList<Entidade> listaObjetosVistos = roboEscolhido.getRadar().acionar();
                                 if (listaObjetosVistos.isEmpty()) {
                                     System.out.println("Nenhum objeto encontrado!");
                                     continue;
                                 } else {
-                                    for (Object elemento : listaObjetosVistos) {
+                                    for (Entidade elemento : listaObjetosVistos) {
                                         if (elemento instanceof Robo) {
                                             if (elemento instanceof RoboAereo) {
                                                 RoboAereo r = (RoboAereo) elemento;
                                                 ;
                                                 System.out.printf("Robô encontrado: %s, X: %d, Y: %d, Altura: %d%n",
                                                         r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(),
-                                                        r.getAltitude());
+                                                        r.getZ());
                                             } else if (elemento instanceof Obstaculo) {
                                                 Obstaculo o = (Obstaculo) elemento;
                                                 System.out.printf(
@@ -528,18 +528,18 @@ public class Main {
                                 int[] centro = Main.obterPosicao(ambiente, scanner);
                                 System.out.print("Digite o raio da varredura: ");
                                 int raio = scanner.nextInt();
-                                ArrayList<Object> objetos_encontrados = roboEscolhido.varrerArea(ambiente, centro[0],
+                                ArrayList<Entidade> objetos_encontrados = roboEscolhido.varrerArea(ambiente, centro[0],
                                         centro[1], raio);
                                 if (objetos_encontrados.isEmpty())
                                     System.out.println("Nenhum objeto foi encontrado!");
                                 else {
                                     System.out.println("Objetos encontrados:");
-                                    for (Object obj : objetos_encontrados) {
+                                    for (Entidade obj : objetos_encontrados) {
                                         if (obj instanceof Robo) {
                                             Robo r = (Robo) obj;
                                             System.out.printf("Robô: %s, X: %d, Y: %d, Altura: %s%n",
-                                                    r.getNome(), r.getPosicaoX(), r.getPosicaoY(),
-                                                    (r instanceof RoboAereo ? ((RoboAereo) r).getAltitude() : "N/A"));
+                                                    r.getNome(), r.getX(), r.getY(),
+                                                    (r instanceof RoboAereo ? ((RoboAereo) r).getZ() : "N/A"));
                                         } else {
                                             Obstaculo o = (Obstaculo) obj;
                                             System.out.printf(

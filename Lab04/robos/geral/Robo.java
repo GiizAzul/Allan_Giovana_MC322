@@ -77,7 +77,7 @@ public class Robo implements Entidade {
             for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
                 Object obj = ambiente.identificarObjetoPosicao(x, posicaoY, posicaoZ);
                 if (obj != null) {
-                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
+                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
                         System.out.println(
                                 "O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY);
@@ -103,7 +103,7 @@ public class Robo implements Entidade {
             for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
                 Object obj = ambiente.identificarObjetoPosicao(posicaoX, y, posicaoZ);
                 if (obj != null) {
-                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipo() == TipoObstaculo.BURACO) {
+                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
                         System.out.println(
                                 "O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y);

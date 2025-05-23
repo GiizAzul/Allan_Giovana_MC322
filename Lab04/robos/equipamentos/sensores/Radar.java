@@ -215,7 +215,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * @return Alcance efetivo do radar para o obstáculo
      */
     public double getAlcanceCorrigido(Obstaculo obstaculo) {
-        return this.raioAlcance * obstaculo.getTipo().getFatorReducaoAlcanceRadar();
+        return this.raioAlcance * obstaculo.getTipoObstaculo().getFatorReducaoAlcanceRadar();
     }
 
     /**
