@@ -15,7 +15,8 @@ public class DroneVigilancia extends RoboAereo {
     private float alcance_radar;
     private float angulo_camera;
 
-    public DroneVigilancia(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente amb, int alc_rad, int ang_radar, float ang_cam) {
+    public DroneVigilancia(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int h, int hmax,
+            Ambiente amb, int alc_rad, int ang_radar, float ang_cam) {
         super(nome, dir, m, x, y, vel, h, hmax, amb, alc_rad, ang_radar);
         this.angulo_camera = ang_cam;
         this.camuflado = false;
@@ -42,41 +43,42 @@ public class DroneVigilancia extends RoboAereo {
             return new ArrayList<>();
         }
 
-        ArrayList<Robo> lista_robos = ambiente.getListaRobos();
-        ArrayList<Obstaculo> lista_obstaculos = ambiente.getListaObstaculos();
+        ArrayList<Entidade> lista_entidades = ambiente.getEntidades();
         ArrayList<Entidade> objetos_encontrados = new ArrayList<>();
-        for (Robo robo : lista_robos) {
-            double distancia = robo.distanciaRobo(this);
-            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {
-                continue;
-            }
-
-            double hMax = this.getZ() - distancia * Math.cos(ang_rad);
-            if (robo instanceof RoboAereo) {
-                RoboAereo roboAereo = (RoboAereo) robo;
-                if (roboAereo.getZ() > hMax) {
-                    // Fora da região de visualização da câmera
+        for (Entidade entidade : lista_entidades) {
+            if (entidade.getTipo() == TipoEntidade.ROBO) {
+                Robo robo = (Robo) entidade;
+                double distancia = robo.distanciaRobo(this);
+                if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {
                     continue;
                 }
 
-            } else if (!(robo instanceof RoboTerrestre)) {
-                // RoboTerrestre automaticamente já está na região de varredura
-                System.out.printf("Robo %s não avaliado!\n", robo.getNome());
+                double hMax = this.getZ() - distancia * Math.cos(ang_rad);
+                if (robo instanceof RoboAereo) {
+                    RoboAereo roboAereo = (RoboAereo) robo;
+                    if (roboAereo.getZ() > hMax) {
+                        // Fora da região de visualização da câmera
+                        continue;
+                    }
+
+                } else if (!(robo instanceof RoboTerrestre)) {
+                    // RoboTerrestre automaticamente já está na região de varredura
+                    System.out.printf("Robo %s não avaliado!\n", robo.getNome());
+                }
+
+                if (robo.getVisivel()) {
+                    objetos_encontrados.add(robo);
+                }
+            } else if (entidade.getTipo() == TipoEntidade.ROBO) {
+                Obstaculo obstaculo = (Obstaculo) entidade;
+                double distancia = distanciaObstaculo(obstaculo);
+                if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {
+                    continue;
+                }
+
+                objetos_encontrados.add(obstaculo);
+
             }
-
-            if (robo.getVisivel()) {
-                objetos_encontrados.add(robo);
-            }
-
-        }
-
-        for (Obstaculo obstaculo : lista_obstaculos) {
-            double distancia = distanciaObstaculo(obstaculo);
-            if (distancia > Math.sqrt(Math.pow(raio, 2) + Math.pow(this.getZ(), 2))) {
-                continue;
-            }
-
-            objetos_encontrados.add(obstaculo);
         }
 
         return objetos_encontrados;

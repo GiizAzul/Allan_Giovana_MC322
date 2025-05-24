@@ -4,6 +4,7 @@ import robos.terrestres.RoboTerrestre;
 import robos.geral.Robo;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import interfaces.*;
 
 /**
  * Classe que implementa um sensor de colisão para robôs terrestres.
@@ -44,24 +45,24 @@ public class Colisao extends Sensor<Integer> {
         int posY = this.robo.getPosicaoYInterna();
         
         // Procura colisões com outros robôs
-        ArrayList<Robo> listaRobos = ambiente.getListaRobos();
-        ArrayList<Obstaculo> listaObstaculos = ambiente.getListaObstaculos();
-        for (Robo colRobo : listaRobos) {
-            if (colRobo != this.robo && colRobo.getPosicaoXInterna() == posX && colRobo.getY() == posY) {
-                this.ultimoRoboColidido = colRobo;
-                return 1; // Colisão com outro robô
-            }
-        }
-        
-        // Procura colisões com obstáculos
-        for (Obstaculo obstaculo : listaObstaculos) {
-            if (obstaculo.getX1() <= this.robo.getX() && obstaculo.getX2() >= posX && 
-                obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
-                this.ultimoObstaculoColidido = obstaculo;
-                return 2; // Colisão com obstáculo
-            }
-        }
 
+        ArrayList<Entidade> listaEntidade = ambiente.getEntidades();
+        for (Entidade entidade : listaEntidade){
+            if (entidade.getTipo() == TipoEntidade.ROBO){
+                Robo colRobo = (Robo) entidade;
+                if (colRobo != this.robo && colRobo.getPosicaoXInterna() == posX && colRobo.getY() == posY) {
+                    this.ultimoRoboColidido = colRobo;
+                    return 1; // Colisão com outro robô
+                }
+            } else if (entidade.getTipo() == TipoEntidade.OBSTACULO){
+                Obstaculo obstaculo = (Obstaculo) entidade;
+                if (obstaculo.getX1() <= this.robo.getX() && obstaculo.getX2() >= posX && 
+                    obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
+                    this.ultimoObstaculoColidido = obstaculo;
+                    return 2; // Colisão com obstáculo
+                }
+            }
+        }
         return 0; // Sem colisão
     }
 

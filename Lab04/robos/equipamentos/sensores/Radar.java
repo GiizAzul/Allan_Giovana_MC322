@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import interfaces.Entidade;
+import interfaces.TipoEntidade;
 import robos.geral.Robo;
 import robos.aereos.RoboAereo;
 
@@ -46,30 +47,24 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * @return ArrayList contendo todos os objetos (obstáculos e robôs) detectados pelo radar
      */
     public ArrayList<Entidade> acionar() {
-        ArrayList<Obstaculo> obstaculosAmbiente = ambiente.getListaObstaculos();
-        ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
+        ArrayList<Entidade> entidadesAmbiente = ambiente.getEntidades();
+        ArrayList<Entidade> resultado = new ArrayList<Entidade>();
         
         // Verifica quais obstáculos estão no alcance do radar
-        for (Obstaculo obstaculo : obstaculosAmbiente) {
-            if (verificacaoObstaculo(obstaculo)) {
-                obstaculosEncontrados.add(obstaculo);
+        for (Entidade entidade : entidadesAmbiente) {
+            if (entidade.getTipo() == TipoEntidade.OBSTACULO){
+                Obstaculo obstaculo = (Obstaculo) entidade;
+                if (verificacaoObstaculo(obstaculo)) {
+                    resultado.add(obstaculo);
+                }
+            } else if (entidade.getTipo() == TipoEntidade.ROBO){
+                Robo roboAmbiente = (Robo) entidade;
+                if (verificacaoRobo(roboAmbiente)) {
+                    resultado.add(roboAmbiente);
+                }
+
             }
         }
-
-        // Verifica quais robôs estão no alcance do radar
-        ArrayList<Robo> robosAmbiente = ambiente.getListaRobos();
-        ArrayList<Robo> robosEncontrados = new ArrayList<Robo>();
-        for (Robo roboAmbiente : robosAmbiente) {
-            if (verificacaoRobo(roboAmbiente)) {
-                robosEncontrados.add(roboAmbiente);
-            }
-        }
-
-        // Combina os resultados em uma única lista
-        ArrayList<Entidade> resultado = new ArrayList<Entidade>();
-        resultado.addAll(obstaculosEncontrados);
-        resultado.addAll(robosEncontrados);
-        
         return resultado;
     }
 

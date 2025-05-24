@@ -172,7 +172,7 @@ public class RoboAereo extends Robo {
                     }else if(((Obstaculo)obj).getTipoObstaculo()==TipoObstaculo.BURACO){
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getY());
                         System.out.println("O robô "+getNome()+" caiu no buraco e foi destruido");
-                        ambiente.removerRobo(this);
+                        ambiente.removerEntidade(this);
                     }else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getY()+" Z:"+getZ());
                     }
@@ -194,7 +194,7 @@ public class RoboAereo extends Robo {
                     }else if(((Obstaculo)obj).getTipoObstaculo()==TipoObstaculo.BURACO){
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getX()+" Y:"+y);
                         System.out.println("O robô "+getNome()+" caiu no buraco e foi destruido");
-                        ambiente.removerRobo(this);
+                        ambiente.removerEntidade(this);
                     }else{
                         System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getX()+" Y:"+y+" Z:"+getZ());
                     }
