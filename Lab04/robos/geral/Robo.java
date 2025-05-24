@@ -82,7 +82,7 @@ public class Robo implements Entidade {
                         System.out.println(
                                 "O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY);
                         System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
-                        ambiente.removerRobo(this);
+                        ambiente.removerEntidade(this);
                         break;
                     } else {
                         // Para outros obstáculos ou robôs, apenas para o movimento
@@ -108,7 +108,7 @@ public class Robo implements Entidade {
                         System.out.println(
                                 "O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y);
                         System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
-                        ambiente.removerRobo(this);
+                        ambiente.removerEntidade(this);
                         break;
                     } else {
                         // Para outros obstáculos ou robôs, apenas para o movimento

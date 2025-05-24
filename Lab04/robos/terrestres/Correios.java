@@ -108,7 +108,7 @@ public class Correios extends RoboTerrestre {
                         + ").\nBuraco coberto na posição X1:" + ((Obstaculo) objeto_posicao).getX1() + " X2:"
                         + ((Obstaculo) objeto_posicao).getX2() + " Y1:" + ((Obstaculo) objeto_posicao).getY1()
                         + " Y2:" + ((Obstaculo) objeto_posicao).getY2();
-                ambiente.removerObstaculo((Obstaculo) objeto_posicao);
+                ambiente.removerEntidade(objeto_posicao);
 
                 return texto;
             }

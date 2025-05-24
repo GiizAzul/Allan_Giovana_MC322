@@ -62,7 +62,7 @@ public class RoboTerrestre extends Robo {
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
                         System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
-                        ambiente.removerRobo(this);
+                        ambiente.removerEntidade(this);
                     } else {
                         System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: " + sensorColisao.getUltimoObstaculoColidido().getTipo() + " na posição X:" + x + " Y:" + posicaoY);
                     }
@@ -87,7 +87,7 @@ public class RoboTerrestre extends Robo {
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
                         System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
-                        ambiente.removerRobo(this);
+                        ambiente.removerEntidade(this);
                     } else {
                         System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: " + sensorColisao.getUltimoObstaculoColidido().getTipo() + " na posição X:" + posicaoX + " Y:" + y);
                     }

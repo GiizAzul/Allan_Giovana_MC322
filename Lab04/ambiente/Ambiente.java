@@ -17,8 +17,9 @@ public class Ambiente {
     private final int tamZ;
 
     // Listas para armazenar robôs e obstáculos
-    private ArrayList<Robo> listaRobos;
-    private ArrayList<Obstaculo> listaObstaculos;
+    private ArrayList<Entidade> entidades;
+
+    private TipoEntidade[][][] mapa;
 
     /**
      * Construtor que inicializa o ambiente com as dimensões especificadas
@@ -27,8 +28,18 @@ public class Ambiente {
         this.tamX = tamX;
         this.tamY = tamY;
         this.tamZ = tamZ;
-        listaRobos = new ArrayList<Robo>();
-        listaObstaculos = new ArrayList<Obstaculo>();
+        entidades = new ArrayList<Entidade>();
+        this.inicializarMapa();
+    }
+
+    private void inicializarMapa() {
+        for (int x = 0; x < tamX; x++) {
+            for (int y = 0; y < tamY; y++) {
+                for (int z = 0; z < tamZ; z++) {
+                    mapa[x][y][z] = TipoEntidade.VAZIO;
+                }
+            }
+        }
     }
 
     /**
@@ -48,43 +59,59 @@ public class Ambiente {
     /**
      * Adiciona um robô ao ambiente
      */
-    public void adicionarRobo(Robo robo) {
-        if (this.dentroDosLimites(robo.getX(), robo.getY(), robo.getZ())) {
-            listaRobos.add(robo);
+    public void adicionarEntidade(Entidade entidade) {
+        if (entidade.getTipo() == TipoEntidade.ROBO) {
+            if (this.dentroDosLimites(entidade.getX(), entidade.getY(), entidade.getZ())) {
+                entidades.add(entidade);
+                mapa[entidade.getX()][entidade.getY()][entidade.getZ()] = TipoEntidade.ROBO;
+            }
+        } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
+            Obstaculo obstaculo = (Obstaculo) entidade;
+            if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) &&
+                    this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
+                entidades.add(obstaculo);
+                for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
+                    for (int y = obstaculo.getY1(); y <= obstaculo.getY2(); y++) {
+                        for (int z = 0; z <= obstaculo.getAltura(); z++) {
+                            mapa[x][y][z] = TipoEntidade.OBSTACULO;
+                        }
+                    }
+                }
+
+            }
         }
     }
 
-    public void removerRobo(Robo robo) {
-        listaRobos.remove(robo);
-    }
+    public void removerEntidade(Entidade entidade) {
+        entidades.remove(entidade);
+        if (entidade.getTipo() == TipoEntidade.ROBO) {
+            mapa[entidade.getX()][entidade.getY()][entidade.getZ()] = TipoEntidade.VAZIO;
+        } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
+            Obstaculo obstaculo = (Obstaculo) entidade;
+            for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
+                for (int y = obstaculo.getY1(); y <= obstaculo.getY2(); y++) {
+                    for (int z = 0; z <= obstaculo.getAltura(); z++) {
+                        mapa[x][y][z] = TipoEntidade.VAZIO;
+                    }
+                }
+            }
 
-    /**
-     * Retorna a lista de robôs no ambiente
-     */
-    public ArrayList<Robo> getListaRobos() {
-        return listaRobos;
-    }
-
-    /**
-     * Adiciona um obstáculo ao ambiente
-     */
-    public void adicionarObstaculo(Obstaculo obstaculo) {
-        if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) &&
-                this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
-            listaObstaculos.add(obstaculo);
         }
-
     }
 
-    public void removerObstaculo(Obstaculo obstaculo) {
-        listaObstaculos.remove(obstaculo);
+    public boolean estaOcupado(int x, int y, int z) {
+        if (mapa[x][y][z] == TipoEntidade.VAZIO) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
-     * Retorna a lista de obstáculos no ambiente
+     * Retorna a lista de entidades no ambiente
      */
-    public ArrayList<Obstaculo> getListaObstaculos() {
-        return listaObstaculos;
+    public ArrayList<Entidade> getEntidades() {
+        return entidades;
     }
 
     // Getters para as dimensões do ambiente
@@ -127,12 +154,12 @@ public class Ambiente {
             int velocidade = (Integer) atributo[6];
 
             // Verificar se a posição está dentro dos limites
-            if (!dentroDosLimites(posX, posY)) {
+            if (!dentroDosLimites(posX, posY, posZ)) {
                 System.out.println("Posição fora dos limites do ambiente");
                 return null;
             }
 
-            if (identificarObjetoPosicao(posX, posY, posZ) != null) {
+            if (estaOcupado(posX, posY, posZ)) {
                 System.out.println("Já existe um objeto nesta posição");
                 return null;
             }
@@ -190,16 +217,18 @@ public class Ambiente {
      * Se posZ for 0, busca no plano do solo
      */
     public Entidade identificarObjetoPosicao(int posX, int posY, int posZ) {
-        for (Robo robo : this.listaRobos) {
-            if (robo.getPosicaoXInterna() == posX && robo.getPosicaoYInterna() == posY && robo.getZ() == posZ) {
-                return robo;
-            }
-
-        }
-        for (Obstaculo obstaculo : this.listaObstaculos) {
-            if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY
-                    && obstaculo.getY2() >= posY && obstaculo.getAltura() >= posZ) {
-                return obstaculo;
+        for (Entidade entidade : this.entidades) {
+            if (entidade.getTipo() == TipoEntidade.ROBO) {
+                Robo robo = (Robo) entidade;
+                if (robo.getPosicaoXInterna() == posX && robo.getPosicaoYInterna() == posY && robo.getZ() == posZ) {
+                    return robo;
+                }
+            } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
+                Obstaculo obstaculo = (Obstaculo) entidade;
+                if (obstaculo.getX1() <= posX && obstaculo.getX2() >= posX && obstaculo.getY1() <= posY
+                        && obstaculo.getY2() >= posY && obstaculo.getAltura() >= posZ) {
+                    return obstaculo;
+                }
             }
         }
         return null;

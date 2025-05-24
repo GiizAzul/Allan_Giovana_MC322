@@ -98,7 +98,7 @@ public class Obstaculo implements Entidade{
             this.integridade -= dano;
 
             if (integridade <= 0) {
-                ambiente.removerObstaculo(this);
+                ambiente.removerEntidade(this);
                 return "O obstáculo foi destruído";
             }
 
