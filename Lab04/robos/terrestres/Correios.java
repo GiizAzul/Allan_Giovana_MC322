@@ -122,7 +122,7 @@ public class Correios extends RoboTerrestre {
         int i = entregas.indexOf(id);
         Entidade objeto_posicao = ambiente.identificarEntidadePosicao(destinoX, destinoY, 0);
         if (moverEntrega(destinoX - getX(), destinoY - getY(), ambiente)) {
-            if (objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
+            if (objeto_posicao != null && objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
                 pesoAtual -= pesos.get(i);
                 entregas.remove(i);
                 pesos.remove(i);
