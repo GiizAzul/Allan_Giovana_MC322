@@ -29,6 +29,10 @@ public class Correios extends RoboTerrestre {
     }
 
     public String executarTarefa(Object... argumentos){
+        String result = super.executarTarefa(argumentos);
+        if (result != ""){
+            return result;
+        }
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "carregar":
@@ -46,7 +50,7 @@ public class Correios extends RoboTerrestre {
             case "listar":
                 return listarEntregas();
             default:
-                return null;
+                return "";
         }
     }
 

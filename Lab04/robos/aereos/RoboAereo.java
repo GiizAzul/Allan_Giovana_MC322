@@ -240,16 +240,6 @@ public class RoboAereo extends Robo {
         return obstaculosEncontrados;
     }
 
-    /**
-     * Sobrescreve o método da classe pai para exibir posição incluindo altitude
-     * @return String formatada com nome e posição 3D do robô
-     */
-    @Override
-    public String exibirPosicao() {
-        return String.format("%s está em (%d, %d, %d)", super.getNome(), super.getX(), super.getY(),
-                this.getZ());
-    }
-
     public Radar getRadar() {
         return this.sensorRadar;
     }
@@ -259,6 +249,23 @@ public class RoboAereo extends Robo {
     }
 
     public String executarTarefa(Object... argumentos){
-        return null;
+        String result = super.executarTarefa(argumentos);
+        if (result != ""){
+            return result;
+        }
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "mover":
+                int x = (Integer) argumentos[1];
+                int y = (Integer) argumentos[2];
+                int z = (Integer) argumentos[3];
+                Ambiente ambiente = (Ambiente) argumentos[4];
+                mover(x, y, z, ambiente);
+                return "";
+        
+            default:
+                return "";
+        }
     }
+
 }

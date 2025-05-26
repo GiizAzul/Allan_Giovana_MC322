@@ -138,15 +138,16 @@ public abstract class Robo implements Entidade {
     public String exibirPosicao() {
         int x = this.getX();
         int y = this.getY();
+        int z = this.getZ();
         if (x == -1 || y == -1) {
             return this.nome + " está com o GPS inativo ou não disponível";
         } else {
-            return this.nome + " está na posição X:" + x + " Y:" + y;
+            return this.nome + " está na posição X:" + x + " Y:" + y +" Z:"+z;
         }
     }
 
     public String getDescricao() {
-        return "Robo" + nome + "na posição" + "X: " + getX() + "Y: " + getY() + "Z: " + getZ();
+        return exibirPosicao();
     }
 
     public char getRepresentacao() {
@@ -434,5 +435,23 @@ public abstract class Robo implements Entidade {
         return this.tipo;
     }
 
-    public abstract String executarTarefa(Object... argumentos);
+    public String executarTarefa(Object... argumentos){
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "direção":
+                String direcao = (String) argumentos[1];
+                setDirecao(direcao);
+                return "";
+            
+            case "mover base":
+                int deltaX = (Integer) argumentos[1];
+                int deltaY = (Integer) argumentos[2];
+                Ambiente ambiente = (Ambiente) argumentos[3];
+                mover(deltaX, deltaY, ambiente);
+                return "";
+        
+            default:
+                return "";
+        }
+    }
 }

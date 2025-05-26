@@ -21,6 +21,10 @@ public class TanqueGuerra extends RoboTerrestre {
     }
 
     public String executarTarefa(Object... argumentos){
+        String result = super.executarTarefa(argumentos);
+        if (result != ""){
+            return result;
+        }
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "atirar":
@@ -35,7 +39,7 @@ public class TanqueGuerra extends RoboTerrestre {
                 return recarregar(nBalas);
 
             default:
-                return null;
+                return "";
         }
     }
 
@@ -72,7 +76,7 @@ public class TanqueGuerra extends RoboTerrestre {
                                 "Disparo realizado no alvo (%d, %d)\n" +
                                         "Obstáculo %s foi atingido!\n" +
                                         defesa,
-                                alvoX, alvoY, alvodef.getTipo());
+                                alvoX, alvoY, alvodef.getTipoObstaculo());
 
                     }
                     return result;

@@ -1,6 +1,10 @@
 package robos.aereos;
+
+import java.util.ArrayList;
+
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import interfaces.Entidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
@@ -10,7 +14,8 @@ public class DroneAtaque extends RoboAereo {
     private int alcance;
     private int escudo;
 
-    public DroneAtaque(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int alt, int altMax, Ambiente amb,
+    public DroneAtaque(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int alt, int altMax,
+            Ambiente amb,
             int muni, int alc) {
 
         super(nome, dir, m, x, y, vel, alt, altMax, amb);
@@ -41,7 +46,11 @@ public class DroneAtaque extends RoboAereo {
         }
     }
 
-    public String executarTarefa(Object... argumentos){
+    public String executarTarefa(Object... argumentos) {
+        String result = super.executarTarefa(argumentos);
+        if (result != "") {
+            return result;
+        }
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "atirar coord":
@@ -57,9 +66,30 @@ public class DroneAtaque extends RoboAereo {
                 nTiros = (Integer) argumentos[2];
                 ambiente = (Ambiente) argumentos[3];
                 return atirar(robo, nTiros, ambiente);
-        
+
+            case "identificar":
+                ArrayList<Entidade> listaObjetosVistos = getRadar().acionar();
+                if (listaObjetosVistos.isEmpty()) {
+                    return "Nenhum objeto encontrado!";
+                } else {
+                    for (Entidade elemento : listaObjetosVistos) {
+                        if (elemento instanceof Obstaculo) {
+                            Obstaculo o = (Obstaculo) elemento;
+                            result+=String.format(
+                                    "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
+                                    o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
+                                    o.getAltura());
+                        } else if (elemento instanceof Robo) {
+                            Robo r = (Robo) elemento;
+                            result+=String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
+                                    r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
+                        }
+                    }
+                    return result;
+                }
+
             default:
-                return null;
+                return "";
         }
     }
 
@@ -81,10 +111,10 @@ public class DroneAtaque extends RoboAereo {
     private String atirar(Robo robo, int nTiros, Ambiente ambiente) {
         if (this.municao < nTiros) {
             return "Munição insuficiente";
-        } else{
+        } else {
             String result = this.atirar(robo.getX(), robo.getY(), robo.getZ(), nTiros, ambiente);
             return result;
-        } 
+        }
     }
 
     private String executarTiro(int dX, int dY, int dZ, int aX, int aY, int aZ, int nTiros, Ambiente ambiente) {
@@ -109,9 +139,9 @@ public class DroneAtaque extends RoboAereo {
                     String defesa = alvodef.defender(nTiros, ambiente);
                     String result = String.format(
                             "Disparo realizado no alvo (%d, %d, %d)\n" +
-                                    "Obstáculo foi %s foi atingido!\n" +
+                                    "Obstáculo %s foi atingido!\n" +
                                     defesa,
-                            aX, aY, aZ, alvodef.getTipo());
+                            aX, aY, aZ, alvodef.getTipoObstaculo());
                     return result;
                 }
             }

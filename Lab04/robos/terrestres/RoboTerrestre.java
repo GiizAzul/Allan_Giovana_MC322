@@ -135,7 +135,23 @@ public class RoboTerrestre extends Robo {
     }
 
     public String executarTarefa(Object... argumentos){
-        return null;
+        String result = super.executarTarefa(argumentos);
+        if (result != ""){
+            return result;
+        }
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "mover":
+                int deltaX = (Integer) argumentos[1];
+                int deltaY = (Integer) argumentos[2];
+                int velocidade = (Integer) argumentos[3];
+                Ambiente ambiente = (Ambiente) argumentos[4];
+                mover(deltaX, deltaY, velocidade, ambiente);
+                return "";
+        
+            default:
+                return "";
+        }
     }
 
 }

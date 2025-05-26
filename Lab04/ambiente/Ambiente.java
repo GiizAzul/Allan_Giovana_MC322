@@ -71,9 +71,9 @@ public class Ambiente {
             if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) &&
                     this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
                 entidades.add(obstaculo);
-                for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
-                    for (int y = obstaculo.getY1(); y <= obstaculo.getY2(); y++) {
-                        for (int z = 0; z <= obstaculo.getAltura(); z++) {
+                for (int x = obstaculo.getX1(); x < obstaculo.getX2(); x++) {
+                    for (int y = obstaculo.getY1(); y < obstaculo.getY2(); y++) {
+                        for (int z = 0; z < obstaculo.getAltura(); z++) {
                             mapa[y][x][z] = TipoEntidade.OBSTACULO;
                         }
                     }
@@ -217,26 +217,25 @@ public class Ambiente {
                     }
 
                 case 2: // Robôs aéreos
-                    int altitude = (Integer) atributo[8];
-                    int altitudeMaxima = (Integer) atributo[9];
+                    int altitudeMaxima = (Integer) atributo[8];
 
                     // Verificar se altitude está dentro dos limites
-                    if (!dentroDosLimites(posX, posY, altitude)) {
+                    if (!dentroDosLimites(posX, posY, posZ)) {
                         System.out.println("Altitude fora dos limites do ambiente");
                         return null;
                     }
 
                     if (subcategoria == 1) { // DroneAtaque
-                        int municao = (Integer) atributo[10];
-                        int alcance = (Integer) atributo[11];
+                        int municao = (Integer) atributo[9];
+                        int alcance = (Integer) atributo[10];
                         return new DroneAtaque(nome, direcao, material, posX, posY, velocidade,
-                                altitude, altitudeMaxima, this, municao, alcance);
+                                posZ, altitudeMaxima, this, municao, alcance);
                     } else { // DroneVigilancia
-                        float alcanceRadar = (Float) atributo[10];
-                        float anguloRadar = (Float) atributo[11];
-                        float anguloCamera = (Float) atributo[12];
+                        float alcanceRadar = (Float) atributo[9];
+                        float anguloRadar = (Float) atributo[10];
+                        float anguloCamera = (Float) atributo[11];
                         return new DroneVigilancia(nome, direcao, material, posX, posY, velocidade,
-                                altitude, altitudeMaxima, this, alcanceRadar, anguloRadar, anguloCamera);
+                                posZ, altitudeMaxima, this, alcanceRadar, anguloRadar, anguloCamera);
                     }
 
                 default:

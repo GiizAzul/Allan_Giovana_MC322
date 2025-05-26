@@ -23,10 +23,13 @@ public class DroneVigilancia extends RoboAereo {
     }
 
     public String executarTarefa(Object... argumentos) {
+        String result = super.executarTarefa(argumentos);
+        if (result != "") {
+            return result;
+        }
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "varrer":
-                String result = null;
                 Ambiente ambiente = (Ambiente) argumentos[1];
                 int centroX = (Integer) argumentos[2];
                 int centroY = (Integer) argumentos[3];
@@ -57,10 +60,31 @@ public class DroneVigilancia extends RoboAereo {
                     desabilitarCamuflagem();
                 else
                     acionarCamuflagem();
-                return null;
+                return "";
+
+            case "identificar":
+                ArrayList<Entidade> listaObjetosVistos = getRadar().acionar();
+                if (listaObjetosVistos.isEmpty()) {
+                    return "Nenhum objeto encontrado!";
+                } else {
+                    for (Entidade elemento : listaObjetosVistos) {
+                        if (elemento instanceof Obstaculo) {
+                            Obstaculo o = (Obstaculo) elemento;
+                            result+=String.format(
+                                    "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d%n",
+                                    o.getTipo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
+                                    o.getAltura());
+                        } else if (elemento instanceof Robo) {
+                            Robo r = (Robo) elemento;
+                            result+=String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d",
+                                    r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
+                        }
+                    }
+                    return result;
+                }
 
             default:
-                return null;
+                return "";
         }
     }
 
