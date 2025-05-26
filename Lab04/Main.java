@@ -39,7 +39,6 @@ public class Main {
 
             ArrayList<Entidade> listaEntidades;
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
-            ArrayList<Obstaculo> listaObstaculo = new ArrayList<Obstaculo>();
 
             while (true) {
                 String menu = String.format(
@@ -62,10 +61,9 @@ public class Main {
                 }
 
                 listaEntidades = ambiente.getEntidades();
+                listaRobo.clear();
                 for (Entidade entidade : listaEntidades) {
-                    if (!listaObstaculo.contains(entidade) && entidade.getTipo() == TipoEntidade.OBSTACULO) {
-                        listaObstaculo.add((Obstaculo) entidade);
-                    } else if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
+                    if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
                         listaRobo.add((Robo) entidade);
                     }
                 }
@@ -122,7 +120,6 @@ public class Main {
             Object[] atributos = new Object[14];
             ArrayList<Entidade> listaEntidades;
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
-            ArrayList<Obstaculo> listaObstaculo = new ArrayList<Obstaculo>();
 
             while (true) {
 
@@ -149,10 +146,9 @@ public class Main {
                 }
 
                 listaEntidades = ambiente.getEntidades();
+                listaRobo.clear();
                 for (Entidade entidade : listaEntidades) {
-                    if (!listaObstaculo.contains(entidade) && entidade.getTipo() == TipoEntidade.OBSTACULO) {
-                        listaObstaculo.add((Obstaculo) entidade);
-                    } else if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
+                    if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
                         listaRobo.add((Robo) entidade);
                     }
                 }
@@ -487,7 +483,7 @@ public class Main {
                     roboEscolhido.executarTarefa("direção", direcao);
                 }
             } else {
-                System.out.println("O robô está inoperante\n");
+                System.out.println("O robô está desligado\n");
             }
 
         } else if (roboSelecionado instanceof Correios) {
@@ -538,7 +534,7 @@ public class Main {
                     roboEscolhido.executarTarefa("direção", direcao);
                 }
             } else {
-                System.out.println("O robô está inoperante\n");
+                System.out.println("O robô está desligado\n");
             }
 
         } else if (roboSelecionado instanceof DroneAtaque) {
@@ -584,7 +580,7 @@ public class Main {
                     roboEscolhido.executarTarefa("direção", direcao);
                 }
             } else {
-                System.out.println("Robô inoperante!");
+                System.out.println("Robô desligado!");
             }
 
         } else if (roboSelecionado instanceof DroneVigilancia) {
@@ -632,7 +628,7 @@ public class Main {
                     System.out.println(roboEscolhido.executarTarefa("camuflagem"));
                 }
             } else {
-                System.out.println("Robô inoperante!");
+                System.out.println("Robô desligado!");
             }
         } else {
             System.out.println("Tipo de Robô inválido!");
