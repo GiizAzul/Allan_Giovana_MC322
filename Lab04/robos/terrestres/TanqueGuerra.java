@@ -20,7 +20,26 @@ public class TanqueGuerra extends RoboTerrestre {
         setIntegridade(100);
     }
 
-    public String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
+    public String executarTarefa(Object... argumentos){
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "atirar":
+                int alvoX = (Integer) argumentos[1];
+                int alvoY = (Integer) argumentos[2];
+                int nTiros = (Integer) argumentos[3];
+                Ambiente ambiente = (Ambiente) argumentos[4];
+                return atirar(alvoX,alvoY,nTiros,ambiente);
+        
+            case "recarregar":
+                int nBalas = (Integer) argumentos[1];
+                return recarregar(nBalas);
+
+            default:
+                return null;
+        }
+    }
+
+    private String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
         Entidade alvo = ambiente.identificarEntidadePosicao(alvoX, alvoY, 0);
         if (municaoAtual < nTiros) {
             return "Munição insuficiente";
@@ -64,7 +83,7 @@ public class TanqueGuerra extends RoboTerrestre {
         }
     }
 
-    public String recarregar(int nBalas) {
+    private String recarregar(int nBalas) {
         municaoAtual += nBalas;
         if (municaoAtual > municaoMax) {
             municaoAtual = municaoMax;

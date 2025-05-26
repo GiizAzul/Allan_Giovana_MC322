@@ -35,7 +35,9 @@ public class Main {
         System.out.println(mensagem);
 
         Object[] atributos = new Object[10];
+        ArrayList<Entidade> listaEntidades;
         ArrayList<Robo> listaRobo;
+        ArrayList<Obstaculo> listaObstaculo;
 
         while (true) {
 
@@ -60,7 +62,14 @@ public class Main {
                 continue;
             }
 
-            listaRobo = ambiente.getListaRobos();
+            listaEntidades = ambiente.getEntidades();
+            for (Entidade entidade: listaEntidades){
+                if (entidade.getTipo()==TipoEntidade.OBSTACULO){
+                    listaObstaculo.add((Obstaculo) entidade);
+                } else if (entidade.getTipo()==TipoEntidade.ROBO){
+                    listaObstaculo.add((Obstaculo) entidade);
+                }
+            }
 
             if (comando == 0) {
                 break;
@@ -76,11 +85,11 @@ public class Main {
                 } while (!Robo.getDirecoesPossiveis().contains(atributos[1]));
 
                 System.out.println("Escolha o material:");
-                System.out.println("0 - ALUMINO");
-                System.out.println("1 - ACO");
-                System.out.println("2 - PLASTICO");
-                System.out.println("3 - FIBRA_VIDRO");
-                System.out.println("4 - FIBRA_CARBONO");
+                System.out.println("0 - Alumínio");
+                System.out.println("1 - Aço");
+                System.out.println("2 - Plástico");
+                System.out.println("3 - Fibra de Vidro");
+                System.out.println("4 - Fibra de Carbono");
                 System.out.print("Material: ");
                 int material = scanner.nextInt();
                 scanner.nextLine(); // Consumir quebra de linha
@@ -100,6 +109,17 @@ public class Main {
                 int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                 atributos[3] = coordenadas[0]; // Posição X
                 atributos[4] = coordenadas[1]; // Posição Y
+                
+                do {
+                    System.out.print("Velocidade: (maior que 0)");
+                    atributos[6] = scanner.nextInt();
+                    scanner.nextLine(); // Consumir quebra de linha
+                } while ((Integer) atributos[6] <= 0);
+                
+                do {
+                    System.out.print("Velocidade Máxima: (maior ou igual a velocidade " + atributos[6] + " definida");
+                    atributos[7] = scanner.nextInt();
+                } while ((Integer) atributos[7] <= 0 || (Integer) atributos[7] < (Integer) atributos[6]);
 
                 System.out.println("Digite o número do tipo de robô que deseja criar:");
                 System.out.println("1 - Terrestre");
@@ -118,43 +138,36 @@ public class Main {
                     int categoria = scanner.nextInt();
                     scanner.nextLine(); // Consumir quebra de linha
                     System.out.println();
+                    atributos[5] = 0;
+
 
                     if (categoria == 1) {
                         // Atributos específicos do Tanque de Guerra
                         do {
-                            System.out.print("Velocidade Máxima: ");
-                            atributos[5] = scanner.nextInt();
-                        } while ((Integer) atributos[5] <= 0);
-
-                        do {
                             System.out.print("Munição Máxima: ");
-                            atributos[6] = scanner.nextInt();
-                        } while ((Integer) atributos[6] <= 0);
+                            atributos[8] = scanner.nextInt();
+                        } while ((Integer) atributos[8] <= 0);
 
                         do {
                             System.out.print("Alcance: ");
-                            atributos[7] = scanner.nextInt();
-                        } while ((Integer) atributos[7] <= 0);
+                            atributos[9] = scanner.nextInt();
+                        } while ((Integer) atributos[9] <= 0);
 
                     } else if (categoria == 2) {
                         // Atributos específicos dos Correios
-                        do {
-                            System.out.print("Velocidade Máxima: ");
-                            atributos[5] = scanner.nextInt();
-                        } while ((Integer) atributos[5] < 0);
 
                         do {
                             System.out.print("Capacidade Máxima de carga: ");
-                            atributos[6] = scanner.nextInt();
-                        } while ((Integer) atributos[6] < 0);
+                            atributos[8] = scanner.nextInt();
+                        } while ((Integer) atributos[8] <= 0);
 
                         do {
                             System.out.print("Peso Máximo suportado: ");
-                            atributos[7] = scanner.nextFloat();
-                        } while ((Float) atributos[7] < 0);
+                            atributos[9] = scanner.nextFloat();
+                        } while ((Float) atributos[9] <= 0);
                     }
 
-                    ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
+                    ambiente.adicionarEntidade(ambiente.criarRobo(tipo, categoria, atributos));
 
                 } else if (tipo == 2) {
                     // Criação de Robôs Aéreos
@@ -167,47 +180,48 @@ public class Main {
                     System.out.println();
 
                     do {
-                        System.out.print("Velocidade Máxima: ");
-                        atributos[5] = scanner.nextInt();
-                    } while ((Integer) atributos[5] < 0);
-
-                    do {
                         System.out.print("Altura Máxima (não pode ultrapassar " + ambiente.getTamZ() + "): ");
-                        atributos[7] = scanner.nextInt();
-                    } while ((Integer) atributos[7] > ambiente.getTamZ() || (Integer) atributos[7] <= 0);
+                        atributos[9] = scanner.nextInt();
+                    } while ((Integer) atributos[9] > ambiente.getTamZ() || (Integer) atributos[9] <= 0);
 
                     do {
                         System.out.print("Altura Inicial (Menor do que Altura Máxima): ");
-                        atributos[6] = scanner.nextInt();
-                    } while ((Integer) atributos[6] > ambiente.getTamZ()
-                            || (Integer) atributos[6] > (Integer) atributos[7]
-                            || (Integer) atributos[6] <= 0);
+                        atributos[8] = scanner.nextInt();
+                    } while ((Integer) atributos[8] > ambiente.getTamZ()
+                            || (Integer) atributos[8] > (Integer) atributos[9]
+                            || (Integer) atributos[8] <= 0);
 
                     if (categoria == 1) {
                         // Atributos específicos do Drone de Ataque
                         do {
                             System.out.print("Munição: ");
-                            atributos[8] = scanner.nextInt();
-                        } while ((Integer) atributos[8] < 0);
+                            atributos[10] = scanner.nextInt();
+                        } while ((Integer) atributos[10] <= 0);
 
                         do {
                             System.out.print("Alcance: ");
-                            atributos[9] = scanner.nextInt();
-                        } while ((Integer) atributos[9] < 0);
+                            atributos[11] = scanner.nextInt();
+                        } while ((Integer) atributos[11] <= 0);
 
                     } else if (categoria == 2) {
                         // Atributos específicos do Drone de Vigilância
+
                         do {
                             System.out.print("Alcance do Radar (número decimal, use ponto): ");
-                            atributos[7] = scanner.nextFloat();
-                        } while ((Float) atributos[7] < 0);
+                            atributos[10] = scanner.nextFloat();
+                        } while ((Float) atributos[10] <= 0);
+                        
+                        do {
+                            System.out.print("Angulo do Radar (número decimal, use ponto): ");
+                            atributos[11] = scanner.nextFloat();
+                        } while ((Float) atributos[11] <= 0);
 
                         do {
                             System.out.print("Ângulo de abertura da câmera (graus, número decimal): ");
-                            atributos[8] = scanner.nextFloat();
-                        } while ((Float) atributos[8] < 0);
+                            atributos[12] = scanner.nextFloat();
+                        } while ((Float) atributos[12] <= 0);
                     }
-                    ambiente.adicionarRobo(ambiente.criarRobo(tipo, categoria, atributos));
+                    ambiente.adicionarEntidade(ambiente.criarRobo(tipo, categoria, atributos));
                     Main.limparTerminal();
                     System.out.println("Robô aéreo adicionado com sucesso!\n");
                 }
@@ -230,13 +244,13 @@ public class Main {
                 scanner.nextLine(); // Consumir quebra de linha
                 System.out.println();
                 if (tipoObs == 0) {
-                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.PAREDE, X1, X2, Y1, Y2));
+                    ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PAREDE, X1, X2, Y1, Y2));
                 } else if (tipoObs == 1) {
-                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.ARVORE, X1, X2, Y1, Y2));
+                    ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.ARVORE, X1, X2, Y1, Y2));
                 } else if (tipoObs == 2) {
-                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.PREDIO, X1, X2, Y1, Y2));
+                    ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PREDIO, X1, X2, Y1, Y2));
                 } else if (tipoObs == 3) {
-                    ambiente.adicionarObstaculo(new Obstaculo(TipoObstaculo.BURACO, X1, X2, Y1, Y2));
+                    ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.BURACO, X1, X2, Y1, Y2));
                 } else if (tipoObs == 4) {
                     Obstaculo outro = new Obstaculo(TipoObstaculo.OUTRO, X1, X2, Y1, Y2);
                     System.out.println("Digite a altura do obstáculo:");
@@ -252,7 +266,7 @@ public class Main {
                     }
                     outro.setAltura(altura);
                     outro.setIntegridade(integridade);
-                    ambiente.adicionarObstaculo(outro);
+                    ambiente.adicionarEntidade(outro);
                 }
 
             } else {

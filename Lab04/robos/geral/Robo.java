@@ -12,8 +12,10 @@ import interfaces.*;
  * Classe que representa um robô com funcionalidades básicas de movimento e
  * sensoriamento.
  */
-public class Robo implements Entidade {
+public abstract class Robo implements Entidade {
     // Propriedades
+    private final int id;
+    private static int cont_robo = 0;
     private String nome; // Nome do robô
     private String direcao; // Direção atual do robô (Norte, Sul, Leste, Oeste)
     private int posicaoX; // Coordenada X da posição do robô
@@ -21,7 +23,7 @@ public class Robo implements Entidade {
     private int posicaoZ;
     private int integridade; // Nível de integridade do robô (0-100)
     private int velocidade; // Velocidade do robô
-    private boolean operando; // Estado de operação do robô (true = operando, false = inoperante)
+    private boolean estado; // Estado de operação do robô (true = ligado, false = desligado)
     private MateriaisRobo material; // Material do robô
     private TipoEntidade tipo;
 
@@ -43,19 +45,24 @@ public class Robo implements Entidade {
      */
     public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int posicaoZ,
             int velocidade) {
+        this.id = ++cont_robo;
         this.nome = nome;
         this.direcao = direcao;
         this.material = material;
         this.posicaoX = posicaoX;
         this.posicaoY = posicaoY;
         this.posicaoZ = posicaoZ;
-        this.operando = true;
+        this.estado = true;
         this.integridade = 100;
         this.velocidade = velocidade;
         this.gps = new GPS(this);
         this.listaSensores = new ArrayList<>();
         this.listaSensores.add(gps);
         this.tipo = TipoEntidade.ROBO;
+    }
+
+    public int getId(){
+        return id;
     }
 
     /**
@@ -138,11 +145,11 @@ public class Robo implements Entidade {
         }
     }
 
-    public String getDescricao(){
+    public String getDescricao() {
         return "Robo" + nome + "na posição" + "X: " + getX() + "Y: " + getY() + "Z: " + getZ();
     }
 
-    public char getRepresentacao(){
+    public char getRepresentacao() {
         return '#';
     }
 
@@ -240,21 +247,25 @@ public class Robo implements Entidade {
     }
 
     /**
-     * Verifica se o robô está operando
+     * Verifica se o robô está ligado
      * 
      * @return Estado de operação
      */
-    public boolean getOperando() {
-        return operando;
+    public boolean getEstado() {
+        return estado;
     }
 
     /**
      * Define o estado de operação do robô
      * 
-     * @param operando Novo estado de operação
+     * @param estado Novo estado de operação
      */
-    public void setOperando(boolean operando) {
-        this.operando = operando;
+    public void ligar() {
+        this.estado = true;
+    }
+
+    public void desligar() {
+        this.estado = false;
     }
 
     /**
@@ -302,10 +313,10 @@ public class Robo implements Entidade {
     public void setIntegridade(int integridade) {
         if (integridade <= 0) {
             this.integridade = 0;
-            this.operando = false;
+            this.estado = false;
         } else {
             this.integridade = integridade;
-            this.operando = true;
+            this.estado = true;
         }
     }
 
@@ -345,12 +356,12 @@ public class Robo implements Entidade {
         this.integridade -= dano;
 
         if (integridade <= 0) {
-            this.operando = false;
+            this.estado = false;
             this.integridade = 0;
-            return "O robô " + getNome() + " está inoperante devido ao dano tomado";
+            return "O robô " + getNome() + " está desligado devido ao dano tomado";
         }
 
-        return "O robô " + getNome() + " ainda está operando";
+        return "O robô " + getNome() + " ainda está ligado";
     }
 
     /**
@@ -422,4 +433,6 @@ public class Robo implements Entidade {
     public TipoEntidade getTipo() {
         return this.tipo;
     }
+
+    public abstract String executarTarefa(Object... argumentos);
 }

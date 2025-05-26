@@ -133,4 +133,9 @@ public class RoboTerrestre extends Robo {
     public Colisao getSensorColisao() {
         return sensorColisao;
     }
+
+    public String executarTarefa(Object... argumentos){
+        return null;
+    }
+
 }

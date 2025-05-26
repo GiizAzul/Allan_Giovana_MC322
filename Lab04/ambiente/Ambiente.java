@@ -188,7 +188,8 @@ public class Ambiente {
             int posY = (Integer) atributo[4];
             int posZ = (Integer) atributo[5];
             int velocidade = (Integer) atributo[6];
-
+            int velocidadeMaxima = (Integer) atributo[7];
+            
             // Verificar se a posição está dentro dos limites
             if (!dentroDosLimites(posX, posY, posZ)) {
                 System.out.println("Posição fora dos limites do ambiente");
@@ -203,22 +204,21 @@ public class Ambiente {
             // Criar robô baseado no tipo e subcategoria
             switch (tipo) {
                 case 1: // Robôs terrestres
-                    int velocidadeMaxima = (Integer) atributo[5];
                     if (subcategoria == 1) { // TanqueGuerra
-                        int municaoMax = (Integer) atributo[6];
-                        int alcance = (Integer) atributo[7];
+                        int municaoMax = (Integer) atributo[8];
+                        int alcance = (Integer) atributo[9];
                         return new TanqueGuerra(nome, direcao, this, material, posX, posY, velocidade,
                                 velocidadeMaxima, municaoMax, alcance);
                     } else { // Correios
-                        int capacidadeMax = (Integer) atributo[6];
-                        float pesoMaximo = (Float) atributo[7];
+                        int capacidadeMax = (Integer) atributo[8];
+                        float pesoMaximo = (Float) atributo[9];
                         return new Correios(nome, direcao, this, material, posX, posY, velocidade,
                                 velocidadeMaxima, capacidadeMax, pesoMaximo);
                     }
 
                 case 2: // Robôs aéreos
-                    int altitude = (Integer) atributo[6];
-                    int altitudeMaxima = (Integer) atributo[7];
+                    int altitude = (Integer) atributo[8];
+                    int altitudeMaxima = (Integer) atributo[9];
 
                     // Verificar se altitude está dentro dos limites
                     if (!dentroDosLimites(posX, posY, altitude)) {
@@ -227,14 +227,14 @@ public class Ambiente {
                     }
 
                     if (subcategoria == 1) { // DroneAtaque
-                        int municao = (Integer) atributo[8];
-                        int alcance = (Integer) atributo[9];
+                        int municao = (Integer) atributo[10];
+                        int alcance = (Integer) atributo[11];
                         return new DroneAtaque(nome, direcao, material, posX, posY, velocidade,
                                 altitude, altitudeMaxima, this, municao, alcance);
                     } else { // DroneVigilancia
-                        int alcanceRadar = (int) atributo[7];
-                        int anguloRadar = (int) atributo[8];
-                        float anguloCamera = (Float) atributo[9];
+                        float alcanceRadar = (Float) atributo[10];
+                        float anguloRadar = (Float) atributo[11];
+                        float anguloCamera = (Float) atributo[12];
                         return new DroneVigilancia(nome, direcao, material, posX, posY, velocidade,
                                 altitude, altitudeMaxima, this, alcanceRadar, anguloRadar, anguloCamera);
                     }
@@ -242,7 +242,7 @@ public class Ambiente {
                 default:
                     return null;
             }
-        } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
+        } catch (ClassCastException | ArrayIndexOutOfBoundsException e ) {
             System.out.println("Erro ao criar robô: parâmetros incorretos");
             return null;
         }

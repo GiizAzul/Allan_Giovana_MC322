@@ -16,13 +16,55 @@ public class DroneVigilancia extends RoboAereo {
     private float angulo_camera;
 
     public DroneVigilancia(String nome, String dir, MateriaisRobo m, int x, int y, int vel, int h, int hmax,
-            Ambiente amb, int alc_rad, int ang_radar, float ang_cam) {
+            Ambiente amb, float alc_rad, float ang_radar, float ang_cam) {
         super(nome, dir, m, x, y, vel, h, hmax, amb, alc_rad, ang_radar);
         this.angulo_camera = ang_cam;
         this.camuflado = false;
     }
 
-    public ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
+    public String executarTarefa(Object... argumentos) {
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "varrer":
+                String result = null;
+                Ambiente ambiente = (Ambiente) argumentos[1];
+                int centroX = (Integer) argumentos[2];
+                int centroY = (Integer) argumentos[3];
+                int raio = (Integer) argumentos[4];
+                ArrayList<Entidade> objetos_encontrados = varrerArea(ambiente, centroX,
+                        centroY, raio);
+                if (objetos_encontrados.isEmpty()) {
+                    result += "Nenhum objeto foi encontrado!";
+                } else {
+                    result += "Objetos encontrados:\n";
+                    for (Entidade obj : objetos_encontrados) {
+                        if (obj instanceof Robo) {
+                            Robo r = (Robo) obj;
+                            result += String.format("Robô: %s, X: %d, Y: %d, Altura: %s\n",
+                                    r.getNome(), r.getX(), r.getY(), r.getZ());
+                        } else {
+                            Obstaculo o = (Obstaculo) obj;
+                            result += String.format("Obstáculo: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
+                                    o.getTipo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
+                                    o.getAltura());
+                        }
+                    }
+                }
+                return result;
+
+            case "camuflagem":
+                if (isCamuflado())
+                    desabilitarCamuflagem();
+                else
+                    acionarCamuflagem();
+                return null;
+
+            default:
+                return null;
+        }
+    }
+
+    private ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura
         // Baseado na capacidade da câmera do drone
@@ -89,12 +131,12 @@ public class DroneVigilancia extends RoboAereo {
         return this.camuflado;
     }
 
-    public void acionarCamuflagem() {
+    private void acionarCamuflagem() {
         this.camuflado = true;
         this.visivel = false;
     }
 
-    public void desabilitarCamuflagem() {
+    private void desabilitarCamuflagem() {
         this.visivel = true;
         this.camuflado = false;
     }

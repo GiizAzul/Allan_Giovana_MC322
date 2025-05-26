@@ -18,8 +18,8 @@ import robos.aereos.RoboAereo;
 public class Radar extends Sensor<ArrayList<Entidade>> {
     private RoboAereo robo;         // Robô aéreo ao qual o radar está acoplado
     private Ambiente ambiente;      // Ambiente onde o radar realiza a detecção
-    private int raioAlcance;        // Alcance máximo do radar em unidades de distância
-    private int anguloAlcance;      // Ângulo de abertura vertical do radar em graus
+    private float raioAlcance;        // Alcance máximo do radar em unidades de distância
+    private float anguloAlcance;      // Ângulo de abertura vertical do radar em graus
 
     /**
      * Construtor do Radar.
@@ -29,7 +29,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * @param raioAlcance Alcance máximo do radar em unidades de distância
      * @param anguloAlcance Ângulo de abertura vertical do radar em graus
      */
-    public Radar(RoboAereo roboAir, Ambiente ambienteSensor, int raioAlcance, int anguloAlcance) {
+    public Radar(RoboAereo roboAir, Ambiente ambienteSensor, float raioAlcance, float anguloAlcance) {
         super();
         this.raioAlcance = raioAlcance;
         this.anguloAlcance = anguloAlcance;
@@ -229,7 +229,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * 
      * @return Raio de alcance do radar
      */
-    public int getRaioAlcance() {
+    public float getRaioAlcance() {
         return raioAlcance;
     }
 
@@ -247,7 +247,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * 
      * @return Ângulo de abertura do radar em graus
      */
-    public int getAnguloAlcance() {
+    public float getAnguloAlcance() {
         return anguloAlcance;
     }
 

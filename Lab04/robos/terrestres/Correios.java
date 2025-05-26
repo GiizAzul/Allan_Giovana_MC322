@@ -28,7 +28,29 @@ public class Correios extends RoboTerrestre {
         setIntegridade(50);
     }
 
-    public String carregarPacote(String id, float peso) {
+    public String executarTarefa(Object... argumentos){
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "carregar":
+                String id = (String) argumentos[1];
+                float peso = (Float) argumentos[2];
+                return carregarPacote(id, peso);  
+
+            case "entregar":
+                id = (String) argumentos[1];
+                int destinoX = (Integer) argumentos[2];    
+                int destinoY = (Integer) argumentos[3];
+                Ambiente ambiente = (Ambiente) argumentos[4];
+                return entregarPacote(id, destinoX, destinoY, ambiente);
+            
+            case "listar":
+                return listarEntregas();
+            default:
+                return null;
+        }
+    }
+
+    private String carregarPacote(String id, float peso) {
         if (entregas.size() >= capacidadeMax) {
             return "Não há espaço para mais pacotes";
         }
@@ -42,7 +64,7 @@ public class Correios extends RoboTerrestre {
         return "Pacote carregado com sucesso";
     }
 
-    public boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) {
+    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) {
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = getX() + deltaX > ambiente.getTamX() ? ambiente.getTamX() : getX() + deltaX;
         int destinoY = getY() + deltaY > ambiente.getTamY() ? ambiente.getTamY() : getY() + deltaY;
@@ -93,7 +115,7 @@ public class Correios extends RoboTerrestre {
         return true;
     }
 
-    public String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) {
+    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) {
         if (!entregas.contains(id)) {
             return ("Pacote " + id + " não encontrado na carga.");
         }
@@ -122,7 +144,7 @@ public class Correios extends RoboTerrestre {
         return "Entrega não concluída";
     }
 
-    public String listarEntregas() {
+    private String listarEntregas() {
         if (entregas.isEmpty()) {
             return "Não há entregas pendentes.";
         } else {

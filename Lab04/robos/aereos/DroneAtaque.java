@@ -3,7 +3,6 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import robos.terrestres.RoboTerrestre;
 
 public class DroneAtaque extends RoboAereo {
 
@@ -34,15 +33,37 @@ public class DroneAtaque extends RoboAereo {
             }
         } else {
             this.setIntegridade(this.getIntegridade() - dano);
-            if (this.getOperando()) {
-                return String.format("O robô %s está inoperante devido ao dano tomado", this.getNome());
+            if (this.getEstado()) {
+                return String.format("O robô %s está desligado devido ao dano tomado", this.getNome());
             } else {
-                return String.format("O robô %s ainda está operante", this.getNome());
+                return String.format("O robô %s ainda está ligado", this.getNome());
             }
         }
     }
 
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
+    public String executarTarefa(Object... argumentos){
+        String tarefa = (String) argumentos[0];
+        switch (tarefa) {
+            case "atirar coord":
+                int alvoX = (Integer) argumentos[1];
+                int alvoY = (Integer) argumentos[2];
+                int alvoZ = (Integer) argumentos[3];
+                int nTiros = (Integer) argumentos[4];
+                Ambiente ambiente = (Ambiente) argumentos[5];
+                return atirar(alvoX, alvoY, alvoZ, nTiros, ambiente);
+
+            case "atirar robo":
+                Robo robo = (Robo) argumentos[1];
+                nTiros = (Integer) argumentos[2];
+                ambiente = (Ambiente) argumentos[3];
+                return atirar(robo, nTiros, ambiente);
+        
+            default:
+                return null;
+        }
+    }
+
+    private String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
         // Verifica se há munição suficiente
         if (this.municao < nTiros) {
             return "Munição insuficiente";
@@ -57,36 +78,13 @@ public class DroneAtaque extends RoboAereo {
 
     }
 
-    public String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
-        // Verifica se há munição suficiente
+    private String atirar(Robo robo, int nTiros, Ambiente ambiente) {
         if (this.municao < nTiros) {
             return "Munição insuficiente";
-        }
-
-        // Verifica se alvo está no alcance
-        int dX = this.getX() - alvoX;
-        int dY = this.getY() - alvoY;
-
-        return executarTiro(dX, dY, this.getZ(), alvoX, alvoY, 0, nTiros, ambiente);
-
-    }
-
-    public String atirar(Robo robo, int nTiros, Ambiente ambiente) {
-        if (this.municao < nTiros) {
-            return "Munição insuficiente";
-        }
-
-        if (robo instanceof RoboTerrestre) {
-            String result = this.atirar(robo.getX(), robo.getY(), nTiros, ambiente);
+        } else{
+            String result = this.atirar(robo.getX(), robo.getY(), robo.getZ(), nTiros, ambiente);
             return result;
-        } else if (robo instanceof RoboAereo) {
-            RoboAereo roboAereo = (RoboAereo) robo;
-            String result = this.atirar(roboAereo.getX(), roboAereo.getY(), roboAereo.getZ(),
-                    nTiros, ambiente);
-            return result;
-        } else {
-            return "Robô inválido!";
-        }
+        } 
     }
 
     private String executarTiro(int dX, int dY, int dZ, int aX, int aY, int aZ, int nTiros, Ambiente ambiente) {

@@ -39,7 +39,7 @@ public class RoboAereo extends Robo {
         this.addSensor(sensorRadar);
     }
 
-    public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, int alc_radar, int ang_radar) {
+    public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, float alc_radar, float ang_radar) {
         super(n, d, m, x, y, h, vel);
         this.altitudeMaxima = hmax;
         this.sensorBarometro = new Barometro(this);
@@ -256,5 +256,9 @@ public class RoboAereo extends Robo {
 
     public Barometro getBarometro() {
         return this.sensorBarometro;
+    }
+
+    public String executarTarefa(Object... argumentos){
+        return null;
     }
 }
