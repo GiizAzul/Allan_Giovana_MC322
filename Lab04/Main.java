@@ -17,6 +17,12 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Bem vindo ao Simulador de Robôs!");
+        System.out.println("Gostaria de utilizar nosso modo padrão com ambiente e entidades padrão ou o modo de criação livre?\n0 - Modo Padrão\n1 - Modo Criação Livre");
+        int modo = scanner.nextInt();
+        if (modo == 1){
+        Ambiente ambiente = new Ambiente(10, 10, 11);
+
+        }
         System.out.println("Crie um ambiente 3D com as dimensões:");
         int tamX, tamY, tamZ;
         do {
