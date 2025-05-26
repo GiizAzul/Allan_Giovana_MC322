@@ -9,7 +9,7 @@ import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
 import interfaces.*;
 
-public class DroneVigilancia extends RoboAereo {
+public class DroneVigilancia extends RoboAereo implements Comunicavel{
 
     private boolean camuflado;
     private float alcance_radar;

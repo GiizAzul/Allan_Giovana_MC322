@@ -5,6 +5,7 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import interfaces.Entidade;
+import interfaces.Sensoreavel;
 import interfaces.TipoEntidade;
 import robos.equipamentos.sensores.*;
 import robos.geral.MateriaisRobo;
@@ -15,7 +16,7 @@ import robos.geral.Robo;
  * Classe que representa um robô aéreo, especialização de Robo
  * com capacidade de voar em diferentes altitudes
  */
-public class RoboAereo extends Robo {
+public class RoboAereo extends Robo implements Sensoreavel {
 
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
     private Barometro sensorBarometro;      // Sensor de pressão atmosférica

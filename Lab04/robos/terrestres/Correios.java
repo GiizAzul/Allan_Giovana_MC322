@@ -9,8 +9,9 @@ import interfaces.Entidade;
 import interfaces.TipoEntidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import interfaces.*;
 
-public class Correios extends RoboTerrestre {
+public class Correios extends RoboTerrestre implements Comunicavel {
     private int capacidadeMax;
     private float pesoMax;
     private float pesoAtual;
@@ -154,5 +155,9 @@ public class Correios extends RoboTerrestre {
         } else {
             return "Entregas pendentes: " + String.join(", ", entregas);
         }
+    }
+
+    private String enviarMensagem(Comunicavel destinatario, String mensagem) {
+
     }
 }

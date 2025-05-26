@@ -4,12 +4,13 @@ import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import interfaces.*;
 
 /**
  * Classe que representa um robô terrestre, especialização de Robo
  * com capacidade de velocidade limitada
  */
-public class RoboTerrestre extends Robo {
+public class RoboTerrestre extends Robo implements Sensoreavel {
     private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
     private Colisao sensorColisao; // Sensor de colisão
 
