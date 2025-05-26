@@ -151,7 +151,7 @@ public abstract class Robo implements Entidade {
     }
 
     public char getRepresentacao() {
-        return '#';
+        return tipo.getRepresentacao();
     }
 
     /**

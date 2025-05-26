@@ -40,7 +40,7 @@ public class Obstaculo implements Entidade{
     }
 
     public char getRepresentacao(){
-        return '-';
+        return tipo.getRepresentacao();
     }
 
     public TipoEntidade getTipo(){

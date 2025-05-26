@@ -128,17 +128,17 @@ public class Ambiente {
         Character[][] vizuMapa = new Character[tamX][tamY];
         for (int x = 0; x < tamX; x++) {
             for (int y = 0; y < tamY; y++) {
-                vizuMapa[y][x] = '.';
+                vizuMapa[y][x] = TipoEntidade.VAZIO.getRepresentacao();
             }
         }
         for (int y = tamY-1; y >=0; y--) {
             for (int x = 0; x < tamX; x++) {
                 for (int z = 0; z < tamZ; z++) {
-                    if (vizuMapa[vizuMapa.length-1-y][x] == '.') {
+                    if (vizuMapa[vizuMapa.length-1-y][x] == TipoEntidade.VAZIO.getRepresentacao()) {
                         if (mapa[y][x][z] == TipoEntidade.DESCONHECIDO) {
-                            vizuMapa[vizuMapa.length-1-y][x] = '?';
+                            vizuMapa[vizuMapa.length-1-y][x] = TipoEntidade.DESCONHECIDO.getRepresentacao();
 
-                        } else if (mapa[y][x][z] == TipoEntidade.OBSTACULO) {
+                        } else if (identificarEntidadePosicao(x, y, z)!=null){
                             Entidade entidade = identificarEntidadePosicao(x, y, z);
                             vizuMapa[vizuMapa.length-1-y][x] = entidade.getRepresentacao();
                         }
