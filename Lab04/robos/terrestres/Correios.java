@@ -51,7 +51,7 @@ public class Correios extends RoboTerrestre {
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
             for (int x = getX() + passoX; x != destinoX + passoX; x += passoX) {
-                Entidade obj = ambiente.identificarObjetoPosicao(x, getY(), 0);
+                Entidade obj = ambiente.identificarEntidadePosicao(x, getY(), 0);
                 if (obj != null) {
                     if (obj.getTipo() == TipoEntidade.ROBO) {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
@@ -73,7 +73,7 @@ public class Correios extends RoboTerrestre {
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
             for (int y = getY() + passoY; y != destinoY + passoY; y += passoY) {
-                Entidade obj = ambiente.identificarObjetoPosicao(getX(), y, 0);
+                Entidade obj = ambiente.identificarEntidadePosicao(getX(), y, 0);
                 if (obj != null) {
                     if (obj.getTipo() == TipoEntidade.ROBO) {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
@@ -98,7 +98,7 @@ public class Correios extends RoboTerrestre {
             return ("Pacote " + id + " não encontrado na carga.");
         }
         int i = entregas.indexOf(id);
-        Entidade objeto_posicao = ambiente.identificarObjetoPosicao(destinoX, destinoY, 0);
+        Entidade objeto_posicao = ambiente.identificarEntidadePosicao(destinoX, destinoY, 0);
         if (moverEntrega(destinoX - getX(), destinoY - getY(), ambiente)) {
             if (objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
                 pesoAtual -= pesos.get(i);

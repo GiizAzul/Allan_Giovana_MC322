@@ -29,14 +29,15 @@ public class Ambiente {
         this.tamY = tamY;
         this.tamZ = tamZ;
         entidades = new ArrayList<Entidade>();
+        mapa = new TipoEntidade[tamY][tamX][tamZ];
         this.inicializarMapa();
     }
 
     private void inicializarMapa() {
-        for (int x = 0; x < tamX; x++) {
-            for (int y = 0; y < tamY; y++) {
+        for (int y = 0; y < tamY; y++) {
+            for (int x = 0; x < tamX; x++) {
                 for (int z = 0; z < tamZ; z++) {
-                    mapa[x][y][z] = TipoEntidade.VAZIO;
+                    mapa[y][x][z] = TipoEntidade.VAZIO;
                 }
             }
         }
@@ -73,7 +74,7 @@ public class Ambiente {
                 for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
                     for (int y = obstaculo.getY1(); y <= obstaculo.getY2(); y++) {
                         for (int z = 0; z <= obstaculo.getAltura(); z++) {
-                            mapa[x][y][z] = TipoEntidade.OBSTACULO;
+                            mapa[y][x][z] = TipoEntidade.OBSTACULO;
                         }
                     }
                 }
@@ -91,7 +92,7 @@ public class Ambiente {
             for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
                 for (int y = obstaculo.getY1(); y <= obstaculo.getY2(); y++) {
                     for (int z = 0; z <= obstaculo.getAltura(); z++) {
-                        mapa[x][y][z] = TipoEntidade.VAZIO;
+                        mapa[y][x][z] = TipoEntidade.VAZIO;
                     }
                 }
             }
@@ -112,6 +113,41 @@ public class Ambiente {
      */
     public ArrayList<Entidade> getEntidades() {
         return entidades;
+    }
+
+    public void moverEntidade(Entidade entidade, int novoX, int novoY, int novoZ) {
+    }
+
+    public void executarSensores() {
+    }
+
+    public void verificarColisoes() {
+    }
+
+    public Character[][] visualizarAmbiente() {
+        Character[][] vizuMapa = new Character[tamX][tamY];
+        for (int x = 0; x < tamX; x++) {
+            for (int y = 0; y < tamY; y++) {
+                vizuMapa[y][x] = '.';
+            }
+        }
+        for (int y = tamY-1; y >=0; y--) {
+            for (int x = 0; x < tamX; x++) {
+                for (int z = 0; z < tamZ; z++) {
+                    if (vizuMapa[vizuMapa.length-1-y][x] == '.') {
+                        if (mapa[y][x][z] == TipoEntidade.DESCONHECIDO) {
+                            vizuMapa[vizuMapa.length-1-y][x] = '?';
+
+                        } else if (mapa[y][x][z] == TipoEntidade.OBSTACULO) {
+                            Entidade entidade = identificarEntidadePosicao(x, y, z);
+                            vizuMapa[vizuMapa.length-1-y][x] = entidade.getRepresentacao();
+                        }
+
+                    }
+                }
+            }
+        }
+        return vizuMapa;
     }
 
     // Getters para as dimensões do ambiente
@@ -216,7 +252,7 @@ public class Ambiente {
      * Identifica um objeto na posição 3D específica
      * Se posZ for 0, busca no plano do solo
      */
-    public Entidade identificarObjetoPosicao(int posX, int posY, int posZ) {
+    public Entidade identificarEntidadePosicao(int posX, int posY, int posZ) {
         for (Entidade entidade : this.entidades) {
             if (entidade.getTipo() == TipoEntidade.ROBO) {
                 Robo robo = (Robo) entidade;

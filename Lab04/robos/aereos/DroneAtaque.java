@@ -92,7 +92,7 @@ public class DroneAtaque extends RoboAereo {
     private String executarTiro(int dX, int dY, int dZ, int aX, int aY, int aZ, int nTiros, Ambiente ambiente) {
         if (Math.pow(dX, 2) + Math.pow(dY, 2) + Math.pow(dZ, 2) <= Math.pow(this.alcance, 2)) {
             this.municao -= nTiros;
-            Object alvo = ambiente.identificarObjetoPosicao(aX, aY, aZ);
+            Object alvo = ambiente.identificarEntidadePosicao(aX, aY, aZ);
             if (alvo == null) {
                 return String.format("Disparado realizado nas coordenadas (%d, %d, %d)\nNenhum alvo foi atingido!\n",
                         aX, aY, aZ);

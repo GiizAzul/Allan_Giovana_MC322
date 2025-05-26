@@ -21,7 +21,7 @@ public class TanqueGuerra extends RoboTerrestre {
     }
 
     public String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
-        Entidade alvo = ambiente.identificarObjetoPosicao(alvoX, alvoY, 0);
+        Entidade alvo = ambiente.identificarEntidadePosicao(alvoX, alvoY, 0);
         if (municaoAtual < nTiros) {
             return "Munição insuficiente";
 

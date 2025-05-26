@@ -79,7 +79,7 @@ public class RoboAereo extends Robo {
         
         // Realiza o movimento passo a passo
         for (int z = getZ() + passo; passo > 0 ? z <= altitudeAlvo : z >= altitudeAlvo; z += passo) {
-            Object obj = ambiente.identificarObjetoPosicao(getX(), getY(), z);
+            Object obj = ambiente.identificarEntidadePosicao(getX(), getY(), z);
             if (obj != null) {
                 System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
                 if (obj instanceof Robo) {
@@ -164,7 +164,7 @@ public class RoboAereo extends Robo {
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
             for (int x = getX() + passoX; x != X + passoX; x += passoX) {
-                Object obj = ambiente.identificarObjetoPosicao(x, getY(),getZ());
+                Object obj = ambiente.identificarEntidadePosicao(x, getY(),getZ());
                 if (obj != null) {
                     System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
                     if (obj instanceof RoboAereo){
@@ -186,7 +186,7 @@ public class RoboAereo extends Robo {
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
             for (int y = getY() + passoY; y != Y + passoY; y += passoY) {
-                Object obj = ambiente.identificarObjetoPosicao(getX(), y, getZ());
+                Object obj = ambiente.identificarEntidadePosicao(getX(), y, getZ());
                 if (obj != null) {
                     System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
                     if (obj instanceof Robo){

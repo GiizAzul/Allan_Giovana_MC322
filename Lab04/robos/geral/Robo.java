@@ -75,7 +75,7 @@ public class Robo implements Entidade {
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
             for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
-                Object obj = ambiente.identificarObjetoPosicao(x, posicaoY, posicaoZ);
+                Object obj = ambiente.identificarEntidadePosicao(x, posicaoY, posicaoZ);
                 if (obj != null) {
                     if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
@@ -101,7 +101,7 @@ public class Robo implements Entidade {
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
             for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
-                Object obj = ambiente.identificarObjetoPosicao(posicaoX, y, posicaoZ);
+                Object obj = ambiente.identificarEntidadePosicao(posicaoX, y, posicaoZ);
                 if (obj != null) {
                     if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
