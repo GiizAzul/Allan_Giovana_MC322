@@ -120,7 +120,8 @@ public class Main {
                             "1 - Atirar\n" +
                             "2 - Recarregar\n" +
                             "3 - Mover\n" +
-                            "4 - Mudar direção\n");
+                            "4 - Mudar direção\n" +
+                            "5 - Alterar Estado\n");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -159,7 +160,11 @@ public class Main {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
                     roboEscolhido.executarTarefa("direção", direcao);
+                } else if (acao == 5) {
+                    System.out.println(roboEscolhido.executarTarefa("desligar"));
                 }
+            } else if (acao == 5) {
+                System.out.println(roboEscolhido.executarTarefa("ligar"));
             } else {
                 System.out.println("O robô está desligado\n");
             }
@@ -173,7 +178,8 @@ public class Main {
                             "3 - Listar entregas\n" +
                             "4 - Mover\n" +
                             "5 - Mudar direção\n" +
-                            "6 - Mandar mensagem\n");
+                            "6 - Mandar mensagem\n" +
+                            "7 - Alterar Estado\n");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -233,7 +239,11 @@ public class Main {
                     String mensagem = scanner.nextLine();
 
                     System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
+                } else if (acao == 7) {
+                    System.out.println(roboEscolhido.executarTarefa("desligar"));
                 }
+            } else if (acao == 7) {
+                System.out.println(roboEscolhido.executarTarefa("ligar"));
             } else {
                 System.out.println("O robô está desligado\n");
             }
@@ -245,7 +255,8 @@ public class Main {
                             "1 - Atirar\n" +
                             "2 - Mover\n" +
                             "3 - Identificar obstáculos\n" +
-                            "4 - Mudar direção\n");
+                            "4 - Mudar direção\n" + 
+                            "5 - Alterar Estado\n");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -279,7 +290,11 @@ public class Main {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
                     roboEscolhido.executarTarefa("direção", direcao);
+                } else if (acao == 5) {
+                    System.out.println(roboEscolhido.executarTarefa("desligar"));
                 }
+            } else if (acao == 5) {
+                System.out.println(roboEscolhido.executarTarefa("ligar"));
             } else {
                 System.out.println("Robô desligado!");
             }
@@ -292,10 +307,11 @@ public class Main {
                             "2 - Identificar obstáculos\n" +
                             "3 - Mudar direção\n" +
                             "4 - Varrer Área\n" +
-                            "5 - %s Camuflagem\n",
-                    roboEscolhido.isCamuflado() ? "Desativar\n"
-                            : "Ativar\n" +
-                                    "6 - Enviar mensagem\n");
+                            "5 - %s Camuflagem\n" +
+                            "6 - Enviar mensagem\n" + 
+                            "7 - Alterar Estado\n",
+                    roboEscolhido.isCamuflado() ? "Desativar"
+                            : "Ativar" );
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -351,7 +367,11 @@ public class Main {
                     String mensagem = scanner.nextLine();
 
                     System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
+                } else if (acao == 7) {
+                    System.out.println(roboEscolhido.executarTarefa("desligar"));
                 }
+            } else if (acao == 7) {
+                System.out.println(roboEscolhido.executarTarefa("ligar"));
             } else {
                 System.out.println("Robô desligado!");
             }
@@ -432,10 +452,21 @@ public class Main {
                     acoesRobo(scanner, listaRobo, ambiente, central);
                 } else if (comando == 2) {
                     // Exibe lista de robôs
-                    System.out.println("Lista de robôs:");
+                    System.out.println("Lista de robôs por estado:");
+                    System.out.println("\n=== Ligados ===");
                     int i = 1;
                     for (Robo robo : listaRobo) {
-                        System.out.printf("%d - %s%n", i++, robo.getNome());
+                        if (robo.getEstado()) {
+                            System.out.printf("%d - %s%n", i++, robo.getNome());
+                        }
+                    }
+
+                    System.out.println("\n=== Desligados ===");
+                    i = 1;
+                    for (Robo robo : listaRobo) {
+                        if (!robo.getEstado()) {
+                            System.out.printf("%d - %s%n", i++, robo.getNome());
+                        }
                     }
                     System.out.println("");
                 }

@@ -61,7 +61,7 @@ public abstract class Robo implements Entidade {
         this.tipo = TipoEntidade.ROBO;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -142,12 +142,13 @@ public abstract class Robo implements Entidade {
         if (x == -1 || y == -1) {
             return this.nome + " está com o GPS inativo ou não disponível";
         } else {
-            return this.nome + " está na posição X:" + x + " Y:" + y +" Z:"+z;
+            return this.nome + " está na posição X:" + x + " Y:" + y + " Z:" + z;
         }
     }
 
     public String getDescricao() {
-        return exibirPosicao();
+        return exibirPosicao() + "\nSua direção é " + direcao + "\nO robô está "
+                + (estado ? "ligado\n" : "desligado\n");
     }
 
     public char getRepresentacao() {
@@ -435,21 +436,29 @@ public abstract class Robo implements Entidade {
         return this.tipo;
     }
 
-    public String executarTarefa(Object... argumentos){
+    public String executarTarefa(Object... argumentos) {
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "direção":
                 String direcao = (String) argumentos[1];
                 setDirecao(direcao);
                 return "";
-            
+
             case "mover base":
                 int deltaX = (Integer) argumentos[1];
                 int deltaY = (Integer) argumentos[2];
                 Ambiente ambiente = (Ambiente) argumentos[3];
                 mover(deltaX, deltaY, ambiente);
                 return "";
-        
+
+            case "desligar":
+                desligar();
+                return "O robô " + nome + " foi desligado";
+
+            case "ligar":
+                ligar();
+                return "O robô " + nome + " foi ligado";
+
             default:
                 return "";
         }
