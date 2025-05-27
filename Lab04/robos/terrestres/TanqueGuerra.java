@@ -5,7 +5,7 @@ import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import interfaces.*;
 
-public class TanqueGuerra extends RoboTerrestre {
+public class TanqueGuerra extends RoboTerrestre implements Atacante{
     private int municaoMax;
     private int municaoAtual;
     private int alcance;
@@ -32,7 +32,7 @@ public class TanqueGuerra extends RoboTerrestre {
                 int alvoY = (Integer) argumentos[2];
                 int nTiros = (Integer) argumentos[3];
                 Ambiente ambiente = (Ambiente) argumentos[4];
-                return atirar(alvoX,alvoY,nTiros,ambiente);
+                return atirar(alvoX,alvoY, 0,nTiros,ambiente);
         
             case "recarregar":
                 int nBalas = (Integer) argumentos[1];
@@ -43,7 +43,7 @@ public class TanqueGuerra extends RoboTerrestre {
         }
     }
 
-    private String atirar(int alvoX, int alvoY, int nTiros, Ambiente ambiente) {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
         Entidade alvo = ambiente.identificarEntidadePosicao(alvoX, alvoY, 0);
         if (municaoAtual < nTiros) {
             return "Munição insuficiente";
@@ -87,7 +87,7 @@ public class TanqueGuerra extends RoboTerrestre {
         }
     }
 
-    private String recarregar(int nBalas) {
+    public String recarregar(int nBalas) {
         municaoAtual += nBalas;
         if (municaoAtual > municaoMax) {
             municaoAtual = municaoMax;

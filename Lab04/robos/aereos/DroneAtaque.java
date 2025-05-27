@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import interfaces.Atacante;
 import interfaces.Entidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
-public class DroneAtaque extends RoboAereo {
+public class DroneAtaque extends RoboAereo implements Atacante {
 
     private int municao;
     private int alcance;
@@ -93,7 +94,7 @@ public class DroneAtaque extends RoboAereo {
         }
     }
 
-    private String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
         // Verifica se há munição suficiente
         if (this.municao < nTiros) {
             return "Munição insuficiente";
@@ -150,4 +151,10 @@ public class DroneAtaque extends RoboAereo {
             return "Alvo fora do alcance";
         }
     }
+
+    public String recarregar(int nBalas) {
+        municao += nBalas;
+        return "Recarregamento concluido";
+    }
+
 }

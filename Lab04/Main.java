@@ -253,10 +253,11 @@ public class Main {
             menu = String.format(
                     "Digite o número da ação desejada:\n\n" +
                             "1 - Atirar\n" +
-                            "2 - Mover\n" +
-                            "3 - Identificar obstáculos\n" +
-                            "4 - Mudar direção\n" + 
-                            "5 - Alterar Estado\n");
+                            "2 - Recarregar\n" +
+                            "3 - Mover\n" +
+                            "4 - Identificar obstáculos\n" +
+                            "5 - Mudar direção\n" + 
+                            "6 - Alterar Estado\n");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -274,6 +275,10 @@ public class Main {
                     System.out.println(roboEscolhido.executarTarefa("atirar coord", alvoX, alvoY, alvoZ,
                             nTiros, ambiente));
                 } else if (acao == 2) {
+                    System.out.print("Digite o número de balas recarregadas:");
+                    int nBalas = scanner.nextInt();
+                    System.out.println(roboEscolhido.executarTarefa("recarregar", nBalas));
+                } else if (acao == 3) {
                     System.out.print("Digite as coordenadas X e Y do destino: ");
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
@@ -281,19 +286,19 @@ public class Main {
                     roboEscolhido.executarTarefa("mover", coordenadas[0], coordenadas[1], nAlt,
                             ambiente);
                     System.out.println(roboEscolhido.exibirPosicao());
-                } else if (acao == 3) {
-                    System.out.println(roboEscolhido.executarTarefa("identificar"));
                 } else if (acao == 4) {
+                    System.out.println(roboEscolhido.executarTarefa("identificar"));
+                } else if (acao == 5) {
                     System.out.print("Digite a nova direção (Norte/Sul/Leste/Oeste): ");
                     String direcao;
                     do {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
                     roboEscolhido.executarTarefa("direção", direcao);
-                } else if (acao == 5) {
+                } else if (acao == 6) {
                     System.out.println(roboEscolhido.executarTarefa("desligar"));
                 }
-            } else if (acao == 5) {
+            } else if (acao == 6) {
                 System.out.println(roboEscolhido.executarTarefa("ligar"));
             } else {
                 System.out.println("Robô desligado!");
