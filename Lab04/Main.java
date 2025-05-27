@@ -41,71 +41,10 @@ public class Main {
             System.out.println(
                     "Atualmente o seu ambiente tem largura, altura e profundidade 10\nExistem 4 robôs no seu ambiente, um Correio, um Tanque de Guerra, um Drone de Ataque e um Drone de Vigilância\nExistem 3 obstáculos no seu ambiente, uma parede, uma árvore e um buraco");
 
-            ArrayList<Entidade> listaEntidades;
+            ArrayList<Entidade> listaEntidades = null;
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
 
-            while (true) {
-                String menu = String.format(
-                        "Digite o número da ação que deseja realizar:\n\n" +
-                                "0 - Fechar o simulador\n" +
-                                "1 - Ações de um robô\n" +
-                                "2 - Lista de robôs\n" +
-                                "3 - Visualizar mapa\n" +
-                                "4 - Histórico de Comunicação\n");
-                System.out.print(menu);
-                System.out.print("Comando: ");
-                int comando = scanner.nextInt();
-                scanner.nextLine(); // Consumir quebra de linha
-                System.out.println();
-
-                Main.limparTerminal();
-
-                if (comando > 4 || comando < 0) {
-                    System.out.println("Comando inválido!!\n");
-                    continue;
-                }
-
-                listaEntidades = ambiente.getEntidades();
-                listaRobo.clear();
-                for (Entidade entidade : listaEntidades) {
-                    if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
-                        listaRobo.add((Robo) entidade);
-                    }
-                }
-
-                if (comando == 0) {
-                    break;
-                } else if (comando == 3) {
-                    Character[][] vizumapa = ambiente.visualizarAmbiente();
-                    for (Character[] linha : vizumapa) {
-                        for (Character chara : linha) {
-                            System.out.print(chara);
-                        }
-                        System.out.println();
-                    }
-                } else if (comando == 4) {
-                    System.out.println(central.exibirMensagens());
-                } else {
-                    // Opções 2, 3 e 4 necessitam de ao menos um robô
-                    if (listaRobo.size() <= 0) {
-                        System.out.println("\nNão há robôs criados!\n");
-                        continue;
-                    }
-
-                    if (comando == 1) {
-                        acoesRobo(scanner, listaRobo, ambiente, central);
-                    } else if (comando == 2) {
-                        // Exibe lista de robôs
-                        System.out.println("Lista de robôs:");
-                        int i = 1;
-                        for (Robo robo : listaRobo) {
-                            System.out.printf("%d - %s%n", i++, robo.getNome());
-                        }
-                        System.out.println("");
-                    }
-                }
-
-            }
+            menu(scanner, ambiente, central, listaEntidades, listaRobo, 4, false);
 
         } else if (modo == 2) {
             System.out.println("Crie um ambiente 3D com as dimensões:");
@@ -125,283 +64,11 @@ public class Main {
             System.out.println(mensagem);
 
             Object[] atributos = new Object[14];
-            ArrayList<Entidade> listaEntidades;
+            ArrayList<Entidade> listaEntidades = null;
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
 
-            while (true) {
+            menu(scanner, ambiente, central, listaEntidades, listaRobo, 7, true, atributos);
 
-                String menu = String.format(
-                        "Digite o número da ação que deseja realizar:\n\n" +
-                                "0 - Fechar o simulador\n" +
-                                "1 - Criar novo robô\n" +
-                                "2 - Ações de um robô\n" +
-                                "3 - Lista de robôs\n" +
-                                "4 - Remover robô\n" +
-                                "5 - Criar obstáculo\n" +
-                                "6 - Visualizar mapa\n" +
-                                "7 - Histórico de Comunicação\n");
-                System.out.print(menu);
-                System.out.print("Comando: ");
-                int comando = scanner.nextInt();
-                scanner.nextLine(); // Consumir quebra de linha
-                System.out.println();
-
-                Main.limparTerminal();
-
-                if (comando > 7 || comando < 0) {
-                    System.out.println("Comando inválido!!\n");
-                    continue;
-                }
-
-                listaEntidades = ambiente.getEntidades();
-                listaRobo.clear();
-                for (Entidade entidade : listaEntidades) {
-                    if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
-                        listaRobo.add((Robo) entidade);
-                    }
-                }
-
-                if (comando == 0) {
-                    break;
-                } else if (comando == 1) {
-                    // Atributos gerais dos Robôs
-                    System.out.println("Digite os atributos básicos do Robô:");
-                    System.out.print("Nome: ");
-                    atributos[0] = scanner.nextLine();
-
-                    do {
-                        System.out.print("Direção (Norte/Sul/Leste/Oeste): ");
-                        atributos[1] = scanner.nextLine();
-                    } while (!Robo.getDirecoesPossiveis().contains(atributos[1]));
-
-                    System.out.println("Escolha o material:");
-                    System.out.println("0 - Alumínio");
-                    System.out.println("1 - Aço");
-                    System.out.println("2 - Plástico");
-                    System.out.println("3 - Fibra de Vidro");
-                    System.out.println("4 - Fibra de Carbono");
-                    System.out.print("Material: ");
-                    int material = scanner.nextInt();
-                    scanner.nextLine(); // Consumir quebra de linha
-                    System.out.println();
-                    if (material == 0) {
-                        atributos[2] = (MateriaisRobo) MateriaisRobo.ALUMINIO;
-                    } else if (material == 1) {
-                        atributos[2] = (MateriaisRobo) MateriaisRobo.ACO;
-                    } else if (material == 2) {
-                        atributos[2] = (MateriaisRobo) MateriaisRobo.PLASTICO;
-                    } else if (material == 3) {
-                        atributos[2] = (MateriaisRobo) MateriaisRobo.FIBRA_VIDRO;
-                    } else if (material == 4) {
-                        atributos[2] = (MateriaisRobo) MateriaisRobo.FIBRA_CARBONO;
-
-                    }
-                    int[] coordenadas = Main.obterPosicao(ambiente, scanner);
-                    atributos[3] = coordenadas[0]; // Posição X
-                    atributos[4] = coordenadas[1]; // Posição Y
-
-                    do {
-                        System.out.print("Velocidade (maior que 0): ");
-                        atributos[6] = scanner.nextInt();
-                        scanner.nextLine(); // Consumir quebra de linha
-                    } while ((Integer) atributos[6] <= 0);
-
-                    do {
-                        System.out
-                                .print("Velocidade Máxima: (maior ou igual a velocidade " + atributos[6]
-                                        + " definida): ");
-                        atributos[7] = scanner.nextInt();
-                    } while ((Integer) atributos[7] <= 0 || (Integer) atributos[7] < (Integer) atributos[6]);
-
-                    System.out.println("Digite o número do tipo de robô que deseja criar:");
-                    System.out.println("1 - Terrestre");
-                    System.out.println("2 - Aéreo");
-                    System.out.print("Tipo: ");
-                    int tipo = scanner.nextInt();
-                    scanner.nextLine(); // Consumir quebra de linha
-                    System.out.println();
-
-                    if (tipo == 1) {
-                        // Robôs terrestres
-                        System.out.println("Digite o número da categoria de robô terrestre:");
-                        System.out.println("1 - Tanque de Guerra");
-                        System.out.println("2 - Correios");
-                        System.out.print("Categoria: ");
-                        int categoria = scanner.nextInt();
-                        scanner.nextLine(); // Consumir quebra de linha
-                        System.out.println();
-                        atributos[5] = 0;
-
-                        if (categoria == 1) {
-                            // Atributos específicos do Tanque de Guerra
-                            do {
-                                System.out.print("Munição Máxima: ");
-                                atributos[8] = scanner.nextInt();
-                            } while ((Integer) atributos[8] <= 0);
-
-                            do {
-                                System.out.print("Alcance: ");
-                                atributos[9] = scanner.nextInt();
-                            } while ((Integer) atributos[9] <= 0);
-
-                        } else if (categoria == 2) {
-                            // Atributos específicos dos Correios
-
-                            do {
-                                System.out.print("Capacidade Máxima de carga: ");
-                                atributos[8] = scanner.nextInt();
-                            } while ((Integer) atributos[8] <= 0);
-
-                            do {
-                                System.out.print("Peso Máximo suportado: ");
-                                atributos[9] = scanner.nextFloat();
-                            } while ((Float) atributos[9] <= 0);
-                        }
-
-                        ambiente.adicionarEntidade(ambiente.criarRobo(tipo, categoria, atributos));
-
-                    } else if (tipo == 2) {
-                        // Criação de Robôs Aéreos
-                        System.out.println("Digite o número da categoria de robô aéreo:");
-                        System.out.println("1 - Drone de Ataque");
-                        System.out.println("2 - Drone de Vigilância");
-                        System.out.print("Categoria: ");
-                        int categoria = scanner.nextInt();
-                        scanner.nextLine(); // Consumir quebra de linha
-                        System.out.println();
-
-                        do {
-                            System.out.print("Altura Máxima (não pode ultrapassar " + ambiente.getTamZ() + "): ");
-                            atributos[8] = scanner.nextInt();
-                        } while ((Integer) atributos[8] > ambiente.getTamZ() || (Integer) atributos[8] <= 0);
-
-                        do {
-                            System.out.print("Altura Inicial (Menor do que Altura Máxima): ");
-                            atributos[5] = scanner.nextInt();
-                        } while ((Integer) atributos[5] > ambiente.getTamZ()
-                                || (Integer) atributos[5] > (Integer) atributos[8]
-                                || (Integer) atributos[5] <= 0);
-
-                        if (categoria == 1) {
-                            // Atributos específicos do Drone de Ataque
-                            do {
-                                System.out.print("Munição: ");
-                                atributos[9] = scanner.nextInt();
-                            } while ((Integer) atributos[9] <= 0);
-
-                            do {
-                                System.out.print("Alcance: ");
-                                atributos[10] = scanner.nextInt();
-                            } while ((Integer) atributos[10] <= 0);
-
-                        } else if (categoria == 2) {
-                            // Atributos específicos do Drone de Vigilância
-
-                            do {
-                                System.out.print("Alcance do Radar (número decimal, use ponto): ");
-                                atributos[9] = scanner.nextFloat();
-                            } while ((Float) atributos[9] <= 0);
-
-                            do {
-                                System.out.print("Angulo do Radar (número decimal, use ponto): ");
-                                atributos[10] = scanner.nextFloat();
-                            } while ((Float) atributos[10] <= 0);
-
-                            do {
-                                System.out.print("Ângulo de abertura da câmera (graus, número decimal): ");
-                                atributos[11] = scanner.nextFloat();
-                            } while ((Float) atributos[11] <= 0);
-                        }
-                        ambiente.adicionarEntidade(ambiente.criarRobo(tipo, categoria, atributos));
-                        Main.limparTerminal();
-                        System.out.println("Robô aéreo adicionado com sucesso!\n");
-                    }
-
-                } else if (comando == 5) {
-                    System.out.println("Escolha as coordenadas do obstáculo (X1 e X2, onde X1 é o menor):");
-                    int X1 = scanner.nextInt();
-                    int X2 = scanner.nextInt();
-                    System.out.println("Escolha as coordenadas do obstáculo (Y1 e Y2, onde Y1 é o menor):");
-                    int Y1 = scanner.nextInt();
-                    int Y2 = scanner.nextInt();
-                    System.out.println("Escolha o tipo de obstáculo:");
-                    System.out.println("0 - Parede");
-                    System.out.println("1 - Árvore");
-                    System.out.println("2 - Prédio");
-                    System.out.println("3 - Buraco");
-                    System.out.println("4 - Outro");
-                    System.out.print("Tipo: ");
-                    int tipoObs = scanner.nextInt();
-                    scanner.nextLine(); // Consumir quebra de linha
-                    System.out.println();
-                    if (tipoObs == 0) {
-                        ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PAREDE, X1, X2, Y1, Y2));
-                    } else if (tipoObs == 1) {
-                        ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.ARVORE, X1, X2, Y1, Y2));
-                    } else if (tipoObs == 2) {
-                        ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PREDIO, X1, X2, Y1, Y2));
-                    } else if (tipoObs == 3) {
-                        ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.BURACO, X1, X2, Y1, Y2));
-                    } else if (tipoObs == 4) {
-                        Obstaculo outro = new Obstaculo(TipoObstaculo.OUTRO, X1, X2, Y1, Y2);
-                        System.out.println("Digite a altura do obstáculo:");
-                        int altura = scanner.nextInt();
-                        System.out.println("O obstáculo é indestrutível?\n0-Não\n1-Sim");
-                        int indestrutivel = scanner.nextInt();
-                        int integridade = 0;
-                        outro.setIndestrutivel(true);
-                        if (indestrutivel == 0) {
-                            System.out.println("Digite a integridade (vida) do obstáculo:");
-                            integridade = scanner.nextInt();
-                            outro.setIndestrutivel(false);
-                        }
-                        outro.setAltura(altura);
-                        outro.setIntegridade(integridade);
-                        ambiente.adicionarEntidade(outro);
-                    }
-
-                } else if (comando == 6) {
-                    Character[][] vizumapa = ambiente.visualizarAmbiente();
-                    for (Character[] linha : vizumapa) {
-                        for (Character chara : linha) {
-                            System.out.print(chara);
-                        }
-                        System.out.println();
-                    }
-                } else if (comando == 7) {
-                    System.out.println(central.exibirMensagens());
-                } else {
-                    // Opções 2, 3 e 4 necessitam de ao menos um robô
-                    if (listaRobo.size() <= 0) {
-                        System.out.println("\nNão há robôs criados!\n");
-                        continue;
-                    }
-
-                    if (comando == 2) {
-                        acoesRobo(scanner, listaRobo, ambiente, central);
-                    } else if (comando == 3) {
-                        // Exibe lista de robôs
-                        System.out.println("Lista de robôs:");
-                        int i = 1;
-                        for (Robo robo : listaRobo) {
-                            System.out.printf("%d - %s%n", i++, robo.getNome());
-                        }
-                        System.out.println("");
-                    } else if (comando == 4) {
-                        // Remoção de um robô
-                        System.out.println("Escolha o Robô a ser removido:");
-                        int i = 1;
-                        for (Robo robo : listaRobo) {
-                            System.out.printf("%d - %s%n", i++, robo.getNome());
-                        }
-                        int index = scanner.nextInt() - 1;
-                        if (index >= 0 && index < listaRobo.size()) {
-                            ambiente.removerEntidade(listaRobo.get(index));
-                            System.out.println("Robô removido!\n");
-                        }
-                    }
-                }
-            }
         }
         scanner.close();
     }
@@ -662,7 +329,7 @@ public class Main {
                             centro[1], raio));
                 } else if (acao == 5) {
                     System.out.println(roboEscolhido.executarTarefa("camuflagem"));
-                } else if (acao == 6){
+                } else if (acao == 6) {
                     System.out.println("Escolha o Robô destinatário:\n");
                     i = 1;
                     for (Robo robo : listaRobo) {
@@ -690,6 +357,304 @@ public class Main {
             }
         } else {
             System.out.println("Tipo de Robô inválido!");
+        }
+    }
+
+    public static void menu(Scanner scanner, Ambiente ambiente, CentralComunicacao central,
+            ArrayList<Entidade> listaEntidades, ArrayList<Robo> listaRobo, int numTotal, boolean livre,
+            Object... atributos) throws ErroComunicacaoException, RoboDesligadoException {
+        while (true) {
+            String menu = String.format(
+                    "Digite o número da ação que deseja realizar:\n\n" +
+                            "0 - Fechar o simulador\n" +
+                            "1 - Ações de um robô\n" +
+                            "2 - Lista de robôs\n" +
+                            "3 - Visualizar mapa\n" +
+                            "4 - Histórico de Comunicação\n");
+            if (livre) {
+                menu += String.format(
+                        "5 - Criar novo robô\n" +
+                                "6 - Remover robô\n" +
+                                "7 - Criar obstáculo\n");
+            }
+            System.out.print(menu);
+            System.out.print("Comando: ");
+            int comando = scanner.nextInt();
+            scanner.nextLine(); // Consumir quebra de linha
+            System.out.println();
+
+            Main.limparTerminal();
+
+            if (comando > numTotal || comando < 0) {
+                System.out.println("Comando inválido!!\n");
+                continue;
+            }
+
+            listaEntidades = ambiente.getEntidades();
+            listaRobo.clear();
+            for (Entidade entidade : listaEntidades) {
+                if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
+                    listaRobo.add((Robo) entidade);
+                }
+            }
+
+            if (comando == 0) {
+                break;
+            } else if (comando == 3) {
+                Character[][] vizumapa = ambiente.visualizarAmbiente();
+                for (Character[] linha : vizumapa) {
+                    for (Character chara : linha) {
+                        System.out.print(chara);
+                    }
+                    System.out.println();
+                }
+            } else if (comando == 4) {
+                System.out.println(central.exibirMensagens());
+            } else {
+                // Opções 2, 3 e 4 necessitam de ao menos um robô
+
+                if (livre) {
+                    menuLivre(comando, scanner, ambiente, listaRobo, atributos);
+                    listaEntidades = ambiente.getEntidades();
+                    listaRobo.clear();
+                    for (Entidade entidade : listaEntidades) {
+                        if (!listaRobo.contains(entidade) && entidade.getTipo() == TipoEntidade.ROBO) {
+                            listaRobo.add((Robo) entidade);
+                        }
+                    }
+                }
+                if (listaRobo.size() <= 0) {
+                    System.out.println("\nNão há robôs criados!\n");
+                    continue;
+                }
+
+                if (comando == 1) {
+                    acoesRobo(scanner, listaRobo, ambiente, central);
+                } else if (comando == 2) {
+                    // Exibe lista de robôs
+                    System.out.println("Lista de robôs:");
+                    int i = 1;
+                    for (Robo robo : listaRobo) {
+                        System.out.printf("%d - %s%n", i++, robo.getNome());
+                    }
+                    System.out.println("");
+                }
+            }
+
+        }
+
+    }
+
+    public static void menuLivre(int comando, Scanner scanner, Ambiente ambiente, ArrayList<Robo> listaRobo,
+            Object... atributos) {
+        if (comando == 5) {
+            // Atributos gerais dos Robôs
+            System.out.println("Digite os atributos básicos do Robô:");
+            System.out.print("Nome: ");
+            atributos[0] = scanner.nextLine();
+
+            do {
+                System.out.print("Direção (Norte/Sul/Leste/Oeste): ");
+                atributos[1] = scanner.nextLine();
+            } while (!Robo.getDirecoesPossiveis().contains(atributos[1]));
+
+            System.out.println("Escolha o material:");
+            System.out.println("0 - Alumínio");
+            System.out.println("1 - Aço");
+            System.out.println("2 - Plástico");
+            System.out.println("3 - Fibra de Vidro");
+            System.out.println("4 - Fibra de Carbono");
+            System.out.print("Material: ");
+            int material = scanner.nextInt();
+            scanner.nextLine(); // Consumir quebra de linha
+            System.out.println();
+            if (material == 0) {
+                atributos[2] = (MateriaisRobo) MateriaisRobo.ALUMINIO;
+            } else if (material == 1) {
+                atributos[2] = (MateriaisRobo) MateriaisRobo.ACO;
+            } else if (material == 2) {
+                atributos[2] = (MateriaisRobo) MateriaisRobo.PLASTICO;
+            } else if (material == 3) {
+                atributos[2] = (MateriaisRobo) MateriaisRobo.FIBRA_VIDRO;
+            } else if (material == 4) {
+                atributos[2] = (MateriaisRobo) MateriaisRobo.FIBRA_CARBONO;
+
+            }
+            int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+            atributos[3] = coordenadas[0]; // Posição X
+            atributos[4] = coordenadas[1]; // Posição Y
+
+            do {
+                System.out.print("Velocidade (maior que 0): ");
+                atributos[6] = scanner.nextInt();
+                scanner.nextLine(); // Consumir quebra de linha
+            } while ((Integer) atributos[6] <= 0);
+
+            do {
+                System.out
+                        .print("Velocidade Máxima: (maior ou igual a velocidade " + atributos[6]
+                                + " definida): ");
+                atributos[7] = scanner.nextInt();
+            } while ((Integer) atributos[7] <= 0 || (Integer) atributos[7] < (Integer) atributos[6]);
+
+            System.out.println("Digite o número do tipo de robô que deseja criar:");
+            System.out.println("1 - Terrestre");
+            System.out.println("2 - Aéreo");
+            System.out.print("Tipo: ");
+            int tipo = scanner.nextInt();
+            scanner.nextLine(); // Consumir quebra de linha
+            System.out.println();
+
+            if (tipo == 1) {
+                // Robôs terrestres
+                System.out.println("Digite o número da categoria de robô terrestre:");
+                System.out.println("1 - Tanque de Guerra");
+                System.out.println("2 - Correios");
+                System.out.print("Categoria: ");
+                int categoria = scanner.nextInt();
+                scanner.nextLine(); // Consumir quebra de linha
+                System.out.println();
+                atributos[5] = 0;
+
+                if (categoria == 1) {
+                    // Atributos específicos do Tanque de Guerra
+                    do {
+                        System.out.print("Munição Máxima: ");
+                        atributos[8] = scanner.nextInt();
+                    } while ((Integer) atributos[8] <= 0);
+
+                    do {
+                        System.out.print("Alcance: ");
+                        atributos[9] = scanner.nextInt();
+                    } while ((Integer) atributos[9] <= 0);
+
+                } else if (categoria == 2) {
+                    // Atributos específicos dos Correios
+
+                    do {
+                        System.out.print("Capacidade Máxima de carga: ");
+                        atributos[8] = scanner.nextInt();
+                    } while ((Integer) atributos[8] <= 0);
+
+                    do {
+                        System.out.print("Peso Máximo suportado: ");
+                        atributos[9] = scanner.nextFloat();
+                    } while ((Float) atributos[9] <= 0);
+                }
+
+                ambiente.adicionarEntidade(ambiente.criarRobo(tipo, categoria, atributos));
+
+            } else if (tipo == 2) {
+                // Criação de Robôs Aéreos
+                System.out.println("Digite o número da categoria de robô aéreo:");
+                System.out.println("1 - Drone de Ataque");
+                System.out.println("2 - Drone de Vigilância");
+                System.out.print("Categoria: ");
+                int categoria = scanner.nextInt();
+                scanner.nextLine(); // Consumir quebra de linha
+                System.out.println();
+
+                do {
+                    System.out.print("Altura Máxima (não pode ultrapassar " + ambiente.getTamZ() + "): ");
+                    atributos[8] = scanner.nextInt();
+                } while ((Integer) atributos[8] > ambiente.getTamZ() || (Integer) atributos[8] <= 0);
+
+                do {
+                    System.out.print("Altura Inicial (Menor do que Altura Máxima): ");
+                    atributos[5] = scanner.nextInt();
+                } while ((Integer) atributos[5] > ambiente.getTamZ()
+                        || (Integer) atributos[5] > (Integer) atributos[8]
+                        || (Integer) atributos[5] <= 0);
+
+                if (categoria == 1) {
+                    // Atributos específicos do Drone de Ataque
+                    do {
+                        System.out.print("Munição: ");
+                        atributos[9] = scanner.nextInt();
+                    } while ((Integer) atributos[9] <= 0);
+
+                    do {
+                        System.out.print("Alcance: ");
+                        atributos[10] = scanner.nextInt();
+                    } while ((Integer) atributos[10] <= 0);
+
+                } else if (categoria == 2) {
+                    // Atributos específicos do Drone de Vigilância
+
+                    do {
+                        System.out.print("Alcance do Radar (número decimal, use ponto): ");
+                        atributos[9] = scanner.nextFloat();
+                    } while ((Float) atributos[9] <= 0);
+
+                    do {
+                        System.out.print("Angulo do Radar (número decimal, use ponto): ");
+                        atributos[10] = scanner.nextFloat();
+                    } while ((Float) atributos[10] <= 0);
+
+                    do {
+                        System.out.print("Ângulo de abertura da câmera (graus, número decimal): ");
+                        atributos[11] = scanner.nextFloat();
+                    } while ((Float) atributos[11] <= 0);
+                }
+                ambiente.adicionarEntidade(ambiente.criarRobo(tipo, categoria, atributos));
+                Main.limparTerminal();
+                System.out.println("Robô aéreo adicionado com sucesso!\n");
+            }
+
+        } else if (comando == 7) {
+            System.out.println("Escolha as coordenadas do obstáculo (X1 e X2, onde X1 é o menor):");
+            int X1 = scanner.nextInt();
+            int X2 = scanner.nextInt();
+            System.out.println("Escolha as coordenadas do obstáculo (Y1 e Y2, onde Y1 é o menor):");
+            int Y1 = scanner.nextInt();
+            int Y2 = scanner.nextInt();
+            System.out.println("Escolha o tipo de obstáculo:");
+            System.out.println("0 - Parede");
+            System.out.println("1 - Árvore");
+            System.out.println("2 - Prédio");
+            System.out.println("3 - Buraco");
+            System.out.println("4 - Outro");
+            System.out.print("Tipo: ");
+            int tipoObs = scanner.nextInt();
+            scanner.nextLine(); // Consumir quebra de linha
+            System.out.println();
+            if (tipoObs == 0) {
+                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PAREDE, X1, X2, Y1, Y2));
+            } else if (tipoObs == 1) {
+                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.ARVORE, X1, X2, Y1, Y2));
+            } else if (tipoObs == 2) {
+                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PREDIO, X1, X2, Y1, Y2));
+            } else if (tipoObs == 3) {
+                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.BURACO, X1, X2, Y1, Y2));
+            } else if (tipoObs == 4) {
+                Obstaculo outro = new Obstaculo(TipoObstaculo.OUTRO, X1, X2, Y1, Y2);
+                System.out.println("Digite a altura do obstáculo:");
+                int altura = scanner.nextInt();
+                System.out.println("O obstáculo é indestrutível?\n0-Não\n1-Sim");
+                int indestrutivel = scanner.nextInt();
+                int integridade = 0;
+                outro.setIndestrutivel(true);
+                if (indestrutivel == 0) {
+                    System.out.println("Digite a integridade (vida) do obstáculo:");
+                    integridade = scanner.nextInt();
+                    outro.setIndestrutivel(false);
+                }
+                outro.setAltura(altura);
+                outro.setIntegridade(integridade);
+                ambiente.adicionarEntidade(outro);
+            }
+        } else if (comando == 6 && listaRobo.size() > 0) {
+            // Remoção de um robô
+            System.out.println("Escolha o Robô a ser removido:");
+            int i = 1;
+            for (Robo robo : listaRobo) {
+                System.out.printf("%d - %s%n", i++, robo.getNome());
+            }
+            int index = scanner.nextInt() - 1;
+            if (index >= 0 && index < listaRobo.size()) {
+                ambiente.removerEntidade(listaRobo.get(index));
+                System.out.println("Robô removido!\n");
+            }
         }
     }
 }
