@@ -54,7 +54,8 @@ public class RoboTerrestre extends Robo{
             int passoX = deltaX > 0 ? 1 : -1;
             int x = 0;
             int detectado = 0;
-            for (x = posicaoY + passoX; x != destinoX + passoX; x += passoX) {
+            for (x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
+                ambiente.moverEntidade(this, x, getY(), getZ());
                 this.setPosicaoX(x);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {
@@ -81,6 +82,7 @@ public class RoboTerrestre extends Robo{
             int passoY = deltaY > 0 ? 1 : -1;
             int y = 0, detectado = 0;
             for (y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
+                ambiente.moverEntidade(this, getX(), y, getZ());
                 this.setPosicaoY(y);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {

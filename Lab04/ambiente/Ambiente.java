@@ -64,7 +64,7 @@ public class Ambiente {
         if (entidade.getTipo() == TipoEntidade.ROBO) {
             if (this.dentroDosLimites(entidade.getX(), entidade.getY(), entidade.getZ())) {
                 entidades.add(entidade);
-                mapa[entidade.getX()][entidade.getY()][entidade.getZ()] = TipoEntidade.ROBO;
+                mapa[entidade.getY()][entidade.getX()][entidade.getZ()] = TipoEntidade.ROBO;
             }
         } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
             Obstaculo obstaculo = (Obstaculo) entidade;

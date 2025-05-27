@@ -256,7 +256,7 @@ public class Main {
                             "2 - Recarregar\n" +
                             "3 - Mover\n" +
                             "4 - Identificar obstáculos\n" +
-                            "5 - Mudar direção\n" + 
+                            "5 - Mudar direção\n" +
                             "6 - Alterar Estado\n");
             System.out.print(menu);
             System.out.print("Ação: ");
@@ -283,7 +283,8 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
                     int nAlt = scanner.nextInt();
-                    roboEscolhido.executarTarefa("mover", coordenadas[0], coordenadas[1], nAlt,
+                    roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                            coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
                             ambiente);
                     System.out.println(roboEscolhido.exibirPosicao());
                 } else if (acao == 4) {
@@ -313,10 +314,10 @@ public class Main {
                             "3 - Mudar direção\n" +
                             "4 - Varrer Área\n" +
                             "5 - %s Camuflagem\n" +
-                            "6 - Enviar mensagem\n" + 
+                            "6 - Enviar mensagem\n" +
                             "7 - Alterar Estado\n",
                     roboEscolhido.isCamuflado() ? "Desativar"
-                            : "Ativar" );
+                            : "Ativar");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -329,7 +330,8 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
                     int nAlt = scanner.nextInt();
-                    roboEscolhido.executarTarefa("mover", coordenadas[0], coordenadas[1], nAlt,
+                    roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                            coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
                             ambiente);
                     System.out.println(roboEscolhido.exibirPosicao());
                 } else if (acao == 2) {
