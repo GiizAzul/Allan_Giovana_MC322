@@ -26,7 +26,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
     }
 
     @Override
-    public String defender(int dano) {
+    public String defender(int dano, Ambiente ambiente) {
         if (this.escudo > 0) {
             if (this.escudo > dano) {
                 this.escudo -= dano;
@@ -128,7 +128,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
             } else {
                 if (alvo instanceof Robo) {
                     Robo alvodef = (Robo) alvo;
-                    String defesa = alvodef.defender(nTiros);
+                    String defesa = alvodef.defender(nTiros, ambiente);
                     String result = String.format(
                             "Disparo realizado no alvo (%d, %d, %d)\n" +
                                     "Robô foi %s foi atingido!\n" +

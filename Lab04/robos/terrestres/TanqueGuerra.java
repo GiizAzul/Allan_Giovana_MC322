@@ -63,7 +63,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante{
                     String result = null;
                     if (alvo.getTipo() == TipoEntidade.ROBO) {
                         Robo alvodef = (Robo) alvo;
-                        String defesa = alvodef.defender(nTiros);
+                        String defesa = alvodef.defender(nTiros, ambiente);
                         result = String.format(
                                 "Disparo realizado no alvo (%d, %d)\n" +
                                         "Robô %s foi atingido!\n" +

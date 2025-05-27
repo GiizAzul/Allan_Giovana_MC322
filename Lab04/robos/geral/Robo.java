@@ -318,7 +318,6 @@ public abstract class Robo implements Entidade, Destrutivel {
             this.estado = false;
         } else {
             this.integridade = integridade;
-            this.estado = true;
         }
     }
 
@@ -354,7 +353,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param dano Quantidade de dano a ser aplicada
      * @return Mensagem indicando o estado do robô após o dano
      */
-    public String defender(int dano) {
+    public String defender(int dano, Ambiente ambiente) {
         this.integridade -= dano;
 
         if (integridade <= 0) {
