@@ -62,25 +62,23 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
                 return "";
 
             case "identificar":
-                ArrayList<Entidade> listaObjetosVistos = getRadar().acionar();
-                if (listaObjetosVistos.isEmpty()) {
+                ArrayList<Obstaculo> listaObstaculos = identificarObstaculo();
+                ArrayList<Robo> listaRobos = identificarRobo();
+                if (listaObstaculos.isEmpty() && listaRobos.isEmpty()) {
                     return "Nenhum objeto encontrado!";
                 } else {
-                    for (Entidade elemento : listaObjetosVistos) {
-                        if (elemento instanceof Obstaculo) {
-                            Obstaculo o = (Obstaculo) elemento;
-                            result+=String.format(
-                                    "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d%n",
-                                    o.getTipo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
-                                    o.getAltura());
-                        } else if (elemento instanceof Robo) {
-                            Robo r = (Robo) elemento;
-                            result+=String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d",
-                                    r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
-                        }
+                    for (Obstaculo o : listaObstaculos) {
+                        result += String.format(
+                                "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
+                                o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
+                                o.getAltura());
                     }
-                    return result;
+                    for (Robo r : listaRobos) {
+                        result += String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
+                                r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
+                    }
                 }
+                return result;
 
             default:
                 return "";

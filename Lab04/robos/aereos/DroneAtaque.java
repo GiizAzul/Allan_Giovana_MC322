@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import interfaces.Atacante;
-import interfaces.Entidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
@@ -69,29 +68,28 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                 return atirar(robo, nTiros, ambiente);
 
             case "identificar":
-                ArrayList<Entidade> listaObjetosVistos = getRadar().acionar();
-                if (listaObjetosVistos.isEmpty()) {
+                ArrayList<Obstaculo> listaoObstaculos = identificarObstaculo();
+                ArrayList<Robo> listaoRobos = identificarRobo();
+                if (listaoObstaculos.isEmpty() && listaoRobos.isEmpty()) {
                     return "Nenhum objeto encontrado!";
                 } else {
-                    for (Entidade elemento : listaObjetosVistos) {
-                        if (elemento instanceof Obstaculo) {
-                            Obstaculo o = (Obstaculo) elemento;
-                            result+=String.format(
-                                    "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
-                                    o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
-                                    o.getAltura());
-                        } else if (elemento instanceof Robo) {
-                            Robo r = (Robo) elemento;
-                            result+=String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
-                                    r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
-                        }
+                    for (Obstaculo o : listaoObstaculos) {
+                        result += String.format(
+                                "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
+                                o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
+                                o.getAltura());
                     }
-                    return result;
+                    for (Robo r : listaoRobos) {
+                        result += String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
+                                r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
+                    }
                 }
+                return result;
 
             default:
                 return "";
         }
+
     }
 
     public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {

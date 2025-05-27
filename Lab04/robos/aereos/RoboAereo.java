@@ -5,8 +5,7 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import interfaces.Entidade;
-import interfaces.Sensoreavel;
-import interfaces.TipoEntidade;
+import interfaces.*;
 import robos.equipamentos.sensores.*;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
@@ -16,7 +15,7 @@ import robos.geral.Robo;
  * Classe que representa um robô aéreo, especialização de Robo
  * com capacidade de voar em diferentes altitudes
  */
-public class RoboAereo extends Robo{
+public class RoboAereo extends Robo implements Identificantes{
 
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
     private Barometro sensorBarometro;      // Sensor de pressão atmosférica
@@ -230,7 +229,7 @@ public class RoboAereo extends Robo{
         return robosEncontrados;
     }
 
-    public ArrayList<Obstaculo> identificarobstaculo() {
+    public ArrayList<Obstaculo> identificarObstaculo() {
         ArrayList<Entidade> objetosEncontrados = this.sensorRadar.acionar();
         ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
         for (Entidade objectEnc : objetosEncontrados) {
