@@ -92,12 +92,12 @@ public class RoboAereo extends Robo implements Identificantes {
                     System.out.println(((Robo) obj).getNome() + " na posição X:" + getX() +
                             " Y:" + getY() + " Z:" + z);
                 } else {
-                    System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + getX() +
+                    System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() +
                             " Y:" + getY() + " Z:" + z);
                 }
                 return; // Interrompe o movimento antes da colisão
             }
-            ambiente.moverEntidade(this, getX(), getZ(), z);
+            ambiente.moverEntidade(this, getX(), getY(), z);
 
             setPosicaoZ(z);
         }
@@ -121,7 +121,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * @param metros Quantidade de metros a descer
      */
     public void descer(int metros, Ambiente ambiente) {
-        this.movimentoZ(-1, metros, ambiente);
+        this.movimentoZ(-1, -metros, ambiente);
     }
 
     /**

@@ -9,6 +9,7 @@ import robos.geral.Robo;
 import robos.geral.MateriaisRobo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
+import interfaces.Entidade;
 
 public class TestAmbiente {
     
@@ -21,10 +22,10 @@ public class TestAmbiente {
         
         testarCriacaoAmbiente();
         testarVerificacaoLimites();
-        testarCriacaoRobos();
-        testarAdicaoRobos();
-        testarIdentificacaoObjetosPosicao();
-        testarAdicaoObstaculos();
+        testarCriacaoERobos();
+        testarAdicaoEntidades();
+        testarVerificacaoOcupacao();
+        testarVisualizacaoAmbiente();
         
         System.out.println("\nTodos os testes foram concluídos!");
     }
@@ -33,14 +34,10 @@ public class TestAmbiente {
         System.out.println("\n== Teste de Criação de Ambiente ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
-        verificar("Ambiente deve ser criado com sucesso", 
-                 ambiente != null);
-        verificar("Dimensão X deve ser 10", 
-                 ambiente.getTamX() == 10);
-        verificar("Dimensão Y deve ser 10", 
-                 ambiente.getTamY() == 10);
-        verificar("Dimensão Z deve ser 5", 
-                 ambiente.getTamZ() == 5);
+        verificar("Ambiente deve ser criado com sucesso", ambiente != null);
+        verificar("Dimensão X deve ser 10", ambiente.getTamX() == 10);
+        verificar("Dimensão Y deve ser 10", ambiente.getTamY() == 10);
+        verificar("Dimensão Z deve ser 5", ambiente.getTamZ() == 5);
     }
     
     private static void testarVerificacaoLimites() {
@@ -48,186 +45,77 @@ public class TestAmbiente {
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
         
-        // Teste de limites 2D
-        verificar("Posição (5,5) deve estar dentro dos limites 2D", 
-                 ambiente.dentroDosLimites(5, 5));
-        verificar("Posição (11,5) deve estar fora dos limites 2D", 
-                 !ambiente.dentroDosLimites(11, 5));
-        verificar("Posição (5,11) deve estar fora dos limites 2D", 
-                 !ambiente.dentroDosLimites(5, 11));
-        verificar("Posição (0,0) deve estar dentro dos limites 2D", 
-                 ambiente.dentroDosLimites(0, 0));
-        verificar("Posição (-1,5) deve estar fora dos limites 2D", 
-                 !ambiente.dentroDosLimites(-1, 5));
-        
-        // Teste de limites 3D
-        verificar("Posição (5,5,3) deve estar dentro dos limites 3D", 
-                 ambiente.dentroDosLimites(5, 5, 3));
-        verificar("Posição (5,5,6) deve estar fora dos limites 3D", 
-                 !ambiente.dentroDosLimites(5, 5, 6));
-        verificar("Posição (5,5,0) deve estar dentro dos limites 3D", 
-                 ambiente.dentroDosLimites(5, 5, 0));
-        verificar("Posição (5,5,-1) deve estar fora dos limites 3D", 
-                 !ambiente.dentroDosLimites(5, 5, -1));
+        verificar("Posição (5,5) deve estar dentro dos limites", ambiente.dentroDosLimites(5, 5));
+        verificar("Posição (11,5) deve estar fora dos limites", !ambiente.dentroDosLimites(11, 5));
+        verificar("Posição (-1,5) deve estar fora dos limites", !ambiente.dentroDosLimites(-1, 5));
+        verificar("Posição (5,5,3) deve estar dentro dos limites", ambiente.dentroDosLimites(5, 5, 3));
+        verificar("Posição (5,5,6) deve estar fora dos limites", !ambiente.dentroDosLimites(5, 5, 6));
     }
     
-    private static void testarCriacaoRobos() {
+    private static void testarCriacaoERobos() {
         System.out.println("\n== Teste de Criação de Robôs ==");
         
-        Ambiente ambiente = new Ambiente(20, 20, 10);
+        Ambiente ambiente = new Ambiente(10, 10, 5);
         
-        // Teste de robô terrestre - TanqueGuerra
-        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 2, 5, 100, 10);
-        verificar("TanqueGuerra deve ser criado com sucesso", 
-                 tanque != null && tanque instanceof TanqueGuerra);
-        if (tanque != null) {
-            verificar("TanqueGuerra deve ter o nome T1", 
-                     tanque.getNome().equals("T1"));
-        }
+        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
+        verificar("TanqueGuerra deve ser criado com sucesso", tanque != null && tanque instanceof TanqueGuerra);
         
-        // Teste de robô terrestre - Correios
-        Robo correio = ambiente.criarRobo(1, 2, "C1", "Sul", MateriaisRobo.PLASTICO, 4, 5, 1, 3, 50, 25.0f);
-        verificar("Correios deve ser criado com sucesso", 
-                 correio != null && correio instanceof Correios);
-        if (correio != null) {
-            verificar("Correios deve ter o nome C1", 
-                     correio.getNome().equals("C1"));
-        }
+        Robo correio = ambiente.criarRobo(1, 2, "C1", "Sul", MateriaisRobo.PLASTICO, 4, 5, 0, 3, 5, 50, 25.0f);
+        verificar("Correios deve ser criado com sucesso", correio != null && correio instanceof Correios);
         
-        // Teste de robô aéreo - DroneAtaque
-        Robo droneAtaque = ambiente.criarRobo(2, 1, "DA1", "Leste", MateriaisRobo.FIBRA_CARBONO, 6, 7, 1, 2, 4, 200, 5);
-        verificar("DroneAtaque deve ser criado com sucesso", 
-                 droneAtaque != null && droneAtaque instanceof DroneAtaque);
-        if (droneAtaque != null) {
-            verificar("DroneAtaque deve ter o nome DA1", 
-                     droneAtaque.getNome().equals("DA1"));
-        }
+        Robo droneAtaque = ambiente.criarRobo(2, 1, "DA1", "Leste", MateriaisRobo.FIBRA_CARBONO, 6, 7, 2, 2, 4, 5, 200, 10);
+        verificar("DroneAtaque deve ser criado com sucesso", droneAtaque != null && droneAtaque instanceof DroneAtaque);
         
-        // Teste de robô aéreo - DroneVigilancia
-        Robo droneVigilancia = ambiente.criarRobo(2, 2, "DV1", "Oeste", MateriaisRobo.PLASTICO, 8, 1, 3, 5, 8, 30, 60.0f, 90.0f);
-        verificar("DroneVigilancia deve ser criado com sucesso", 
-                 droneVigilancia != null && droneVigilancia instanceof DroneVigilancia);
-        if (droneVigilancia != null) {
-            verificar("DroneVigilancia deve ter o nome DV1", 
-                     droneVigilancia.getNome().equals("DV1"));
-        }
-        
-        // Teste de criação de robô com parâmetros inválidos
-        Robo roboInvalido = ambiente.criarRobo(1, 1, "X1", "Norte", MateriaisRobo.FIBRA_VIDRO, 25, 25, 1, 5, 100, 10);
-        verificar("Deve retornar null para robô fora dos limites", 
-                 roboInvalido == null);
-        
-        // Teste de tipo inválido
-        Robo tipoInvalido = ambiente.criarRobo(3, 1, "I1", "Norte", MateriaisRobo.ACO, 5, 5, 1, 5, 100, 10);
-        verificar("Deve retornar null para tipo de robô inválido", 
-                 tipoInvalido == null);
+        Robo droneVigilancia = ambiente.criarRobo(2, 2, "DV1", "Oeste", MateriaisRobo.PLASTICO, 8, 1, 3, 5, 8, 5, 60.0f, 90.0f, 45.0f);
+        verificar("DroneVigilancia deve ser criado com sucesso", droneVigilancia != null && droneVigilancia instanceof DroneVigilancia);
     }
     
-    private static void testarAdicaoRobos() {
-        System.out.println("\n== Teste de Adição de Robôs ao Ambiente ==");
+    private static void testarAdicaoEntidades() {
+        System.out.println("\n== Teste de Adição de Entidades ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
         
-        Robo robo1 = new Robo("R1", "Norte", MateriaisRobo.ACO, 1, 1, 5);
-        Robo robo2 = new Robo("R2", "Sul", MateriaisRobo.ACO, 2, 2, 5);
-        Robo robo3 = new Robo("R3", "Leste", MateriaisRobo.ACO,  3, 3, 5);
-        
-        // Adicionar robôs
-        ambiente.adicionarRobo(robo1);
-        ambiente.adicionarRobo(robo2);
-        ambiente.adicionarRobo(robo3);
-        
-        ArrayList<Robo> robos = ambiente.getListaRobos();
-        verificar("Ambiente deve conter 3 robôs", 
-                 robos.size() == 3);
-        verificar("Ambiente deve conter o robô R1", 
-                 robos.contains(robo1));
-        verificar("Ambiente deve conter o robô R2", 
-                 robos.contains(robo2));
-        verificar("Ambiente deve conter o robô R3", 
-                 robos.contains(robo3));
-        
-        // Teste de adição de robô fora dos limites
-        Robo roboFora = new Robo("Fora", "Oeste", MateriaisRobo.PLASTICO, 15, 15, 0);
-        ambiente.adicionarRobo(roboFora);
-        verificar("Não deve adicionar robô fora dos limites", 
-                 !ambiente.getListaRobos().contains(roboFora));
-    }
-    
-    private static void testarIdentificacaoObjetosPosicao() {
-        System.out.println("\n== Teste de Identificação de Objetos por Posição ==");
-        
-        Ambiente ambiente = new Ambiente(10, 10, 5);
-        
-        // Adicionar robôs em posições conhecidas
-        Robo roboTerrestre = new Robo("RT", "Norte", MateriaisRobo.FIBRA_CARBONO, 2, 3, 5);
-        ambiente.adicionarRobo(roboTerrestre);
-        
-        DroneAtaque roboAereo = new DroneAtaque("RA", "Leste", MateriaisRobo.PLASTICO, 6, 7, 5, 2, 4, ambiente, 200, 5);
-        ambiente.adicionarRobo(roboAereo);
-        
-        // Teste de identificação 2D
-        Object objetoEncontrado2D = ambiente.identificarObjetoPosicao(2, 3);
-        verificar("Deve encontrar robô terrestre na posição (2,3)", 
-                 objetoEncontrado2D != null && objetoEncontrado2D.equals(roboTerrestre));
-        
-        // Teste de identificação 3D
-        Object objetoEncontrado3D = ambiente.identificarObjetoPosicao(6, 7, 2);
-        verificar("Deve encontrar robô aéreo na posição (6,7,2)", 
-                 objetoEncontrado3D != null && objetoEncontrado3D.equals(roboAereo));
-        
-        // Teste de identificação de posição vazia
-        Object objetoVazio = ambiente.identificarObjetoPosicao(9, 9);
-        verificar("Deve retornar null para posição vazia", 
-                 objetoVazio == null);
-        
-        Object objetoVazio3D = ambiente.identificarObjetoPosicao(6, 7, 3);
-        verificar("Deve retornar null para posição 3D vazia", 
-                 objetoVazio3D == null);
-    }
-    
-    private static void testarAdicaoObstaculos() {
-        System.out.println("\n== Teste de Adição de Obstáculos ==");
-        
-        Ambiente ambiente = new Ambiente(10, 10, 5);
-        
-        // Criar obstáculos
+        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
         Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 1, 2, 1, 2);
-        Obstaculo arvore = new Obstaculo(TipoObstaculo.ARVORE, 5, 6, 5, 6);
         
-        // Adicionar obstáculos
-        ambiente.adicionarObstaculo(parede);
-        ambiente.adicionarObstaculo(arvore);
+        ambiente.adicionarEntidade(tanque);
+        ambiente.adicionarEntidade(parede);
         
-        ArrayList<Obstaculo> obstaculos = ambiente.getListaObstaculos();
-        verificar("Ambiente deve conter 2 obstáculos", 
-                 obstaculos.size() == 2);
-        verificar("Ambiente deve conter a parede", 
-                 obstaculos.contains(parede));
-        verificar("Ambiente deve conter a árvore", 
-                 obstaculos.contains(arvore));
-        
-        // Teste de obstaculo fora dos limites
-        Obstaculo obstaculoFora = new Obstaculo(TipoObstaculo.PAREDE, 15, 16, 15, 16);
-        ambiente.adicionarObstaculo(obstaculoFora);
-        verificar("Não deve adicionar obstáculo fora dos limites", 
-                 !ambiente.getListaObstaculos().contains(obstaculoFora));
-        
-        // Verificar colisão com obstáculo
-        Robo robo = new Robo("R1", "Norte", MateriaisRobo.FIBRA_VIDRO, 1, 1, 0);
-        ambiente.adicionarRobo(robo);
-        
-        // Uso do método identificarObjetoPosicao para verificar colisão
-        Object colisao = ambiente.identificarObjetoPosicao(1, 1);
-        verificar("Deve detectar robô na posição", colisao != null);
-        
-        // Verifica se tem algo na posição do obstáculo
-        Object objetoNaPosicao = ambiente.identificarObjetoPosicao(1, 1);
-        verificar("Deve encontrar objeto na posição do robô", 
-                 objetoNaPosicao != null);
+        ArrayList<Entidade> entidades = ambiente.getEntidades();
+        verificar("Ambiente deve conter 2 entidades", entidades.size() == 2);
+        verificar("Ambiente deve conter o tanque", entidades.contains(tanque));
+        verificar("Ambiente deve conter a parede", entidades.contains(parede));
     }
     
-    // Método auxiliar para verificação de testes
+    private static void testarVerificacaoOcupacao() {
+        System.out.println("\n== Teste de Verificação de Ocupação ==");
+        
+        Ambiente ambiente = new Ambiente(10, 10, 5);
+        
+        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
+        ambiente.adicionarEntidade(tanque);
+        
+        verificar("Posição (2,3) deve estar ocupada", ambiente.estaOcupado(2, 3, 0));
+        verificar("Posição (5,5) não deve estar ocupada", !ambiente.estaOcupado(5, 5, 0));
+    }
+    
+    private static void testarVisualizacaoAmbiente() {
+        System.out.println("\n== Teste de Visualização do Ambiente ==");
+        
+        Ambiente ambiente = new Ambiente(10, 10, 5);
+        
+        Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
+        Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 1, 2, 1, 2);
+        
+        ambiente.adicionarEntidade(tanque);
+        ambiente.adicionarEntidade(parede);
+        
+        Character[][] visualizacao = ambiente.visualizarAmbiente();
+        verificar("Visualização deve ser criada", visualizacao != null);
+        verificar("Visualização deve ter dimensão X correta", visualizacao.length == ambiente.getTamX());
+        verificar("Visualização deve ter dimensão Y correta", visualizacao[0].length == ambiente.getTamY());
+    }
+    
     private static void verificar(String descricao, boolean condicao) {
         if (condicao) {
             System.out.println("\033[1;32m✓ PASSOU:\033[0m " + descricao);

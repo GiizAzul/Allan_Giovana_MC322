@@ -101,7 +101,7 @@ public class Ambiente {
     }
 
     public boolean estaOcupado(int x, int y, int z) {
-        if (mapa[x][y][z] == TipoEntidade.VAZIO) {
+        if (mapa[y][x][z] == TipoEntidade.VAZIO) {
             return false;
         } else {
             return true;
