@@ -2,8 +2,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import ambiente.Ambiente;
+import ambiente.CentralComunicacao;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
+import excecoes.ErroComunicacaoException;
+import excecoes.RoboDesligadoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;
@@ -14,8 +17,9 @@ import interfaces.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException {
         Scanner scanner = new Scanner(System.in);
+        CentralComunicacao central = new CentralComunicacao();
         System.out.println("Bem vindo ao Simulador de Robôs!");
         System.out.println(
                 "Gostaria de utilizar nosso modo padrão com ambiente e entidades padrão ou o modo de criação livre?\n1 - Modo Padrão\n2 - Modo Criação Livre");
@@ -46,7 +50,8 @@ public class Main {
                                 "0 - Fechar o simulador\n" +
                                 "1 - Ações de um robô\n" +
                                 "2 - Lista de robôs\n" +
-                                "3 - Visualizar mapa\n");
+                                "3 - Visualizar mapa\n" +
+                                "4 - Histórico de Comunicação\n");
                 System.out.print(menu);
                 System.out.print("Comando: ");
                 int comando = scanner.nextInt();
@@ -55,7 +60,7 @@ public class Main {
 
                 Main.limparTerminal();
 
-                if (comando > 3 || comando < 0) {
+                if (comando > 4 || comando < 0) {
                     System.out.println("Comando inválido!!\n");
                     continue;
                 }
@@ -70,7 +75,7 @@ public class Main {
 
                 if (comando == 0) {
                     break;
-                } else if (comando == 3){
+                } else if (comando == 3) {
                     Character[][] vizumapa = ambiente.visualizarAmbiente();
                     for (Character[] linha : vizumapa) {
                         for (Character chara : linha) {
@@ -78,6 +83,8 @@ public class Main {
                         }
                         System.out.println();
                     }
+                } else if (comando == 4) {
+                    System.out.println(central.exibirMensagens());
                 } else {
                     // Opções 2, 3 e 4 necessitam de ao menos um robô
                     if (listaRobo.size() <= 0) {
@@ -86,8 +93,8 @@ public class Main {
                     }
 
                     if (comando == 1) {
-                        acoesRobo(scanner, listaRobo, ambiente);
-                    } else if(comando == 2){
+                        acoesRobo(scanner, listaRobo, ambiente, central);
+                    } else if (comando == 2) {
                         // Exibe lista de robôs
                         System.out.println("Lista de robôs:");
                         int i = 1;
@@ -131,7 +138,8 @@ public class Main {
                                 "3 - Lista de robôs\n" +
                                 "4 - Remover robô\n" +
                                 "5 - Criar obstáculo\n" +
-                                "6 - Visualizar mapa\n");
+                                "6 - Visualizar mapa\n" +
+                                "7 - Histórico de Comunicação\n");
                 System.out.print(menu);
                 System.out.print("Comando: ");
                 int comando = scanner.nextInt();
@@ -140,7 +148,7 @@ public class Main {
 
                 Main.limparTerminal();
 
-                if (comando > 6 || comando < 0) {
+                if (comando > 7 || comando < 0) {
                     System.out.println("Comando inválido!!\n");
                     continue;
                 }
@@ -360,6 +368,8 @@ public class Main {
                         }
                         System.out.println();
                     }
+                } else if (comando == 7) {
+                    System.out.println(central.exibirMensagens());
                 } else {
                     // Opções 2, 3 e 4 necessitam de ao menos um robô
                     if (listaRobo.size() <= 0) {
@@ -368,7 +378,7 @@ public class Main {
                     }
 
                     if (comando == 2) {
-                        acoesRobo(scanner, listaRobo, ambiente);
+                        acoesRobo(scanner, listaRobo, ambiente, central);
                     } else if (comando == 3) {
                         // Exibe lista de robôs
                         System.out.println("Lista de robôs:");
@@ -417,7 +427,8 @@ public class Main {
         return new int[] { destinoX, destinoY };
     }
 
-    public static void acoesRobo(Scanner scanner, ArrayList<Robo> listaRobo, Ambiente ambiente) {
+    public static void acoesRobo(Scanner scanner, ArrayList<Robo> listaRobo, Ambiente ambiente,
+            CentralComunicacao central) throws ErroComunicacaoException, RoboDesligadoException {
         String menu;
         System.out.println("Escolha o Robô:\n");
         int i = 1;
@@ -494,7 +505,8 @@ public class Main {
                             "2 - Entregar pacote\n" +
                             "3 - Listar entregas\n" +
                             "4 - Mover\n" +
-                            "5 - Mudar direção\n");
+                            "5 - Mudar direção\n" +
+                            "6 - Mandar mensagem\n");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -532,6 +544,28 @@ public class Main {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
                     roboEscolhido.executarTarefa("direção", direcao);
+                } else if (acao == 6) {
+                    System.out.println("Escolha o Robô destinatário:\n");
+                    i = 1;
+                    for (Robo robo : listaRobo) {
+                        System.out.printf("%d - %s%n", i++, robo.getNome());
+                    }
+                    index = 0;
+                    do {
+                        System.out.print("Robô: ");
+                        index = scanner.nextInt();
+                    } while (index <= 0 || index > sizeLista);
+                    scanner.nextLine(); // Consumir quebra de linha
+                    System.out.println();
+                    Robo destinatario = listaRobo.get(index - 1);
+                    if (!(destinatario instanceof Comunicavel)) {
+                        throw new ErroComunicacaoException("O Robô destinatário deve ser comunicável");
+                    }
+
+                    System.out.println("Digite a mensagem a ser enviada:\n");
+                    String mensagem = scanner.nextLine();
+
+                    System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
                 }
             } else {
                 System.out.println("O robô está desligado\n");
@@ -592,7 +626,9 @@ public class Main {
                             "3 - Mudar direção\n" +
                             "4 - Varrer Área\n" +
                             "5 - %s Camuflagem\n",
-                    roboEscolhido.isCamuflado() ? "Desativar" : "Ativar");
+                    roboEscolhido.isCamuflado() ? "Desativar\n"
+                            : "Ativar\n" +
+                                    "6 - Enviar mensagem\n");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -626,6 +662,28 @@ public class Main {
                             centro[1], raio));
                 } else if (acao == 5) {
                     System.out.println(roboEscolhido.executarTarefa("camuflagem"));
+                } else if (acao == 6){
+                    System.out.println("Escolha o Robô destinatário:\n");
+                    i = 1;
+                    for (Robo robo : listaRobo) {
+                        System.out.printf("%d - %s%n", i++, robo.getNome());
+                    }
+                    index = 0;
+                    do {
+                        System.out.print("Robô: ");
+                        index = scanner.nextInt();
+                    } while (index <= 0 || index > sizeLista);
+                    scanner.nextLine(); // Consumir quebra de linha
+                    System.out.println();
+                    Robo destinatario = listaRobo.get(index - 1);
+                    if (!(destinatario instanceof Comunicavel)) {
+                        throw new ErroComunicacaoException("O Robô destinatário deve ser comunicável");
+                    }
+
+                    System.out.println("Digite a mensagem a ser enviada:\n");
+                    String mensagem = scanner.nextLine();
+
+                    System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
                 }
             } else {
                 System.out.println("Robô desligado!");

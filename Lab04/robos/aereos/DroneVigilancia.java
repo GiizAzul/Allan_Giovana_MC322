@@ -2,12 +2,11 @@ package robos.aereos;
 
 import java.util.ArrayList;
 
-import ambiente.Ambiente;
-import ambiente.Obstaculo;
-import robos.geral.MateriaisRobo;
-import robos.geral.Robo;
+import robos.geral.*;
 import robos.terrestres.RoboTerrestre;
 import interfaces.*;
+import excecoes.*;
+import ambiente.*;
 
 public class DroneVigilancia extends RoboAereo implements Comunicavel{
 
@@ -180,4 +179,39 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
     public void setAnguloCamera(float angulo_camera) {
         this.angulo_camera = angulo_camera;
     }
+
+    
+    public String enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws  ErroComunicacaoException, RoboDesligadoException{
+        if (destinatario == null){
+            throw new ErroComunicacaoException("Destinatário não pode ser nulo");
+        }
+        if (!getEstado()){
+            throw new RoboDesligadoException("Robô " + getNome() + " está desligado e não pode enviar mensagens.");
+        }
+
+        try {
+            central.registrarMensagem(this, destinatario, mensagem);
+            
+            return "Mensagem enviada com sucesso por " + this.getNome() + "\n"+destinatario.receberMensagem(this, mensagem);
+        } catch (Exception e) {
+            throw new ErroComunicacaoException("Falha ao enviar mensagem: " + e.getMessage());
+        }
+    }
+
+    public String receberMensagem(Comunicavel remetente, String mensagem) 
+            throws ErroComunicacaoException, RoboDesligadoException {
+        
+        if (!getEstado()) {
+            throw new RoboDesligadoException("Robô " + getNome() + " está desligado e não pode receber mensagens.");
+        }
+
+        if (remetente == null) {
+            throw new ErroComunicacaoException("Remetente não pode ser nulo.");
+        }
+
+        // A mensagem já foi registrada pela central no método enviarMensagem
+        // Aqui podemos adicionar lógica adicional de processamento da mensagem
+        return getNome() + " recebeu mensagem de " + ((Robo)remetente).getNome() + ": " + mensagem;
+    }
+
 }

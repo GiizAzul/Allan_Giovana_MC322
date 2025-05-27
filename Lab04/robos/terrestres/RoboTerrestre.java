@@ -10,7 +10,7 @@ import interfaces.*;
  * Classe que representa um robô terrestre, especialização de Robo
  * com capacidade de velocidade limitada
  */
-public class RoboTerrestre extends Robo implements Sensoreavel {
+public class RoboTerrestre extends Robo{
     private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
     private Colisao sensorColisao; // Sensor de colisão
 
