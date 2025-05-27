@@ -29,7 +29,7 @@ public class Main {
             ambiente.adicionarEntidade(
                     ambiente.criarRobo(1, 1, "Marquinhos Tanque", "Norte", MateriaisRobo.ACO, 3, 3, 0, 2, 5, 100, 10));
             ambiente.adicionarEntidade(ambiente.criarRobo(1, 2, "Robertinho Correio", "Sul", MateriaisRobo.PLASTICO, 4,
-                    5, 0, 1, 3, 50, 25.0f));
+                    9, 0, 1, 3, 50, 25.0f));
             ambiente.adicionarEntidade(ambiente.criarRobo(2, 1, "Pedrinho Drone Ataque", "Leste",
                     MateriaisRobo.FIBRA_CARBONO, 6, 7, 1, 2, 4, 8, 200, 5));
             ambiente.adicionarEntidade(ambiente.criarRobo(2, 2, "Joãozinho Drone Vigilância", "Oeste",
@@ -256,7 +256,7 @@ public class Main {
                             "2 - Recarregar\n" +
                             "3 - Mover\n" +
                             "4 - Identificar obstáculos\n" +
-                            "5 - Mudar direção\n" + 
+                            "5 - Mudar direção\n" +
                             "6 - Alterar Estado\n");
             System.out.print(menu);
             System.out.print("Ação: ");
@@ -283,7 +283,8 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
                     int nAlt = scanner.nextInt();
-                    roboEscolhido.executarTarefa("mover", coordenadas[0], coordenadas[1], nAlt,
+                    roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                            coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
                             ambiente);
                     System.out.println(roboEscolhido.exibirPosicao());
                 } else if (acao == 4) {
@@ -313,10 +314,10 @@ public class Main {
                             "3 - Mudar direção\n" +
                             "4 - Varrer Área\n" +
                             "5 - %s Camuflagem\n" +
-                            "6 - Enviar mensagem\n" + 
+                            "6 - Enviar mensagem\n" +
                             "7 - Alterar Estado\n",
                     roboEscolhido.isCamuflado() ? "Desativar"
-                            : "Ativar" );
+                            : "Ativar");
             System.out.print(menu);
             System.out.print("Ação: ");
             int acao = scanner.nextInt();
@@ -329,7 +330,8 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
                     int nAlt = scanner.nextInt();
-                    roboEscolhido.executarTarefa("mover", coordenadas[0], coordenadas[1], nAlt,
+                    roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                            coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
                             ambiente);
                     System.out.println(roboEscolhido.exibirPosicao());
                 } else if (acao == 2) {

@@ -1,4 +1,7 @@
 package robos.equipamentos.sensores;
+import excecoes.sensor.SensorAusenteException;
+import excecoes.sensor.SensorException;
+import excecoes.sensor.SensorInativoException;
 import robos.geral.Robo;
 
 public class Barometro extends Sensor<Double> {
@@ -36,16 +39,16 @@ public class Barometro extends Sensor<Double> {
      * @return Double com a pressão atmosférica em hPa para a altitude informada
      */
     @Override
-    public Double acionar() {
+    public Double acionar() throws SensorException {
         // Leitura da pressão atmosférica em função da altitude
         if (robo == null) {
-            return -1.0; // Código de erro: robô não associado
+           throw new SensorAusenteException("Robo não possui um barômetro.");
         }
         if (this.isAtivo() == false) {
-            return -1.0; // Código de erro: sensor inativo
+           throw new SensorInativoException("Barômetro está inativo.");
         }   
-        
-        double alt = robo.getZ();
+
+        double alt = robo.getZInterno();
         this.pressaoAtmosferica = 1013.25 * Math.pow(1 - (0.0065 * alt) / 288.15, 5.25588);
         return this.pressaoAtmosferica;
     }

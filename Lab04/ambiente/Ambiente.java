@@ -2,8 +2,11 @@ package ambiente;
 
 import java.util.ArrayList;
 
+import excecoes.ForaDosLimitesException;
+import excecoes.sensor.SensorInativoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
+import robos.equipamentos.sensores.Sensor;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
@@ -60,11 +63,11 @@ public class Ambiente {
     /**
      * Adiciona um robô ao ambiente
      */
-    public void adicionarEntidade(Entidade entidade) {
+    public void adicionarEntidade(Entidade entidade) throws ForaDosLimitesException {
         if (entidade.getTipo() == TipoEntidade.ROBO) {
-            if (this.dentroDosLimites(entidade.getX(), entidade.getY(), entidade.getZ())) {
+            if (this.dentroDosLimites(entidade.getXInterno(), entidade.getYInterno(), entidade.getZInterno())) {
                 entidades.add(entidade);
-                mapa[entidade.getX()][entidade.getY()][entidade.getZ()] = TipoEntidade.ROBO;
+                mapa[entidade.getXInterno()][entidade.getYInterno()][entidade.getZInterno()] = TipoEntidade.ROBO;
             }
         } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
             Obstaculo obstaculo = (Obstaculo) entidade;
@@ -86,7 +89,7 @@ public class Ambiente {
     public void removerEntidade(Entidade entidade) {
         entidades.remove(entidade);
         if (entidade.getTipo() == TipoEntidade.ROBO) {
-            mapa[entidade.getX()][entidade.getY()][entidade.getZ()] = TipoEntidade.VAZIO;
+            mapa[entidade.getXInterno()][entidade.getYInterno()][entidade.getZInterno()] = TipoEntidade.VAZIO;
         } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
             Obstaculo obstaculo = (Obstaculo) entidade;
             for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
@@ -255,7 +258,7 @@ public class Ambiente {
         for (Entidade entidade : this.entidades) {
             if (entidade.getTipo() == TipoEntidade.ROBO) {
                 Robo robo = (Robo) entidade;
-                if (robo.getPosicaoXInterna() == posX && robo.getPosicaoYInterna() == posY && robo.getZ() == posZ) {
+                if (robo.getXInterno() == posX && robo.getYInterno() == posY && robo.getZInterno() == posZ) {
                     return robo;
                 }
             } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {

@@ -1,6 +1,6 @@
 package ambiente;
 import interfaces.*;
-public class Obstaculo implements Entidade, Destrutivel{
+public class Obstaculo implements Entidade, Destrutivel {
     private final int x1;
     private final int x2;
     private final int y1;
@@ -24,15 +24,15 @@ public class Obstaculo implements Entidade, Destrutivel{
     }
 
     public int getX(){
-        return 0;
+        return -1;
     }
 
     public int getY(){
-        return 0;
+        return -1;
     }
 
     public int getZ(){
-        return 0;
+        return -1;
     }
 
     public String getDescricao(){
@@ -104,6 +104,27 @@ public class Obstaculo implements Entidade, Destrutivel{
 
             return "O obstáculo ainda não foi destruído";
         }
+    }
+
+    /**
+     * Método interno para acesso direto à posição X
+     */
+    public int getXInterno() {
+        return this.x1;
+    }
+
+    /**
+     * Método interno para acesso direto à posição Y
+     */
+    public int getYInterno() {
+        return this.y1;
+    }
+
+    /**
+     * Método interno para acesso direto à posição Y
+     */
+    public int getZInterno() {
+        return this.altura;
     }
 
 }

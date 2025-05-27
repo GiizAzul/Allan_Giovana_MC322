@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import interfaces.Entidade;
+import excecoes.AlvoInvalidoException;
+import excecoes.ColisaoException;
+import excecoes.ForaDosLimitesException;
+import excecoes.MunicaoInsuficienteException;
+import excecoes.RoboDestruidoPorBuracoException;
+import excecoes.sensor.SensorException;
+import excecoes.sensor.SensorInativoException;
 import interfaces.*;
 import robos.equipamentos.sensores.*;
 import robos.geral.MateriaisRobo;
@@ -15,7 +21,7 @@ import robos.geral.Robo;
  * Classe que representa um robô aéreo, especialização de Robo
  * com capacidade de voar em diferentes altitudes
  */
-public class RoboAereo extends Robo implements Identificantes{
+public class RoboAereo extends Robo implements Identificantes {
 
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
     private Barometro sensorBarometro;      // Sensor de pressão atmosférica
@@ -61,7 +67,7 @@ public class RoboAereo extends Robo implements Identificantes{
      * 
      * O movimento é interrompido se houver colisão ou se a altitude máxima for atingida.
      */
-    private void movimentoZ(int passo, int metros, Ambiente ambiente) {
+    private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorInativoException{
         // Calcula a altitude alvo baseada na direção do movimento
         int altitudeAlvo = passo > 0 ? getZ() + metros : getZ() - metros;
         
@@ -102,7 +108,7 @@ public class RoboAereo extends Robo implements Identificantes{
      * @param metros Quantidade de metros a subir
      * @param ambiente Ambiente onde o robô se encontra
      */
-    public void subir(int metros, Ambiente ambiente) {
+    public void subir(int metros, Ambiente ambiente) throws SensorInativoException {
         this.movimentoZ(1, metros, ambiente);
     }
 
@@ -110,7 +116,7 @@ public class RoboAereo extends Robo implements Identificantes{
      * Diminui a altitude do robô aéreo
      * @param metros Quantidade de metros a descer
      */
-    public void descer(int metros, Ambiente ambiente) {
+    public void descer(int metros, Ambiente ambiente) throws SensorInativoException {
         this.movimentoZ(-1, metros, ambiente);
     }
 
@@ -122,7 +128,7 @@ public class RoboAereo extends Robo implements Identificantes{
         return this.altitudeMaxima;
     }
 
-    public double getPressao() {
+    public double getPressao() throws SensorException {
         return this.sensorBarometro.acionar();
     }
 
@@ -139,13 +145,13 @@ public class RoboAereo extends Robo implements Identificantes{
      * @param alvo Robô aéreo alvo
      * @return Distância euclidiana 3D (considerando altitudes)
      */
-    public double distanciaRobo(Robo alvo) {
+    public double distanciaRobo(Robo alvo) throws SensorInativoException {
         if (!this.getGPS().isAtivo()) {
             return -1;
         }
 
-        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getX(), 2)
-                + Math.pow(alvo.getPosicaoYInterna() - this.getY(), 2)
+        return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
+                + Math.pow(alvo.getYInterno() - this.getY(), 2)
                 + Math.pow(alvo.getZ() - this.getZ(), 2));
     }
 
@@ -156,7 +162,7 @@ public class RoboAereo extends Robo implements Identificantes{
      * @param Z Nova altitude
      * @param ambiente Ambiente onde o robô se encontra
      */
-    public void mover(int X, int Y, int Z, Ambiente ambiente) {
+    public void mover(int X, int Y, int Z, Ambiente ambiente) throws SensorInativoException {
         int deltaX = X - getX();
         int deltaY = Y - getY();
 
@@ -248,7 +254,7 @@ public class RoboAereo extends Robo implements Identificantes{
         return this.sensorBarometro;
     }
 
-    public String executarTarefa(Object... argumentos){
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;

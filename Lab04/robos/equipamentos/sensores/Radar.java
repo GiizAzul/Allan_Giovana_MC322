@@ -97,9 +97,9 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      */
     private boolean verificacaoRobo(Robo roboAmbiente) {
         // Obtém a posição do robô no ambiente
-        int xRoboAmbiente = roboAmbiente.getPosicaoXInterna();
-        int yRoboAmbiente = roboAmbiente.getPosicaoYInterna();
-        int zRoboAmbiente = roboAmbiente.getZ();
+        int xRoboAmbiente = roboAmbiente.getXInterno();
+        int yRoboAmbiente = roboAmbiente.getYInterno();
+        int zRoboAmbiente = roboAmbiente.getZInterno();
 
         // Verifica se o robô está visível - robôs camuflados não são detectados
         if (!roboAmbiente.getVisivel()) {
@@ -152,7 +152,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
         double r = this.getDistanciaPontoRadar2D(pontoRotacionado[0], pontoRotacionado[1]);
         
         // Calcula o ângulo vertical entre o robô e o objeto
-        double anguloObjeto = Math.atan((this.robo.getZ() - z) / (r));
+        double anguloObjeto = Math.atan((this.robo.getZInterno() - z) / (r));
         
         // Verifica se o ângulo está dentro do ângulo de abertura do radar
         if (Math.abs(anguloObjeto) > this.anguloAlcance) {
@@ -187,7 +187,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * @return Distância 2D entre o robô e o ponto
      */
     public double getDistanciaPontoRadar2D(double x, double y) {
-        return Math.sqrt(Math.pow(x - robo.getX(), 2) + Math.pow(y - robo.getY(), 2));
+        return Math.sqrt(Math.pow(x - robo.getXInterno(), 2) + Math.pow(y - robo.getYInterno(), 2));
     }
 
     /**
@@ -199,7 +199,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * @return Distância 3D entre o robô e o ponto
      */
     public double getDistanciaPontoRadar3D(double x, double y, double z) {
-        return Math.sqrt(Math.pow(x - robo.getX(), 2) + Math.pow(y - robo.getY(), 2) + Math.pow(z - robo.getZ(), 2));
+        return Math.sqrt(Math.pow(x - robo.getXInterno(), 2) + Math.pow(y - robo.getYInterno(), 2) + Math.pow(z - robo.getZInterno(), 2));
     }
 
     /**

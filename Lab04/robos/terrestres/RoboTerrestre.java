@@ -4,13 +4,14 @@ import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import interfaces.*;
+import excecoes.*;
+import excecoes.sensor.SensorInativoException;
 
 /**
  * Classe que representa um robô terrestre, especialização de Robo
  * com capacidade de velocidade limitada
  */
-public class RoboTerrestre extends Robo{
+public class RoboTerrestre extends Robo {
     private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
     private Colisao sensorColisao; // Sensor de colisão
 
@@ -42,8 +43,8 @@ public class RoboTerrestre extends Robo{
         }
 
         // Robo Terrestre não precisa do GPS para se movimentar (v*t)
-        int posicaoX = this.getPosicaoXInterna();
-        int posicaoY = this.getPosicaoYInterna();
+        int posicaoX = this.getXInterno();
+        int posicaoY = this.getYInterno();
 
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = posicaoX + deltaX > ambiente.getTamX() ? ambiente.getTamX() : posicaoX + deltaX;
@@ -122,20 +123,18 @@ public class RoboTerrestre extends Robo{
      * @param alvo Robô aéreo alvo
      * @return Distância euclidiana 3D (considerando altitude do robô)
      */
-    public double distanciaRobo(Robo alvo) {
-        if (!this.getGPS().isAtivo()) {
-            return -1;
-        }
+    public double distanciaRobo(Robo alvo) throws SensorInativoException {
+        super.verificarGPSAtivo();
 
-        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getX(), 2)
-                + Math.pow(alvo.getPosicaoYInterna() - this.getY(), 2) + Math.pow(alvo.getZ() - 0, 2));
+        return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
+                + Math.pow(alvo.getYInterno() - this.getY(), 2) + Math.pow(alvo.getZ() - 0, 2));
     }
 
     public Colisao getSensorColisao() {
         return sensorColisao;
     }
 
-    public String executarTarefa(Object... argumentos){
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;

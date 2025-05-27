@@ -43,8 +43,8 @@ public class GPS extends Sensor<int[]> {
         
         // Acessa diretamente as posições internas do robô
         return new int[] {
-            this.robo.getPosicaoXInterna(), 
-            this.robo.getPosicaoYInterna(),
+            this.robo.getXInterno(), 
+            this.robo.getYInterno(),
             0 // Z é por padrão 0 para Robos
         };
     }
@@ -59,7 +59,7 @@ public class GPS extends Sensor<int[]> {
         if (!isAtivo() || this.robo == null) {
             return -1; // Código de erro quando o sensor está inativo
         }
-        return this.robo.getPosicaoXInterna();
+        return this.robo.getXInterno();
     }
     
     /**
@@ -72,7 +72,7 @@ public class GPS extends Sensor<int[]> {
         if (!isAtivo() || this.robo == null) {
             return -1; // Código de erro quando o sensor está inativo
         }
-        return this.robo.getPosicaoYInterna();
+        return this.robo.getYInterno();
     }
     
     /**
