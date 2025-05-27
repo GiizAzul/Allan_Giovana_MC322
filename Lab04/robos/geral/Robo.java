@@ -12,7 +12,7 @@ import interfaces.*;
  * Classe que representa um robô com funcionalidades básicas de movimento e
  * sensoriamento.
  */
-public abstract class Robo implements Entidade {
+public abstract class Robo implements Entidade, Destrutivel {
     // Propriedades
     private final int id;
     private static int cont_robo = 0;

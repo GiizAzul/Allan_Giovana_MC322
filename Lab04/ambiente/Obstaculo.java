@@ -1,6 +1,6 @@
 package ambiente;
 import interfaces.*;
-public class Obstaculo implements Entidade{
+public class Obstaculo implements Entidade, Destrutivel{
     private final int x1;
     private final int x2;
     private final int y1;
