@@ -91,10 +91,13 @@ public class RoboAereo extends Robo implements Identificantes{
                 }
                 return; // Interrompe o movimento antes da colisão
             }
-            setPosicaoZ(z);;
+            ambiente.moverEntidade(this,getX(),getZ(),z);
+
+            setPosicaoZ(z);
         }
         // Atualiza a altitude final
-        setPosicaoZ(altitudeAlvo);;
+        ambiente.moverEntidade(this,getX(),getZ(),altitudeAlvo);
+        setPosicaoZ(altitudeAlvo);
     }
 
     /**
@@ -178,6 +181,7 @@ public class RoboAereo extends Robo implements Identificantes{
                     }
                     return; // Para uma casa antes do obstáculo
                 }
+                ambiente.moverEntidade(this,x,getY(),getZ());
                 setPosicaoX(x);
             }
         }
@@ -200,6 +204,7 @@ public class RoboAereo extends Robo implements Identificantes{
                     }
                     return; // Para uma casa antes do obstáculo
                 }
+                ambiente.moverEntidade(this,getX(),y,getZ());
                 setPosicaoY(y);
             }
         }

@@ -93,6 +93,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                         return false;
                     }
                 }
+                ambiente.moverEntidade(this,x,getY(),getZ());
                 setPosicaoX(x);
             }
         }
@@ -115,6 +116,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                         return false;
                     }
                 }
+                ambiente.moverEntidade(this,getX(),y,getZ());
                 setPosicaoY(y);
             }
         }

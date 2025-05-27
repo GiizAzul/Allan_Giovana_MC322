@@ -100,6 +100,7 @@ public abstract class Robo implements Entidade, Destrutivel {
                         break;
                     }
                 }
+                ambiente.moverEntidade(this, x, posicaoY, posicaoZ);
                 posicaoX = x; // Atualiza a posição X antes da colisão
             }
         }
@@ -124,6 +125,7 @@ public abstract class Robo implements Entidade, Destrutivel {
                         break; // Para a movimentação
                     }
                 }
+                ambiente.moverEntidade(this, posicaoX, y, posicaoZ);
                 posicaoY = y; // Atualiza a posição Y antes da colisão
             }
         }

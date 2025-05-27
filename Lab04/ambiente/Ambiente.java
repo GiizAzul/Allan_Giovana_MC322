@@ -71,9 +71,9 @@ public class Ambiente {
             if (this.dentroDosLimites(obstaculo.getX1(), obstaculo.getY1()) &&
                     this.dentroDosLimites(obstaculo.getX2(), obstaculo.getY2())) {
                 entidades.add(obstaculo);
-                for (int x = obstaculo.getX1(); x < obstaculo.getX2(); x++) {
-                    for (int y = obstaculo.getY1(); y < obstaculo.getY2(); y++) {
-                        for (int z = 0; z < obstaculo.getAltura(); z++) {
+                for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {
+                    for (int y = obstaculo.getY1(); y <= obstaculo.getY2(); y++) {
+                        for (int z = 0; z <= obstaculo.getAltura(); z++) {
                             mapa[y][x][z] = TipoEntidade.OBSTACULO;
                         }
                     }
@@ -110,12 +110,15 @@ public class Ambiente {
 
     /**
      * Retorna a lista de entidades no ambiente
+     *
      */
     public ArrayList<Entidade> getEntidades() {
         return entidades;
     }
 
     public void moverEntidade(Entidade entidade, int novoX, int novoY, int novoZ) {
+        mapa[entidade.getY()][entidade.getX()][entidade.getZ()]=TipoEntidade.VAZIO;
+        mapa[novoY][novoX][novoZ]=entidade.getTipo();
     }
 
     public void executarSensores() {
@@ -131,23 +134,17 @@ public class Ambiente {
                 vizuMapa[y][x] = TipoEntidade.VAZIO.getRepresentacao();
             }
         }
-        for (int y = tamY-1; y >=0; y--) {
+        for (int y = tamY - 1; y >= 0; y--) {
             for (int x = 0; x < tamX; x++) {
                 for (int z = 0; z < tamZ; z++) {
-                    if (vizuMapa[vizuMapa.length-1-y][x] == TipoEntidade.VAZIO.getRepresentacao()) {
-                        if (mapa[y][x][z] == TipoEntidade.DESCONHECIDO) {
-                            vizuMapa[vizuMapa.length-1-y][x] = TipoEntidade.DESCONHECIDO.getRepresentacao();
-
-                        } else if (identificarEntidadePosicao(x, y, z)!=null){
-                            Entidade entidade = identificarEntidadePosicao(x, y, z);
-                            vizuMapa[vizuMapa.length-1-y][x] = entidade.getRepresentacao();
-                        }
-
+                    if (mapa[y][x][z] != TipoEntidade.VAZIO){
+                        vizuMapa[vizuMapa.length - 1 - y][x]=mapa[y][x][z].getRepresentacao();
                     }
                 }
             }
         }
         return vizuMapa;
+
     }
 
     // Getters para as dimensões do ambiente
@@ -189,7 +186,7 @@ public class Ambiente {
             int posZ = (Integer) atributo[5];
             int velocidade = (Integer) atributo[6];
             int velocidadeMaxima = (Integer) atributo[7];
-            
+
             // Verificar se a posição está dentro dos limites
             if (!dentroDosLimites(posX, posY, posZ)) {
                 System.out.println("Posição fora dos limites do ambiente");
@@ -241,7 +238,7 @@ public class Ambiente {
                 default:
                     return null;
             }
-        } catch (ClassCastException | ArrayIndexOutOfBoundsException e ) {
+        } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
             System.out.println("Erro ao criar robô: parâmetros incorretos");
             return null;
         }

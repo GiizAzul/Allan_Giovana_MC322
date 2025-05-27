@@ -29,7 +29,7 @@ public class Main {
             ambiente.adicionarEntidade(
                     ambiente.criarRobo(1, 1, "Marquinhos Tanque", "Norte", MateriaisRobo.ACO, 3, 3, 0, 2, 5, 100, 10));
             ambiente.adicionarEntidade(ambiente.criarRobo(1, 2, "Robertinho Correio", "Sul", MateriaisRobo.PLASTICO, 4,
-                    5, 0, 1, 3, 50, 25.0f));
+                    9, 0, 1, 3, 50, 25.0f));
             ambiente.adicionarEntidade(ambiente.criarRobo(2, 1, "Pedrinho Drone Ataque", "Leste",
                     MateriaisRobo.FIBRA_CARBONO, 6, 7, 1, 2, 4, 8, 200, 5));
             ambiente.adicionarEntidade(ambiente.criarRobo(2, 2, "Joãozinho Drone Vigilância", "Oeste",

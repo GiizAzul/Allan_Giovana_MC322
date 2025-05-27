@@ -71,6 +71,7 @@ public class RoboTerrestre extends Robo{
                 }
             }
             if (detectado != 0) {
+                ambiente.moverEntidade(this, x - passoX, getY(), getZ());
                 this.setPosicaoX(x - passoX); // Corrige a posição do robô
             }
         }
@@ -96,6 +97,7 @@ public class RoboTerrestre extends Robo{
                 }
             }
             if (detectado != 0) {
+                ambiente.moverEntidade(this, getX(), y - passoY, getZ());
                 this.setPosicaoY(y - passoY); // Corrige a posição do robô
             }
         }
