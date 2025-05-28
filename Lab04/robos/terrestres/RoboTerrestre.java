@@ -49,8 +49,8 @@ public class RoboTerrestre extends Robo {
         int posicaoY = this.getPosicaoYInterna();
 
         // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = posicaoX + deltaX > ambiente.getTamX() ? ambiente.getTamX() : posicaoX + deltaX;
-        int destinoY = posicaoY + deltaY > ambiente.getTamY() ? ambiente.getTamY() : posicaoY + deltaY;
+        int destinoX = posicaoX + deltaX >= ambiente.getTamX() ? ambiente.getTamX()-1 : posicaoX + deltaX;
+        int destinoY = posicaoY + deltaY >= ambiente.getTamY() ? ambiente.getTamY()-1 : posicaoY + deltaY;
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {

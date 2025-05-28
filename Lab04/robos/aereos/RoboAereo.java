@@ -172,8 +172,8 @@ public class RoboAereo extends Robo implements Identificantes {
      */
     public void mover(int deltaX, int deltaY, int deltaZ, Ambiente ambiente) {
         // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = getX() + deltaX > ambiente.getTamX() ? ambiente.getTamX() : getX() + deltaX;
-        int destinoY = getY() + deltaY > ambiente.getTamY() ? ambiente.getTamY() : getY() + deltaY;
+        int destinoX = getX() + deltaX >= ambiente.getTamX() ? ambiente.getTamX()-1 : getX() + deltaX;
+        int destinoY = getY() + deltaY >= ambiente.getTamY() ? ambiente.getTamY()-1 : getY() + deltaY;
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {

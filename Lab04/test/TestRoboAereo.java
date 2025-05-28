@@ -1,5 +1,8 @@
 import ambiente.Ambiente;
+import ambiente.CentralComunicacao;
+import excecoes.RoboDesligadoException;
 import robos.aereos.DroneAtaque;
+import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
@@ -21,6 +24,9 @@ public class TestRoboAereo {
         testarDistanciaEntreRobosAereos();
         testarExibirPosicao();
         testarBarometro();
+        testarEspecificidadesDroneAtaque();
+        testarEspecificidadesDroneVigilancia();
+        testarComunicacaoDroneVigilancia();
         
         System.out.println("\nTodos os testes foram concluídos!");
     }
@@ -153,6 +159,120 @@ public class TestRoboAereo {
         
         drone.mover(0, 0, -1, ambiente);
         verificar("Altitude deve diminuir após descida", drone.getZ() < altitudeInicial + 2);
+    }
+    
+    private static void testarEspecificidadesDroneAtaque() {
+        System.out.println("\n== Teste de Especificidades do DroneAtaque ==");
+        
+        Ambiente ambiente = new Ambiente(50, 50, 100);
+        DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA1", "Norte", 
+                                                           MateriaisRobo.FIBRA_CARBONO, 
+                                                           5, 5, 2, 5, 8, 5, 200, 10);
+        ambiente.adicionarEntidade(drone);
+
+        // Teste de ataque em coordenadas
+        String resultado = drone.executarTarefa("atirar coord", 7, 7, 2, 1, ambiente);
+        verificar("Deve permitir atirar em coordenadas vazias", 
+                 resultado.contains("Disparado realizado") && 
+                 resultado.contains("Nenhum alvo foi atingido"));
+
+        // Teste de ataque em robô
+        Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 7, 7, 0, 2, 5, 100, 10);
+        ambiente.adicionarEntidade(alvo);
+        resultado = drone.executarTarefa("atirar coord", 7, 7, 0, 2, ambiente);
+        verificar("Deve acertar robô alvo", resultado.contains("Robô T1 foi atingido"));
+
+        // Teste de escudo
+        String defesa = drone.defender(30, ambiente);
+        verificar("Escudo deve absorver dano", defesa.contains("defendeu o dano em seu escudo"));
+
+        // Teste de munição insuficiente
+        resultado = drone.executarTarefa("atirar coord", 7, 7, 0, 300, ambiente);
+        verificar("Deve identificar munição insuficiente", resultado.equals("Munição insuficiente"));
+
+        // Teste de alvo fora de alcance
+        resultado = drone.executarTarefa("atirar coord", 50, 50, 0, 1, ambiente);
+        verificar("Deve identificar alvo fora do alcance", resultado.equals("Alvo fora do alcance"));
+
+        // Teste de identificação de alvos
+        resultado = drone.executarTarefa("identificar");
+        verificar("Deve identificar objetos próximos", 
+                 resultado.contains("Robô encontrado") || resultado.contains("Obstáculo encontrado"));
+    }
+
+    private static void testarEspecificidadesDroneVigilancia() {
+        System.out.println("\n== Teste de Especificidades do DroneVigilancia ==");
+        
+        Ambiente ambiente = new Ambiente(50, 50, 100);
+        DroneVigilancia drone = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV1", "Norte", 
+                                                                    MateriaisRobo.PLASTICO, 
+                                                                    10, 10, 2, 5, 8, 5, 50.0f, 60.0f, 160.0f);
+        ambiente.adicionarEntidade(drone);
+
+        // Teste de varredura de área
+        Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 12, 12, 0, 2, 5, 100, 10);
+        ambiente.adicionarEntidade(alvo);
+        
+        String resultado = drone.executarTarefa("varrer", ambiente, 10, 10, 5);
+        verificar("Deve identificar objetos na área de varredura", 
+                 resultado.contains("Objetos encontrados") && resultado.contains("T1"));
+
+        // Teste de camuflagem
+        resultado = drone.executarTarefa("camuflagem");
+        verificar("Deve ativar camuflagem", drone.isCamuflado());
+
+        resultado = drone.executarTarefa("varrer", ambiente, 10, 10, 5);
+        verificar("Drone camuflado não deve ser detectado", !resultado.contains("DV1"));
+
+        drone.executarTarefa("camuflagem");
+        verificar("Deve desativar camuflagem", !drone.isCamuflado());
+
+        // Teste de identificação
+        resultado = drone.executarTarefa("identificar");
+        verificar("Deve identificar objetos próximos", 
+                 resultado.contains("Robô encontrado") || resultado.contains("Obstáculo encontrado"));
+    }
+
+    private static void testarComunicacaoDroneVigilancia() {
+        System.out.println("\n== Teste de Comunicação do DroneVigilancia ==");
+        
+        Ambiente ambiente = new Ambiente(50, 50, 100);
+        CentralComunicacao central = new CentralComunicacao();
+        
+        DroneVigilancia drone1 = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV1", "Norte", 
+                                                                     MateriaisRobo.PLASTICO, 
+                                                                     10, 10, 2, 5, 8, 5, 50.0f, 60.0f, 90.0f);
+        DroneVigilancia drone2 = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV2", "Sul", 
+                                                                     MateriaisRobo.PLASTICO, 
+                                                                     15, 15, 2, 5, 8, 5, 50.0f, 60.0f, 90.0f);
+        ambiente.adicionarEntidade(drone1);
+        ambiente.adicionarEntidade(drone2);
+
+        try {
+            // Teste de envio de mensagem
+            String resultado = drone1.enviarMensagem(drone2, "Teste de mensagem", central);
+            verificar("Deve enviar mensagem com sucesso", 
+                     resultado.contains("Mensagem enviada com sucesso"));
+
+            // Teste de histórico da central
+            String historico = central.exibirMensagens();
+            verificar("Central deve registrar a mensagem", 
+                     historico.contains("De: DV1 | Para: DV2"));
+
+            // Teste de comunicação com drone desligado
+            drone1.desligar();
+            try {
+                drone1.enviarMensagem(drone2, "Teste com drone desligado", central);
+                verificar("Deve impedir envio com drone desligado", false);
+            } catch (RoboDesligadoException e) {
+                verificar("Deve lançar exceção de drone desligado", 
+                         e.getMessage().contains("desligado"));
+            }
+
+        } catch (Exception e) {
+            verificar("Não deve ocorrer erro na comunicação", false);
+            System.out.println("Erro: " + e.getMessage());
+        }
     }
     
     private static void verificar(String descricao, boolean condicao) {

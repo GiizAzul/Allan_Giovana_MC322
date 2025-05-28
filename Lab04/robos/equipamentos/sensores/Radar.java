@@ -59,7 +59,7 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
                 }
             } else if (entidade.getTipo() == TipoEntidade.ROBO){
                 Robo roboAmbiente = (Robo) entidade;
-                if ((RoboAereo)roboAmbiente != robo && verificacaoRobo(roboAmbiente)) {
+                if (roboAmbiente != robo && verificacaoRobo(roboAmbiente)) {
                     resultado.add(roboAmbiente);
                 }
 

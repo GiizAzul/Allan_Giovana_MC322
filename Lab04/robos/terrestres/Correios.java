@@ -171,7 +171,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         try {
             central.registrarMensagem(this, destinatario, mensagem);
             return "Mensagem enviada com sucesso por " + this.getNome() + "\n" + destinatario.receberMensagem(this, mensagem);
-        } catch (Exception e) {
+        } catch (RoboDesligadoException | ErroComunicacaoException e) {
             throw new ErroComunicacaoException("Falha ao enviar mensagem: " + e.getMessage());
         }
     }

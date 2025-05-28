@@ -129,7 +129,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                     String defesa = alvodef.defender(nTiros, ambiente);
                     String result = String.format(
                             "Disparo realizado no alvo (%d, %d, %d)\n" +
-                                    "Robô foi %s foi atingido!\n" +
+                                    "Robô %s foi atingido!\n" +
                                     defesa,
                             aX, aY, aZ, alvodef.getNome());
                     return result;
