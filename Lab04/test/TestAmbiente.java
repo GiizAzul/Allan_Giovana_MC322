@@ -110,7 +110,7 @@ public class TestAmbiente {
         ambiente.adicionarEntidade(tanque);
         ambiente.adicionarEntidade(parede);
         
-        Character[][] visualizacao = ambiente.visualizarAmbiente();
+        String[][] visualizacao = ambiente.visualizarAmbiente();
         verificar("Visualização deve ser criada", visualizacao != null);
         verificar("Visualização deve ter dimensão X correta", visualizacao.length == ambiente.getTamX());
         verificar("Visualização deve ter dimensão Y correta", visualizacao[0].length == ambiente.getTamY());

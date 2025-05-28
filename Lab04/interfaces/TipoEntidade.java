@@ -1,18 +1,17 @@
 package interfaces;
 
 public enum TipoEntidade{
-    VAZIO('.'),
-    ROBO('#'),
-    OBSTACULO('*'),
-    DESCONHECIDO('?');
+    VAZIO("▫️"),
+    ROBO("🤖"),
+    OBSTACULO("O"),
+    DESCONHECIDO("?");
+    private final String representacao;
 
-    private final char representacao;
-
-    TipoEntidade(char representacao){
+    TipoEntidade(String representacao){
         this.representacao=representacao;
     }
 
-    public Character getRepresentacao(){
+    public String getRepresentacao(){
         return representacao;
     }
 }

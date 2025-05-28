@@ -6,5 +6,5 @@ public interface Entidade {
     int getZ();
     TipoEntidade getTipo();
     String getDescricao();
-    char getRepresentacao();
+    String getRepresentacao();
 }

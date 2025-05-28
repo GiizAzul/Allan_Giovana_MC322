@@ -39,8 +39,8 @@ public class Obstaculo implements Entidade, Destrutivel{
         return "Obstáculo" + getTipo() + "na posição" + "X1: " + getX1() + "X2: " + getX2()+ "Y1: " + getY1() + "Y2: " + getY2() + "Altura: " + getAltura();
     }
 
-    public char getRepresentacao(){
-        return tipo.getRepresentacao();
+    public String getRepresentacao(){
+        return tipoObstaculo.getRepresentacao();
     }
 
     public TipoEntidade getTipo(){

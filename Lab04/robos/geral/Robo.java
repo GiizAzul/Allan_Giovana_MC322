@@ -153,7 +153,7 @@ public abstract class Robo implements Entidade, Destrutivel {
                 + (estado ? "ligado\n" : "desligado\n");
     }
 
-    public char getRepresentacao() {
+    public String getRepresentacao() {
         return tipo.getRepresentacao();
     }
 

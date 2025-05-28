@@ -31,11 +31,11 @@ public class Main {
             ambiente.adicionarEntidade(ambiente.criarRobo(1, 2, "Robertinho Correio", "Sul", MateriaisRobo.PLASTICO, 4,
                     9, 0, 1, 3, 50, 25.0f));
             ambiente.adicionarEntidade(ambiente.criarRobo(2, 1, "Pedrinho Drone Ataque", "Leste",
-                    MateriaisRobo.FIBRA_CARBONO, 6, 7, 1, 2, 4, 8, 200, 5));
+                    MateriaisRobo.FIBRA_CARBONO, 6, 8, 1, 2, 4, 8, 200, 5));
             ambiente.adicionarEntidade(ambiente.criarRobo(2, 2, "Joãozinho Drone Vigilância", "Oeste",
                     MateriaisRobo.PLASTICO, 8, 1, 3, 5, 8, 9, 50.0f, 60.0f, 90.0f));
             ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PAREDE, 1, 2, 1, 2));
-            ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.ARVORE, 5, 6, 5, 6));
+            ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.ARVORE, 5, 6, 6, 7));
             ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.BURACO, 4, 6, 4, 5));
 
             System.out.println(
@@ -428,9 +428,9 @@ public class Main {
             if (comando == 0) {
                 break;
             } else if (comando == 3) {
-                Character[][] vizumapa = ambiente.visualizarAmbiente();
-                for (Character[] linha : vizumapa) {
-                    for (Character chara : linha) {
+                String[][] vizumapa = ambiente.visualizarAmbiente();
+                for (String[] linha : vizumapa) {
+                    for (String chara : linha) {
                         System.out.print(chara);
                     }
                     System.out.println();

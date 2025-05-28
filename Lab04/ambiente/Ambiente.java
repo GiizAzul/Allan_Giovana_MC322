@@ -127,8 +127,8 @@ public class Ambiente {
     public void verificarColisoes() {
     }
 
-    public Character[][] visualizarAmbiente() {
-        Character[][] vizuMapa = new Character[tamX][tamY];
+    public String[][] visualizarAmbiente() {
+        String[][] vizuMapa = new String[tamX][tamY];
         for (int x = 0; x < tamX; x++) {
             for (int y = 0; y < tamY; y++) {
                 vizuMapa[y][x] = TipoEntidade.VAZIO.getRepresentacao();
@@ -138,7 +138,12 @@ public class Ambiente {
             for (int x = 0; x < tamX; x++) {
                 for (int z = 0; z < tamZ; z++) {
                     if (mapa[y][x][z] != TipoEntidade.VAZIO){
-                        vizuMapa[vizuMapa.length - 1 - y][x]=mapa[y][x][z].getRepresentacao();
+                        if (mapa[y][x][z]!= TipoEntidade.OBSTACULO){
+                            vizuMapa[vizuMapa.length - 1 - y][x]=mapa[y][x][z].getRepresentacao();
+                        } else{
+                            Obstaculo o = (Obstaculo) identificarEntidadePosicao(x, y, z);
+                            vizuMapa[vizuMapa.length - 1 - y][x]=o.getRepresentacao();
+                        }
                     }
                 }
             }
