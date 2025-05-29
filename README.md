@@ -9,11 +9,14 @@ Este repositório contém um simulador em Java que permite criar e controlar dif
 - **Terminal** compatível com Linux (para os scripts shell)
 
 ## Descrição do Repositório
-O repositório  é um projeto de Programação Orientada a Objetos que implementa um sistema de simulação de robôs em Java, organizado em três laboratórios até agora que demonstram a evolução do sistema:
+O repositório é um projeto de Programação Orientada a Objetos que implementa um sistema de simulação de robôs em Java, organizado em três laboratórios até agora que demonstram a evolução do sistema:
 
 - **Lab01**: Implementação inicial com classes básicas para ambiente e robô simples
 - **Lab02**: Expansão do sistema com introdução de hierarquia de classes para diferentes tipos de robôs (terrestres e aéreos)
-- **Lab03**: Versão atualizada e estruturada com organização em pacotes, sistema de sensores, obstáculos detalhados, testes unitários e diagrama UML
+- **Lab03**: Versão com organização em pacotes, sistema de sensores, obstáculos detalhados , testes unitários e diagrama UML
+- **Lab04**: Versão atualizada com sistema de comunicação entre robôs, tratamento de exceções, e visualização do ambiente
+
+
 
 ## Como Iniciar
 ### Executando a Aplicação
@@ -39,6 +42,23 @@ Para verificar se todas as funcionalidades estão operando corretamente **(Imple
 ### Guia de Uso
 Cada um dos Lab's possuem um conjunto de funcionalidades que podem ser exploradas após a execução do script `start.sh`. Um lab sempre possui todas as funcionalidades do anterior, podendo haver algumas alterações entre elas, de modo que cada lab é uma crescente de desenvolvimento em relação ao anterior.
 
+No Lab04, você pode escolher entre dois modos de execução:
+1. **Modo Padrão**: Ambiente 10x10x10 pré-configurado com 4 robôs (um de cada tipo) e 3 obstáculos
+2. **Modo Livre**: Permite criar um ambiente personalizado e adicionar robôs/obstáculos manualmente
+
+### Menu Principal
+O sistema oferece as seguintes opções:
+```bash
+0 - Fechar o simulador
+1 - Ações de um robô
+2 - Lista de robôs
+3 - Visualizar mapa
+4 - Histórico de Comunicação
+5 - Criar novo robô (modo livre)
+6 - Remover robô (modo livre)
+7 - Criar obstáculo (modo livre)
+```
+
 ### Arquivos de Teste
 O repositório inclui testes para verificar o funcionamento adequado dos componentes:
 - **TestAmbiente.java**: Testes de criação e manipulação do ambiente
@@ -49,7 +69,7 @@ Todos esses arquivos são executados ao executar o arquivo `test.sh`
 
 ## Diagrama de Classes
 O sistema completo é representado pelo diagrama de classes, mostrando as relações entre as diferentes classes de robôs, sensores, obstáculos e ambiente.
-![Imagem do diagrama de classes](./Lab03/UML/Simulador%20de%20Robôs.png)
+![Imagem do diagrama de classes](./Lab04/UML/Simulador%20de%20Robôs.png)
 
 ## Funcionalidades dos Componentes
 
@@ -57,22 +77,38 @@ O sistema completo é representado pelo diagrama de classes, mostrando as relaç
 #### Classe Base - Robô
 A classe `Robo` implementa as funcionalidades básicas de movimento e sensoriamento para todos os tipos de robôs, incluindo:
 - Nome, direção e posição (X, Y)
-- Nível de integridade e velocidade
-- Métodos para movimento e detecção de colisões
+- Estado: integridade, velocidade, ligado/desligado
+- GPS básico integrado
+- Sistema de movimento
 
 #### Robôs Aéreos
-- **RoboAereo**: Classe abstrata com altitude e sistemas de navegação aérea
-- **DroneAtaque**: Equipado com sistema de munição e capacidade ofensiva
-- **DroneVigilancia**: Sensores aprimorados para monitoramento
+Classe abstrata com altitude e sistemas de navegação aérea
+##### DroneAtaque
+- Sistema de munição e tiros direcionais
+- Capacidade de destruir obstáculos
+- Radar e Barômetro
+
+##### DroneVigilancia
+- Radar de longo alcance
+- Sistema avançado de detecção
+- Comunicação ampliada
+
+#### Robôs Terrestres
+Classe abstrata com funcionalidades específicas para solo
+
+##### TanqueGuerra
+- Blindagem reforçada
+- Tiros de alto impacto
+- Sensor de colisão
+
+##### Correios
+- Transporte de pacotes
+- Cobertura de buracos
+- Comunicação ampliada
 
 ### Materiais dos Robôs
 A classe `MateriaisRobo` define diferentes materiais que afetam o fator de redução do alcance do sensor Radar e, portanto, a detecção de obstáculos e robôs pelo sensor
 Incluem: Alumínio, Aço, Plástico, Fibra de Vidro, Fibra de Carbono e outros
-
-#### Robôs Terrestres
-- **RoboTerrestre**: Classe abstrata com funcionalidades específicas para solo
-- **Correios**: Transporte de pacotes e cobrimento de buracos
-- **TanqueGuerra**: Blindagem reforçada e armamento pesado
 
 ### Sistema de Sensores
 #### Radar
@@ -103,12 +139,53 @@ Objetos que impedem a movimentação dos robôs além de outras interações
 - Obstáculos não indestrutíveis podem sem destruídos com tiros do TanqueGuerra ou DroneAtaque
 
 #### Tipos de Obstáculo
-Define altura, integridade, fator de redução do alcançe do sensor radar e indestrutibilidade padrões
+Define altura, integridade, fator de redução do alcançe do sensor radar, indestrutibilidade e representação padrões
 - Inclue Parede, Árvore, Prédio, Buraco e outros
 - O obstáculo Buraco é indestrutível, além de poder ser coberto pelo Correios e destruir qualquer robô que passe por ele
 
 ### Ambiente de Simulação
-A classe `Ambiente` gerencia:
-- Dimensões do espaço simulado
-- Gerenciamento de obstáculos e robôs
-- Identificação de objetos em determinadas posições
+A classe `Ambiente` gerencia o espaço virtual onde os robôs e obstáculos interagem:
+
+#### Características Principais
+- Espaço tridimensional (X, Y, Z)
+- Dimensões configuráveis no modo livre
+- Sistema de coordenadas para posicionamento
+- Visualização em matriz do ambiente
+
+#### Gerenciamento de Entidades
+- Adição/remoção de robôs
+- Posicionamento de obstáculos
+- Verificação de colisões
+
+#### Visualização
+- Representação em matriz do ambiente
+- Símbolos específicos para cada tipo de entidade:
+  - `🤖`: Robô
+  - Obstáculos:
+    - `⬜`: Parede
+    - `🌲`: Árvore
+    - `🏢`: Prédio
+    - `🕳️`: Buraco
+  - `▫️`: Espaço vazio
+
+#### Modos de Operação
+- **Padrão**: Ambiente 10x10x10 pré-configurado
+- **Livre**: Dimensões e entidades personalizáveis
+
+### Central de Comunicação
+Sistema que gerencia a comunicação entre os robôs:
+
+#### Funcionalidades
+- Registro de mensagens entre robôs
+- Histórico completo de comunicações
+- Identificação de remetente e destinatário
+- Visualização formatada das mensagens
+
+#### Formato das Mensagens
+```
+(De: RoboA | Para: RoboB): Conteúdo da mensagem
+```
+
+#### Restrições
+- Robôs precisam estar ligados para se comunicar
+- Apenas robôs com interface `Comunicavel`
