@@ -41,8 +41,8 @@ public class TestRoboAereo extends TestBase {
                                             10, 10, 2, 5, 8, 5, 200, 10);
         verificar("DroneAtaque deve ser criado com sucesso", droneAtaque != null);
         verificar("Nome do drone deve ser DA1", droneAtaque.getNome().equals("DA1"));
-        verificar("Posição X deve ser 10", droneAtaque.getX() == 10);
-        verificar("Posição Y deve ser 10", droneAtaque.getY() == 10);
+        verificar("Posição X deve ser 10", droneAtaque.getXInterno() == 10);
+        verificar("Posição Y deve ser 10", droneAtaque.getYInterno() == 10);
         
         // Teste de criação de DroneVigilancia
         Robo droneVigilancia = ambiente.criarRobo(2, 2, "DV1", "Oeste", MateriaisRobo.PLASTICO, 
@@ -58,7 +58,7 @@ public class TestRoboAereo extends TestBase {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque)ambiente.criarRobo(2, 1, "DA2", "Norte", MateriaisRobo.ALUMINIO, 
                                       10, 10, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
         
         int altitudeInicial = drone.getZ();
         drone.mover(0, 0, 2, ambiente);
@@ -74,7 +74,7 @@ public class TestRoboAereo extends TestBase {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA3", "Leste", MateriaisRobo.FIBRA_CARBONO, 
                                       5, 5, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
         
         drone.mover(3, 4, 2, ambiente);
         verificar("Posição X após movimento deve ser 8", drone.getX() == 8);
@@ -88,7 +88,7 @@ public class TestRoboAereo extends TestBase {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA4", "Sul", MateriaisRobo.PLASTICO, 
                                       10, 10, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
         
         drone.mover(0, 0, 10, ambiente);
         verificar("Altitude não deve ultrapassar o máximo", drone.getZ() <= 8);
@@ -107,8 +107,8 @@ public class TestRoboAereo extends TestBase {
         Robo roboTerrestre = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 
                                               3, 4, 0, 2, 5, 100, 10);
         
-        ambiente.adicionarEntidadeTest(droneAereo);
-        ambiente.adicionarEntidadeTest(roboTerrestre);
+        adicionarEntidadeTest(droneAereo, ambiente);
+        adicionarEntidadeTest(roboTerrestre, ambiente);
         
         double distancia = droneAereo.distanciaRobo(roboTerrestre);
         verificar("Distância deve ser calculada em 3D", distancia > 0);
@@ -124,8 +124,8 @@ public class TestRoboAereo extends TestBase {
         Robo drone2 = ambiente.criarRobo(2, 1, "DA7", "Sul", MateriaisRobo.ALUMINIO, 
                                        3, 4, 3, 5, 8, 5, 200, 10);
         
-        ambiente.adicionarEntidadeTest(drone1);
-        ambiente.adicionarEntidadeTest(drone2);
+        adicionarEntidadeTest(drone1, ambiente);
+        adicionarEntidadeTest(drone2, ambiente);
         
         double distancia = drone1.distanciaRobo(drone2);
         verificar("Distância deve ser calculada em 3D", distancia > 0);
@@ -137,7 +137,7 @@ public class TestRoboAereo extends TestBase {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         Robo drone = ambiente.criarRobo(2, 1, "DA8", "Oeste", MateriaisRobo.PLASTICO, 
                                       15, 25, 3, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
         
         String posicao = drone.exibirPosicao();
         verificar("Exibição deve incluir posição X", posicao.contains("15"));
@@ -151,7 +151,7 @@ public class TestRoboAereo extends TestBase {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA9", "Norte", MateriaisRobo.ALUMINIO, 
                                       10, 10, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
         
         int altitudeInicial = drone.getZ();
         drone.mover(0, 0, 2, ambiente);
@@ -168,7 +168,7 @@ public class TestRoboAereo extends TestBase {
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA1", "Norte", 
                                                            MateriaisRobo.FIBRA_CARBONO, 
                                                            5, 5, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
 
         // Teste de ataque em coordenadas
         String resultado = drone.executarTarefa("atirar coord", 7, 7, 2, 1, ambiente);
@@ -178,7 +178,7 @@ public class TestRoboAereo extends TestBase {
 
         // Teste de ataque em robô
         Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 7, 7, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidadeTest(alvo);
+        adicionarEntidadeTest(alvo, ambiente);
         resultado = drone.executarTarefa("atirar coord", 7, 7, 0, 2, ambiente);
         verificar("Deve acertar robô alvo", resultado.contains("Robô T1 foi atingido"));
 
@@ -207,11 +207,11 @@ public class TestRoboAereo extends TestBase {
         DroneVigilancia drone = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV1", "Norte", 
                                                                     MateriaisRobo.PLASTICO, 
                                                                     10, 10, 2, 5, 8, 5, 50.0f, 60.0f, 160.0f);
-        ambiente.adicionarEntidadeTest(drone);
+        adicionarEntidadeTest(drone, ambiente);
 
         // Teste de varredura de área
         Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 12, 12, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidadeTest(alvo);
+        adicionarEntidadeTest(alvo, ambiente);
         
         String resultado = drone.executarTarefa("varrer", ambiente, 10, 10, 5);
         verificar("Deve identificar objetos na área de varredura", 
@@ -245,8 +245,8 @@ public class TestRoboAereo extends TestBase {
         DroneVigilancia drone2 = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV2", "Sul", 
                                                                      MateriaisRobo.PLASTICO, 
                                                                      15, 15, 2, 5, 8, 5, 50.0f, 60.0f, 90.0f);
-        ambiente.adicionarEntidadeTest(drone1);
-        ambiente.adicionarEntidadeTest(drone2);
+        adicionarEntidadeTest(drone1, ambiente);
+        adicionarEntidadeTest(drone2, ambiente);
 
         try {
             // Teste de envio de mensagem
@@ -272,14 +272,6 @@ public class TestRoboAereo extends TestBase {
         } catch (Exception e) {
             verificar("Não deve ocorrer erro na comunicação", false);
             System.out.println("Erro: " + e.getMessage());
-        }
-    }
-    
-    private static void verificar(String descricao, boolean condicao) {
-        if (condicao) {
-            System.out.println("\033[1;32m✓ PASSOU:\033[0m "  + descricao);
-        } else {
-            System.out.println("\033[1;31m✗ FALHOU:\033[0m " + descricao);
         }
     }
 }

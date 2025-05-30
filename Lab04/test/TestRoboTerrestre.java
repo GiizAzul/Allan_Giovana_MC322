@@ -45,8 +45,8 @@ public class TestRoboTerrestre extends TestBase {
         Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 5, 5, 0, 5, 10, 100, 10);
         verificar("TanqueGuerra deve ser criado com sucesso", tanque != null);
         verificar("Nome deve ser T1", tanque.getNome().equals("T1"));
-        verificar("Posição X deve ser 5", tanque.getX() == 5);
-        verificar("Posição Y deve ser 5", tanque.getY() == 5);
+        verificar("Posição X deve ser 5", tanque.getXInterno() == 5);
+        verificar("Posição Y deve ser 5", tanque.getYInterno() == 5);
         verificar("Direção deve ser Norte", tanque.getDirecao().equals("Norte"));
 
         // Teste de criação de Correios
@@ -62,7 +62,7 @@ public class TestRoboTerrestre extends TestBase {
         Ambiente ambiente = new Ambiente(20, 20, 10);
 
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 0, 0, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
 
         robo.mover(3, 4, ambiente);
         verificar("Posição X após movimento deve ser 3", robo.getX() == 3);
@@ -70,7 +70,7 @@ public class TestRoboTerrestre extends TestBase {
 
         // Teste com obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 5, 6, 4, 5);
-        ambiente.adicionarEntidadeTest(obstaculo);
+        adicionarEntidadeTest(obstaculo, ambiente);
 
         robo.mover(3, 0, ambiente);
         verificar("Movimento deve ser bloqueado pelo obstáculo", robo.getX() == 4);
@@ -98,8 +98,8 @@ public class TestRoboTerrestre extends TestBase {
         Robo robo1 = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 0, 0, 0, 5, 10, 100, 10);
         Robo robo2 = ambiente.criarRobo(1, 1, "T2", "Sul", MateriaisRobo.ACO, 3, 4, 0, 5, 10, 100, 10);
 
-        ambiente.adicionarEntidadeTest(robo1);
-        ambiente.adicionarEntidadeTest(robo2);
+        adicionarEntidadeTest(robo1, ambiente);
+        adicionarEntidadeTest(robo2, ambiente);
 
         double distancia = robo1.distanciaRobo(robo2);
         verificar("Distância deve ser 5.0", Math.abs(distancia - 5.0) < 0.001);
@@ -113,8 +113,8 @@ public class TestRoboTerrestre extends TestBase {
         Robo terrestre = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 0, 0, 0, 5, 10, 100, 10);
         Robo aereo = ambiente.criarRobo(2, 1, "D1", "Norte", MateriaisRobo.FIBRA_CARBONO, 3, 4, 5, 5, 8, 10, 200, 10);
 
-        ambiente.adicionarEntidadeTest(terrestre);
-        ambiente.adicionarEntidadeTest(aereo);
+        adicionarEntidadeTest(terrestre, ambiente);
+        adicionarEntidadeTest(aereo, ambiente);
 
         double distancia = terrestre.distanciaRobo(aereo);
         verificar("Distância 3D deve ser calculada corretamente", Math.abs(distancia - 7.071) < 0.001);
@@ -126,10 +126,10 @@ public class TestRoboTerrestre extends TestBase {
         Ambiente ambiente = new Ambiente(20, 20, 10);
 
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 5, 5, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
 
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 5, 6, 6, 7);
-        ambiente.adicionarEntidadeTest(obstaculo);
+        adicionarEntidadeTest(obstaculo, ambiente);
 
         robo.mover(0, 2, ambiente);
         verificar("Movimento deve ser interrompido antes da colisão", robo.getY() == 5);
@@ -141,14 +141,14 @@ public class TestRoboTerrestre extends TestBase {
         Ambiente ambiente = new Ambiente(20, 20, 10);
 
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 5, 5, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
 
         // Teste com diferentes tipos de obstáculos
         Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 7, 8, 5, 6);
         Obstaculo arvore = new Obstaculo(TipoObstaculo.ARVORE, 5, 6, 7, 8);
 
-        ambiente.adicionarEntidadeTest(parede);
-        ambiente.adicionarEntidadeTest(arvore);
+        adicionarEntidadeTest(parede, ambiente);
+        adicionarEntidadeTest(arvore, ambiente);
 
         robo.mover(3, 0, ambiente);
         verificar("Movimento deve parar antes da parede", robo.getX() == 6);
@@ -163,10 +163,10 @@ public class TestRoboTerrestre extends TestBase {
         Ambiente ambiente = new Ambiente(20, 20, 10);
 
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 5, 5, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
 
         Obstaculo buraco = new Obstaculo(TipoObstaculo.BURACO, 5, 6, 7, 8);
-        ambiente.adicionarEntidadeTest(buraco);
+        adicionarEntidadeTest(buraco, ambiente);
 
         verificar("Robô deve estar no ambiente inicialmente", ambiente.getEntidades().contains(robo));
 
@@ -182,7 +182,7 @@ public class TestRoboTerrestre extends TestBase {
 
         TanqueGuerra tanque = (TanqueGuerra) ambiente.criarRobo(1, 1, "T1", "Norte",
                 MateriaisRobo.ACO, 5, 5, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(tanque);
+        adicionarEntidadeTest(tanque, ambiente);
 
         // Teste de ataque sem alvo
         String resultado = tanque.executarTarefa("atirar", 10, 10, 1, ambiente);
@@ -197,14 +197,14 @@ public class TestRoboTerrestre extends TestBase {
 
         // Teste de ataque em robô
         Robo alvo = ambiente.criarRobo(1, 2, "C1", "Sul", MateriaisRobo.PLASTICO, 7, 7, 0, 3, 5, 50, 25.0f);
-        ambiente.adicionarEntidadeTest(alvo);
+        adicionarEntidadeTest(alvo, ambiente);
         resultado = tanque.executarTarefa("atirar", 7, 7, 2, ambiente);
         verificar("Deve acertar robô alvo",
                 resultado.contains("Robô C1 foi atingido"));
 
         // Teste de ataque em obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 6, 6, 6, 6);
-        ambiente.adicionarEntidadeTest(obstaculo);
+        adicionarEntidadeTest(obstaculo, ambiente);
         resultado = tanque.executarTarefa("atirar", 6, 6, 1, ambiente);
         verificar("Deve acertar obstáculo",
                 resultado.contains("Obstáculo PAREDE foi atingido"));
@@ -239,7 +239,7 @@ public class TestRoboTerrestre extends TestBase {
 
         Correios correio = (Correios) ambiente.criarRobo(1, 2, "C1", "Sul",
                 MateriaisRobo.PLASTICO, 5, 5, 0, 3, 5, 50, 25.0f);
-        ambiente.adicionarEntidadeTest(correio);
+        adicionarEntidadeTest(correio, ambiente);
 
         // Teste de carregamento de pacotes
         String resultado = correio.executarTarefa("carregar", "P1", 10.0f);
@@ -267,7 +267,7 @@ public class TestRoboTerrestre extends TestBase {
 
         // Teste de entrega em buraco
         Obstaculo buraco = new Obstaculo(TipoObstaculo.BURACO, 8, 8, 8, 8);
-        ambiente.adicionarEntidadeTest(buraco);
+        adicionarEntidadeTest(buraco, ambiente);
         correio.executarTarefa("carregar", "P4", 5.0f);
         resultado = correio.executarTarefa("entregar", "P4", 8, 8, ambiente);
         verificar("Deve cobrir buraco ao entregar pacote",
@@ -275,7 +275,7 @@ public class TestRoboTerrestre extends TestBase {
 
         // Teste de entrega com obstáculo no caminho
         Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 7, 7, 7, 7);
-        ambiente.adicionarEntidadeTest(parede);
+        adicionarEntidadeTest(parede, ambiente);
         correio.executarTarefa("carregar", "P5", 5.0f);
         resultado = correio.executarTarefa("entregar", "P5", 7, 7, ambiente);
         verificar("Deve falhar ao tentar entregar com obstáculo no caminho",
@@ -288,7 +288,7 @@ public class TestRoboTerrestre extends TestBase {
             // Criação de robôs e central
             Correios outroCorreio = (Correios) ambiente.criarRobo(1, 2, "C2", "Norte",
                     MateriaisRobo.PLASTICO, 9, 9, 0, 3, 5, 50, 25.0f);
-            ambiente.adicionarEntidadeTest(outroCorreio);
+            adicionarEntidadeTest(outroCorreio, ambiente);
 
             // Teste de envio de mensagem bem-sucedido
             resultado = correio.enviarMensagem(outroCorreio, "Teste de mensagem", central);
@@ -353,7 +353,7 @@ public class TestRoboTerrestre extends TestBase {
 
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte",
                 MateriaisRobo.ACO, 0, 0, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
 
         // Teste de movimento nos limites do ambiente
         robo.mover(25, 0, ambiente);
@@ -377,7 +377,7 @@ public class TestRoboTerrestre extends TestBase {
         // Teste com TanqueGuerra
         TanqueGuerra tanque = (TanqueGuerra) ambiente.criarRobo(1, 1, "T1", "Norte",
                 MateriaisRobo.ACO, 5, 5, 0, 5, 10, 100, 10);
-        ambiente.adicionarEntidadeTest(tanque);
+        adicionarEntidadeTest(tanque, ambiente);
 
         int integridadeInicial = tanque.getIntegridade();
         tanque.defender(30, ambiente);
@@ -387,7 +387,7 @@ public class TestRoboTerrestre extends TestBase {
         // Teste com Correios
         Correios correio = (Correios) ambiente.criarRobo(1, 2, "C1", "Sul",
                 MateriaisRobo.PLASTICO, 10, 10, 0, 3, 5, 50, 25.0f);
-        ambiente.adicionarEntidadeTest(correio);
+        adicionarEntidadeTest(correio, ambiente);
 
         integridadeInicial = correio.getIntegridade();
         correio.defender(20, ambiente);
@@ -398,13 +398,5 @@ public class TestRoboTerrestre extends TestBase {
         correio.defender(100, ambiente);
         verificar("Robô deve ser desligado quando integridade chega a 0",
                 !correio.getEstado());
-    }
-
-    private static void verificar(String descricao, boolean condicao) {
-        if (condicao) {
-            System.out.println("\033[1;32m✓ PASSOU:\033[0m " + descricao);
-        } else {
-            System.out.println("\033[1;31m✗ FALHOU:\033[0m " + descricao);
-        }
     }
 }

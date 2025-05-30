@@ -34,8 +34,8 @@ public class TestRobo extends TestBase {
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
         
         verificar("Nome do robô deve ser T1", robo.getNome().equals("T1"));
-        verificar("Posição X inicial deve ser 2", robo.getX() == 2);
-        verificar("Posição Y inicial deve ser 3", robo.getY() == 3);
+        verificar("Posição X inicial deve ser 2", robo.getXInterno() == 2);
+        verificar("Posição Y inicial deve ser 3", robo.getYInterno() == 3);
         verificar("Direção inicial deve ser Norte", robo.getDirecao().equals("Norte"));
         verificar("Material do robô deve ser ACO", robo.getMateriaisRobo() == MateriaisRobo.ACO);
         verificar("Integridade inicial deve ser 100", robo.getIntegridade() == 100);
@@ -46,7 +46,7 @@ public class TestRobo extends TestBase {
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
         
         robo.mover(1, 1, ambiente);
         verificar("Posição X após movimento deve ser 3", robo.getX() == 3);
@@ -54,7 +54,7 @@ public class TestRobo extends TestBase {
         
         // Teste com obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 4, 4, 4, 4);
-        ambiente.adicionarEntidadeTest(obstaculo);
+        adicionarEntidadeTest(obstaculo, ambiente);
         robo.mover(1, 1, ambiente);
         verificar("Movimento deve ser bloqueado por obstáculo", robo.getX() == 3 && robo.getY() == 5);
     }
@@ -98,8 +98,8 @@ public class TestRobo extends TestBase {
         Robo robo1 = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 0, 0, 0, 2, 5, 100, 10);
         Robo robo2 = ambiente.criarRobo(1, 1, "T2", "Sul", MateriaisRobo.ACO, 3, 4, 0, 2, 5, 100, 10);
         
-        ambiente.adicionarEntidadeTest(robo1);
-        ambiente.adicionarEntidadeTest(robo2);
+        adicionarEntidadeTest(robo1, ambiente);
+        adicionarEntidadeTest(robo2, ambiente);
         
         double distancia = robo1.distanciaRobo(robo2);
         verificar("Distância calculada deve ser 5.0", Math.abs(distancia - 5.0) < 0.001);
@@ -124,7 +124,7 @@ public class TestRobo extends TestBase {
         verificar("Posição X inicial deve ser 2", robo.getX() == 2);
         verificar("Posição Y inicial deve ser 3", robo.getY() == 3);
         
-        ambiente.adicionarEntidadeTest(robo);
+        adicionarEntidadeTest(robo, ambiente);
         robo.mover(1, 1, ambiente);
         
         verificar("GPS deve atualizar posição X após movimento", robo.getX() == 3);
@@ -139,15 +139,15 @@ public class TestRobo extends TestBase {
         Robo robo1 = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
         Robo robo2 = ambiente.criarRobo(1, 1, "T2", "Sul", MateriaisRobo.ACO, 2, 4, 0, 2, 5, 100, 10);
         
-        ambiente.adicionarEntidadeTest(robo1);
-        ambiente.adicionarEntidadeTest(robo2);
+        adicionarEntidadeTest(robo1, ambiente);
+        adicionarEntidadeTest(robo2, ambiente);
         
         robo1.mover(0, 2, ambiente);
         verificar("Movimento deve ser bloqueado por colisão", robo1.getY() == 3);
         
         // Teste com obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 3, 3, 3, 3);
-        ambiente.adicionarEntidadeTest(obstaculo);
+        adicionarEntidadeTest(obstaculo, ambiente);
         
         robo1.mover(1, 0, ambiente);
         verificar("Movimento deve ser bloqueado por obstáculo", robo1.getX() == 2);
@@ -162,13 +162,5 @@ public class TestRobo extends TestBase {
         String posicao = robo.exibirPosicao();
         verificar("Exibição deve incluir posição X", posicao.contains("2"));
         verificar("Exibição deve incluir posição Y", posicao.contains("3"));
-    }
-    
-    private static void verificar(String descricao, boolean condicao) {
-        if (condicao) {
-            System.out.println("\033[1;32m✓ PASSOU:\033[0m " + descricao);
-        } else {
-            System.out.println("\033[1;31m✗ FALHOU:\033[0m " + descricao);
-        }
     }
 }
