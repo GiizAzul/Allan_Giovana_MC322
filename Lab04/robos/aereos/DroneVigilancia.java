@@ -6,9 +6,11 @@ import robos.geral.*;
 import robos.terrestres.RoboTerrestre;
 import interfaces.*;
 import excecoes.*;
+import excecoes.sensor.SensorException;
+import excecoes.sensor.SensorInativoException;
 import ambiente.*;
 
-public class DroneVigilancia extends RoboAereo implements Comunicavel{
+public class DroneVigilancia extends RoboAereo implements Comunicavel {
 
     private boolean camuflado;
     private float alcance_radar;
@@ -21,7 +23,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
         this.camuflado = false;
     }
 
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
         if (result != "") {
             return result;
@@ -33,8 +35,14 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
                 int centroX = (Integer) argumentos[2];
                 int centroY = (Integer) argumentos[3];
                 int raio = (Integer) argumentos[4];
-                ArrayList<Entidade> objetos_encontrados = varrerArea(ambiente, centroX,
-                        centroY, raio);
+                ArrayList<Entidade> objetos_encontrados;
+                try {
+                    objetos_encontrados = varrerArea(ambiente, centroX,
+                            centroY, raio);
+                } catch (ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException | SensorException e) {
+                    return "Erro ao varrer a área: " + e.getMessage();
+                }
+
                 if (objetos_encontrados.isEmpty()) {
                     result += "Nenhum objeto foi encontrado!";
                 } else {
@@ -43,7 +51,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
                         if (obj instanceof Robo) {
                             Robo r = (Robo) obj;
                             result += String.format("Robô: %s, X: %d, Y: %d, Altura: %s\n",
-                                    r.getNome(), r.getX(), r.getY(), r.getZ());
+                                    r.getNome(), r.getXInterno(), r.getYInterno(), r.getZInterno());
                         } else {
                             Obstaculo o = (Obstaculo) obj;
                             result += String.format("Obstáculo: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
@@ -75,7 +83,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
                     }
                     for (Robo r : listaRobos) {
                         result += String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
-                                r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
+                                r.getNome(), r.getXInterno(), r.getYInterno(), r.getZInterno());
                     }
                 }
                 return result;
@@ -85,17 +93,14 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel{
         }
     }
 
-    private ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) {
+    private ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura
         // Baseado na capacidade da câmera do drone
         // Sistema de varredura não encontra drones camuflados
 
         // Move o drone para ficar sobre a região central
-        if (!this.getGPS().isAtivo()) {
-            System.out.println("GPS não está ativo, não é possível varrer a área!");
-            return new ArrayList<>();
-        }
+        verificarGPSAtivo();
 
         this.mover(centroX - this.getX(), centroY - this.getY(), ambiente);
 

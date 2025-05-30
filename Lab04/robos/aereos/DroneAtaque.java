@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import interfaces.Atacante;
+import interfaces.Entidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import excecoes.*;
+import excecoes.sensor.*;;
 
 public class DroneAtaque extends RoboAereo implements Atacante {
 
@@ -46,7 +49,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
         }
     }
 
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
         if (result != "") {
             return result;
@@ -59,13 +62,21 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                 int alvoZ = (Integer) argumentos[3];
                 int nTiros = (Integer) argumentos[4];
                 Ambiente ambiente = (Ambiente) argumentos[5];
-                return atirar(alvoX, alvoY, alvoZ, nTiros, ambiente);
+                try {
+                    return atirar(alvoX, alvoY, alvoZ, nTiros, ambiente);
+                } catch (SensorInativoException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                    return e.getMessage();
+                }
 
             case "atirar robo":
                 Robo robo = (Robo) argumentos[1];
                 nTiros = (Integer) argumentos[2];
                 ambiente = (Ambiente) argumentos[3];
-                return atirar(robo, nTiros, ambiente);
+                try {
+                    return atirar(robo, nTiros, ambiente);
+                } catch (SensorInativoException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                    return e.getMessage();
+                }
 
             case "identificar":
                 ArrayList<Obstaculo> listaoObstaculos = identificarObstaculo();
@@ -81,24 +92,29 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                     }
                     for (Robo r : listaoRobos) {
                         result += String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
-                                r.getNome(), r.getPosicaoXInterna(), r.getPosicaoYInterna(), r.getZ());
+                                r.getNome(), r.getXInterno(), r.getYInterno(), r.getZInterno());
                     }
                 }
                 return result;
 
             default:
+            // TO DO: Tarefa Exception
                 return "";
         }
 
     }
 
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
-        // Verifica se há munição suficiente
-        if (this.municao < nTiros) {
-            return "Munição insuficiente";
-        }
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorInativoException, MunicaoInsuficienteException, AlvoInvalidoException {
 
-        // Verifica se alvo está no alcance
+        verificarGPSAtivo();
+
+        if (this.municao < nTiros) {
+            throw new MunicaoInsuficienteException();
+        } 
+        if (alvoX == getXInterno() && alvoY == getYInterno() && alvoZ == getZInterno()) {
+            throw new AlvoInvalidoException("Não é possível atirar no próprio robô");
+        } 
+
         int dX = this.getX() - alvoX;
         int dY = this.getY() - alvoY;
         int dZ = this.getZ() - alvoZ;
@@ -107,13 +123,14 @@ public class DroneAtaque extends RoboAereo implements Atacante {
 
     }
 
-    private String atirar(Robo robo, int nTiros, Ambiente ambiente) {
+    private String atirar(Robo robo, int nTiros, Ambiente ambiente)
+    throws SensorInativoException, MunicaoInsuficienteException, AlvoInvalidoException {
+        verificarGPSAtivo();
         if (this.municao < nTiros) {
-            return "Munição insuficiente";
-        } else {
-            String result = this.atirar(robo.getX(), robo.getY(), robo.getZ(), nTiros, ambiente);
-            return result;
+            throw new MunicaoInsuficienteException();
         }
+
+        return this.atirar(robo.getX(), robo.getY(), robo.getZ(), nTiros, ambiente);
     }
 
     private String executarTiro(int dX, int dY, int dZ, int aX, int aY, int aZ, int nTiros, Ambiente ambiente) {

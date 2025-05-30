@@ -1,14 +1,16 @@
 package robos.aereos;
-
 import java.util.ArrayList;
 
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
+import excecoes.*;
+import excecoes.sensor.*;
 import interfaces.*;
 import robos.equipamentos.sensores.*;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+
 
 /**
  * Classe que representa um robô aéreo, especialização de Robo
@@ -16,8 +18,8 @@ import robos.geral.Robo;
  */
 public class RoboAereo extends Robo implements Identificantes {
 
-    private int altitudeMaxima = -1; // Altitude máxima que o robô pode atingir
-    private Barometro sensorBarometro; // Sensor de pressão atmosférica
+    private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
+    private Barometro sensorBarometro;      // Sensor de pressão atmosférica
     private Radar sensorRadar; // Sensor de radar para detecção de objetos
 
     /**
@@ -39,8 +41,7 @@ public class RoboAereo extends Robo implements Identificantes {
         this.addSensor(sensorRadar);
     }
 
-    public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente,
-            float alc_radar, float ang_radar) {
+    public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, float alc_radar, float ang_radar) {
         super(n, d, m, x, y, h, vel);
         this.altitudeMaxima = hmax;
         this.sensorBarometro = new Barometro(this);
@@ -48,7 +49,7 @@ public class RoboAereo extends Robo implements Identificantes {
         this.addSensor(sensorBarometro);
         this.addSensor(sensorRadar);
     }
-
+    
     /**
      * Realiza o movimento vertical (eixo Z) do robô aéreo.
      * 
@@ -67,22 +68,22 @@ public class RoboAereo extends Robo implements Identificantes {
      *                 O movimento é interrompido se houver colisão ou se a altitude
      *                 máxima for atingida.
      */
-    private void movimentoZ(int passo, int metros, Ambiente ambiente) {
+    private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorInativoException{
         // Calcula a altitude alvo baseada na direção do movimento
         int altitudeAlvo = passo > 0 ? getZ() + metros : getZ() - metros;
-
+        
         // Impede que a altitude alvo seja negativa (abaixo do solo)
         if (altitudeAlvo < 0) {
             System.out.println("Não é possível descer abaixo do nível do solo.");
             altitudeAlvo = 0;
         }
-
+        
         // Impede que a altitude alvo exceda a altitude máxima
         if (altitudeAlvo > this.altitudeMaxima) {
             System.out.println("Altura máxima permitida é " + this.altitudeMaxima + " metros.");
             altitudeAlvo = this.altitudeMaxima;
         }
-
+        
         // Realiza o movimento passo a passo
         for (int z = getZ() + passo; z != altitudeAlvo + passo; z += passo) {
             Object obj = ambiente.identificarEntidadePosicao(getX(), getY(), z);
@@ -101,45 +102,39 @@ public class RoboAereo extends Robo implements Identificantes {
 
             setPosicaoZ(z);
         }
-        // Atualiza a altitude final
-
     }
 
     /**
      * Aumenta a altitude do robô aéreo
-     * 
-     * @param metros   Quantidade de metros a subir
+     * @param metros Quantidade de metros a subir
      * @param ambiente Ambiente onde o robô se encontra
      */
-    public void subir(int metros, Ambiente ambiente) {
+    public void subir(int metros, Ambiente ambiente) throws SensorInativoException {
         this.movimentoZ(1, metros, ambiente);
     }
 
     /**
      * Diminui a altitude do robô aéreo
-     * 
      * @param metros Quantidade de metros a descer
      */
-    public void descer(int metros, Ambiente ambiente) {
-        this.movimentoZ(-1, -metros, ambiente);
+    public void descer(int metros, Ambiente ambiente) throws SensorInativoException {
+        this.movimentoZ(-1, metros, ambiente);
     }
 
     /**
      * Obtém a altitude máxima do robô
-     * 
      * @return Altitude máxima em metros
      */
     public int getAltitudeMaxima() {
         return this.altitudeMaxima;
     }
 
-    public double getPressao() {
+    public double getPressao() throws SensorException {
         return this.sensorBarometro.acionar();
     }
 
     /**
      * Define uma nova altitude máxima
-     * 
      * @param hMax Nova altitude máxima
      */
     public void setAltitudeMaxima(int hMax) {
@@ -148,94 +143,87 @@ public class RoboAereo extends Robo implements Identificantes {
 
     /**
      * Calcula a distância entre este robô aéreo e outro robô aéreo
-     * 
      * @param alvo Robô aéreo alvo
      * @return Distância euclidiana 3D (considerando altitudes)
      */
-    public double distanciaRobo(Robo alvo) {
+    public double distanciaRobo(Robo alvo) throws SensorInativoException {
         if (!this.getGPS().isAtivo()) {
             return -1;
         }
 
-        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getX(), 2)
-                + Math.pow(alvo.getPosicaoYInterna() - this.getY(), 2)
+        return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
+                + Math.pow(alvo.getYInterno() - this.getY(), 2)
                 + Math.pow(alvo.getZ() - this.getZ(), 2));
     }
 
     /**
      * Move o robô aéreo para uma nova posição 3D
-     * 
-     * @param X        Nova coordenada X
-     * @param Y        Nova coordenada Y
-     * @param Z        Nova altitude
+     * @param X Nova coordenada X
+     * @param Y Nova coordenada Y
+     * @param Z Nova altitude
      * @param ambiente Ambiente onde o robô se encontra
      */
-    public void mover(int deltaX, int deltaY, int deltaZ, Ambiente ambiente) {
-        // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = getX() + deltaX >= ambiente.getTamX() ? ambiente.getTamX()-1 : getX() + deltaX;
-        int destinoY = getY() + deltaY >= ambiente.getTamY() ? ambiente.getTamY()-1 : getY() + deltaY;
+    public void mover(int X, int Y, int Z, Ambiente ambiente) throws SensorInativoException {
+        int deltaX = X - getX();
+        int deltaY = Y - getY();
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {
             int passoX = deltaX > 0 ? 1 : -1;
-            for (int x = getX() + passoX; x != destinoX + passoX; x += passoX) {
-                Object obj = ambiente.identificarEntidadePosicao(x, getY(), getZ());
+            for (int x = getX() + passoX; x != X + passoX; x += passoX) {
+                Object obj = ambiente.identificarEntidadePosicao(x, getY(),getZ());
                 if (obj != null) {
-                    System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                    if (obj instanceof RoboAereo) {
-                        System.out.println(
-                                ((RoboAereo) obj).getNome() + " na posição X:" + x + " Y:" + getY() + " Z:" + getZ());
-                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + x + " Y:" + getY());
-                        System.out.println("O robô " + getNome() + " caiu no buraco e foi destruido");
+                    System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
+                    if (obj instanceof RoboAereo){
+                        System.out.println(((RoboAereo)obj).getNome()+" na posição X:"+x+" Y:"+getY()+" Z:"+getZ());
+                    }else if(((Obstaculo)obj).getTipoObstaculo()==TipoObstaculo.BURACO){
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getY());
+                        System.out.println("O robô "+getNome()+" caiu no buraco e foi destruido");
                         ambiente.removerEntidade(this);
-                    } else {
-                        System.out.println(
-                                ((Obstaculo) obj).getTipo() + " na posição X:" + x + " Y:" + getY() + " Z:" + getZ());
+                    }else{
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getY()+" Z:"+getZ());
                     }
                     return; // Para uma casa antes do obstáculo
                 }
                 ambiente.moverEntidade(this, x, getY(), getZ());
                 setPosicaoX(x);
-                ; // Atualiza a posição X antes da colisão
             }
         }
 
         // Movimentação em linha reta no eixo Y
         if (deltaY != 0) {
             int passoY = deltaY > 0 ? 1 : -1;
-            for (int y = getY() + passoY; y != destinoY + passoY; y += passoY) {
+            for (int y = getY() + passoY; y != Y + passoY; y += passoY) {
                 Object obj = ambiente.identificarEntidadePosicao(getX(), y, getZ());
                 if (obj != null) {
-                    System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                    if (obj instanceof RoboAereo) {
-                        System.out.println(
-                                ((RoboAereo) obj).getNome() + " na posição X:" + getX() + " Y:" + y + " Z:" + getZ());
-                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y);
-                        System.out.println("O robô " + getNome() + " caiu no buraco e foi destruido");
+                    System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
+                    if (obj instanceof Robo){
+                        System.out.println(((Robo)obj).getNome()+" na posição X:"+getX()+" Y:"+y+" Z:"+getZ());
+                    }else if(((Obstaculo)obj).getTipoObstaculo()==TipoObstaculo.BURACO){
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getX()+" Y:"+y);
+                        System.out.println("O robô "+getNome()+" caiu no buraco e foi destruido");
                         ambiente.removerEntidade(this);
-                    } else {
-                        System.out.println(
-                                ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y + " Z:" + getZ());
+                    }else{
+                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+getX()+" Y:"+y+" Z:"+getZ());
                     }
                     return; // Para uma casa antes do obstáculo
                 }
                 ambiente.moverEntidade(this, getX(), y, getZ());
-                setPosicaoY(y); // Atualiza a posição Y antes da colisão
+                setPosicaoY(y);
             }
         }
 
-        if (deltaZ > 0) {
-            this.subir(deltaZ, ambiente);
-        } else if (deltaZ < 0) {
-            this.descer(deltaZ, ambiente);
+        
+        int h = this.getZ();
+        if (Z > h) {
+            this.subir(Z - h, ambiente);
+        } else {
+            this.descer(h - Z, ambiente);
         }
     }
 
     /**
      * Sobrescreve o método da classe pai para identificar Robôs
-     * 
      * @return Lista de robôs que são encontrados por meio do sensor de Radar
      */
     @Override
@@ -269,9 +257,9 @@ public class RoboAereo extends Robo implements Identificantes {
         return this.sensorBarometro;
     }
 
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
-        if (result != "") {
+        if (result != ""){
             return result;
         }
         String tarefa = (String) argumentos[0];
@@ -283,7 +271,7 @@ public class RoboAereo extends Robo implements Identificantes {
                 Ambiente ambiente = (Ambiente) argumentos[4];
                 mover(x, y, z, ambiente);
                 return "";
-
+        
             default:
                 return "";
         }
