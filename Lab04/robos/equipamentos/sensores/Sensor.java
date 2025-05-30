@@ -1,4 +1,7 @@
 package robos.equipamentos.sensores;
+
+import excecoes.sensor.*;
+
 /**
  * Classe abstrata genérica que representa um sensor básico para robôs.
  * Cada tipo de sensor específico pode retornar diferentes tipos de dados.
@@ -45,5 +48,5 @@ public abstract class Sensor<T> {
      * 
      * @return Dados coletados pelo sensor
      */
-    abstract T acionar();
+    abstract T acionar() throws SensorException;
 }
