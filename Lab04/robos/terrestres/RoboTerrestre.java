@@ -4,7 +4,6 @@ import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import interfaces.*;
 import excecoes.*;
 import excecoes.sensor.*;;
 
@@ -58,7 +57,7 @@ public class RoboTerrestre extends Robo {
             int x = 0;
             int detectado = 0;
             for (x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
-                ambiente.moverEntidade(this, x, getY(), getZ());
+                ambiente.moverEntidade(this, x, getYInterno(), getZInterno());
                 this.setPosicaoX(x);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {
@@ -77,7 +76,7 @@ public class RoboTerrestre extends Robo {
                 }
             }
             if (detectado != 0) {
-                ambiente.moverEntidade(this, x - passoX, getY(), getZ());
+                ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
                 this.setPosicaoX(x - passoX); // Corrige a posição do robô
             }
         }
@@ -87,7 +86,7 @@ public class RoboTerrestre extends Robo {
             int passoY = deltaY > 0 ? 1 : -1;
             int y = 0, detectado = 0;
             for (y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
-                ambiente.moverEntidade(this, getX(), y, getZ());
+                ambiente.moverEntidade(this, getXInterno(), y, getZInterno());
                 this.setPosicaoY(y);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {
@@ -106,7 +105,7 @@ public class RoboTerrestre extends Robo {
                 }
             }
             if (detectado != 0) {
-                ambiente.moverEntidade(this, getX(), y - passoY, getZ());
+                ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
                 this.setPosicaoY(y - passoY); // Corrige a posição do robô
             }
         }

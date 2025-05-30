@@ -3,10 +3,8 @@ package ambiente;
 import java.util.ArrayList;
 
 import excecoes.ForaDosLimitesException;
-import excecoes.sensor.SensorInativoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
-import robos.equipamentos.sensores.Sensor;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
@@ -119,8 +117,8 @@ public class Ambiente {
     }
 
     public void moverEntidade(Entidade entidade, int novoX, int novoY, int novoZ) {
-        mapa[entidade.getY()][entidade.getX()][entidade.getZ()]=TipoEntidade.VAZIO;
-        mapa[novoY][novoX][novoZ]=entidade.getTipo();
+        mapa[entidade.getYInterno()][entidade.getXInterno()][entidade.getZInterno()] = TipoEntidade.VAZIO;
+        mapa[novoY][novoX][novoZ] = entidade.getTipo();
     }
 
     public void executarSensores() {
