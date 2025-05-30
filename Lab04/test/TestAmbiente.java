@@ -78,13 +78,17 @@ public class TestAmbiente {
         Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
         Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 1, 2, 1, 2);
         
-        ambiente.adicionarEntidade(tanque);
-        ambiente.adicionarEntidade(parede);
-        
-        ArrayList<Entidade> entidades = ambiente.getEntidades();
-        verificar("Ambiente deve conter 2 entidades", entidades.size() == 2);
-        verificar("Ambiente deve conter o tanque", entidades.contains(tanque));
-        verificar("Ambiente deve conter a parede", entidades.contains(parede));
+        try {
+            ambiente.adicionarEntidade(tanque);
+            ambiente.adicionarEntidade(parede);
+            
+            ArrayList<Entidade> entidades = ambiente.getEntidades();
+            verificar("Ambiente deve conter 2 entidades", entidades.size() == 2);
+            verificar("Ambiente deve conter o tanque", entidades.contains(tanque));
+            verificar("Ambiente deve conter a parede", entidades.contains(parede));
+        } catch (Exception e) {
+            verificar("Não deve lançar exceção ao adicionar entidades. Erro:" + e.getMessage(), false);
+        }
     }
     
     private static void testarVerificacaoOcupacao() {
@@ -93,10 +97,14 @@ public class TestAmbiente {
         Ambiente ambiente = new Ambiente(10, 10, 5);
         
         Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidade(tanque);
-        
-        verificar("Posição (2,3) deve estar ocupada", ambiente.estaOcupado(2, 3, 0));
-        verificar("Posição (5,5) não deve estar ocupada", !ambiente.estaOcupado(5, 5, 0));
+        try {
+            ambiente.adicionarEntidade(tanque);
+            
+            verificar("Posição (2,3) deve estar ocupada", ambiente.estaOcupado(2, 3, 0));
+            verificar("Posição (5,5) não deve estar ocupada", !ambiente.estaOcupado(5, 5, 0));
+        } catch (Exception e) {
+            verificar("Não deve lançar exceção ao adicionar entidades. Erro:" + e.getMessage(), false);
+        }
     }
     
     private static void testarVisualizacaoAmbiente() {
@@ -107,13 +115,17 @@ public class TestAmbiente {
         Robo tanque = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
         Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 1, 2, 1, 2);
         
-        ambiente.adicionarEntidade(tanque);
-        ambiente.adicionarEntidade(parede);
-        
-        String[][] visualizacao = ambiente.visualizarAmbiente();
-        verificar("Visualização deve ser criada", visualizacao != null);
-        verificar("Visualização deve ter dimensão X correta", visualizacao.length == ambiente.getTamX());
-        verificar("Visualização deve ter dimensão Y correta", visualizacao[0].length == ambiente.getTamY());
+        try {
+            ambiente.adicionarEntidade(tanque);
+            ambiente.adicionarEntidade(parede);
+            
+            String[][] visualizacao = ambiente.visualizarAmbiente();
+            verificar("Visualização deve ser criada", visualizacao != null);
+            verificar("Visualização deve ter dimensão X correta", visualizacao.length == ambiente.getTamX());
+            verificar("Visualização deve ter dimensão Y correta", visualizacao[0].length == ambiente.getTamY());
+        }  catch (Exception e) {
+            verificar("Não deve lançar exceção ao adicionar entidades. Erro:" + e.getMessage(), false);
+        }
     }
     
     private static void verificar(String descricao, boolean condicao) {
