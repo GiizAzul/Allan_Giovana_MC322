@@ -6,10 +6,10 @@ import ambiente.Ambiente;
 import ambiente.CentralComunicacao;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import excecoes.ErroComunicacaoException;
-import excecoes.RoboDesligadoException;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import excecoes.*;
+import excecoes.sensor.*;
 import interfaces.*;
 
 public class Correios extends RoboTerrestre implements Comunicavel {
@@ -30,7 +30,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         setIntegridade(50);
     }
 
-    public String executarTarefa(Object... argumentos){
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;
@@ -47,7 +47,12 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                 int destinoX = (Integer) argumentos[2];    
                 int destinoY = (Integer) argumentos[3];
                 Ambiente ambiente = (Ambiente) argumentos[4];
-                return entregarPacote(id, destinoX, destinoY, ambiente);
+                
+                try {
+                    return entregarPacote(id, destinoX, destinoY, ambiente);
+                } catch (SensorInativoException e) {
+                    return "Erro ao entregar pacote: " + e.getMessage();
+                }
             
             case "listar":
                 return listarEntregas();
@@ -70,7 +75,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         return "Pacote carregado com sucesso";
     }
 
-    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) {
+    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) throws SensorInativoException {
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = getX() + deltaX > ambiente.getTamX() ? ambiente.getTamX() : getX() + deltaX;
         int destinoY = getY() + deltaY > ambiente.getTamY() ? ambiente.getTamY() : getY() + deltaY;
@@ -123,7 +128,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         return true;
     }
 
-    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) {
+    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) throws SensorInativoException {
         if (!entregas.contains(id)) {
             return ("Pacote " + id + " não encontrado na carga.");
         }

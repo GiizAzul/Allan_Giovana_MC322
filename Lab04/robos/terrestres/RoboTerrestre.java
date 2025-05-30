@@ -1,18 +1,19 @@
 package robos.terrestres;
-
 import ambiente.Ambiente;
 import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import interfaces.*;
+import excecoes.*;
+import excecoes.sensor.*;;
 
 /**
  * Classe que representa um robô terrestre, especialização de Robo
  * com capacidade de velocidade limitada
  */
 public class RoboTerrestre extends Robo {
-    private int velocidadeMaxima; // Velocidade máxima do robô terrestre
+    private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
     private Colisao sensorColisao; // Sensor de colisão
 
     /**
@@ -24,8 +25,7 @@ public class RoboTerrestre extends Robo {
      * @param posicaoY         Posição Y inicial
      * @param velocidadeMaxima Velocidade máxima do robô
      */
-    public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX,
-            int posicaoY, int velocidade, int velocidadeMaxima) {
+    public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
         super(nome, direcao, material, posicaoX, posicaoY, 0, velocidade);
         this.velocidadeMaxima = velocidadeMaxima;
         this.sensorColisao = new Colisao(this, ambiente); // Inicializa o sensor de colisão
@@ -45,8 +45,8 @@ public class RoboTerrestre extends Robo {
         }
 
         // Robo Terrestre não precisa do GPS para se movimentar (v*t)
-        int posicaoX = this.getPosicaoXInterna();
-        int posicaoY = this.getPosicaoYInterna();
+        int posicaoX = this.getXInterno();
+        int posicaoY = this.getYInterno();
 
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = posicaoX + deltaX >= ambiente.getTamX() ? ambiente.getTamX()-1 : posicaoX + deltaX;
@@ -62,8 +62,7 @@ public class RoboTerrestre extends Robo {
                 this.setPosicaoX(x);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {
-                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:"
-                            + posicaoY);
+                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
                     break; // Para uma casa antes do obstáculo
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
@@ -92,8 +91,7 @@ public class RoboTerrestre extends Robo {
                 this.setPosicaoY(y);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {
-                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + posicaoX
-                            + " Y:" + y);
+                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:"+ posicaoX + " Y:" + y);
                     break; // Para uma casa antes do obstáculo
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
@@ -116,7 +114,6 @@ public class RoboTerrestre extends Robo {
 
     /**
      * Obtém a velocidade máxima do robô
-     * 
      * @return Velocidade máxima
      */
     public int getVelocidadeMaxima() {
@@ -125,36 +122,31 @@ public class RoboTerrestre extends Robo {
 
     /**
      * Define uma nova velocidade máxima
-     * 
      * @param vmax Nova velocidade máxima
      */
     public void setVelocidadeMaxima(int vmax) {
         this.velocidadeMaxima = vmax;
     }
-    
 
     /**
      * Calcula a distância entre este robô terrestre e um robô
-     * 
      * @param alvo Robô aéreo alvo
      * @return Distância euclidiana 3D (considerando altitude do robô)
      */
-    public double distanciaRobo(Robo alvo) {
-        if (!this.getGPS().isAtivo()) {
-            return -1;
-        }
+    public double distanciaRobo(Robo alvo) throws SensorInativoException {
+        super.verificarGPSAtivo();
 
-        return Math.sqrt(Math.pow(alvo.getPosicaoXInterna() - this.getX(), 2)
-                + Math.pow(alvo.getPosicaoYInterna() - this.getY(), 2) + Math.pow(alvo.getZ() - 0, 2));
+        return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
+                + Math.pow(alvo.getYInterno() - this.getY(), 2) + Math.pow(alvo.getZ() - 0, 2));
     }
 
     public Colisao getSensorColisao() {
         return sensorColisao;
     }
 
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
-        if (result != "") {
+        if (result != ""){
             return result;
         }
         String tarefa = (String) argumentos[0];

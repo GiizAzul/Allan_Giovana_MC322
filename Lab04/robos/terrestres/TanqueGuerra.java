@@ -1,11 +1,14 @@
 package robos.terrestres;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import robos.equipamentos.sensores.Sensor;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import interfaces.*;
+import excecoes.*;
+import excecoes.sensor.SensorInativoException;
 
-public class TanqueGuerra extends RoboTerrestre implements Atacante{
+public class TanqueGuerra extends RoboTerrestre implements Atacante {
     private int municaoMax;
     private int municaoAtual;
     private int alcance;
@@ -20,7 +23,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante{
         setIntegridade(100);
     }
 
-    public String executarTarefa(Object... argumentos){
+    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;
@@ -32,7 +35,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante{
                 int alvoY = (Integer) argumentos[2];
                 int nTiros = (Integer) argumentos[3];
                 Ambiente ambiente = (Ambiente) argumentos[4];
-                return atirar(alvoX,alvoY, 0,nTiros,ambiente);
+                return atirar(alvoX, alvoY, 0,nTiros,ambiente);
         
             case "recarregar":
                 int nBalas = (Integer) argumentos[1];
@@ -43,47 +46,49 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante{
         }
     }
 
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorInativoException, MunicaoInsuficienteException, AlvoInvalidoException {
+        verificarGPSAtivo();
+
         Entidade alvo = ambiente.identificarEntidadePosicao(alvoX, alvoY, 0);
+
         if (municaoAtual < nTiros) {
-            return "Munição insuficiente";
+            throw new MunicaoInsuficienteException();
+        } 
+        if (alvoX == getX() && alvoY == getY()) {
+            throw new AlvoInvalidoException("Não é possível atirar no próprio robô");
+        } 
 
-        } else if (alvoX == getX() && alvoY == getY()) {
-            return "Não é possível atirar na própria posição";
-
-        } else {
-            int dX = getX() - alvoX;
-            int dY = getY() - alvoY;
-            if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(alcance, 2)) {
-                municaoAtual -= nTiros;
-                if (alvo == null) {
-                    return String.format("Disparado realizado no alvo (%d, %d)\nNenhum alvo foi atingido!\n", alvoX,
-                            alvoY);
-                } else {
-                    String result = null;
-                    if (alvo.getTipo() == TipoEntidade.ROBO) {
-                        Robo alvodef = (Robo) alvo;
-                        String defesa = alvodef.defender(nTiros, ambiente);
-                        result = String.format(
-                                "Disparo realizado no alvo (%d, %d)\n" +
-                                        "Robô %s foi atingido!\n" +
-                                        defesa,
-                                alvoX, alvoY, alvodef.getNome());
-                    } else if (alvo.getTipo() == TipoEntidade.OBSTACULO) {
-                        Obstaculo alvodef = (Obstaculo) alvo;
-                        String defesa = alvodef.defender(nTiros, ambiente);
-                        result = String.format(
-                                "Disparo realizado no alvo (%d, %d)\n" +
-                                        "Obstáculo %s foi atingido!\n" +
-                                        defesa,
-                                alvoX, alvoY, alvodef.getTipoObstaculo());
-
-                    }
-                    return result;
-                }
+        int dX = getX() - alvoX;
+        int dY = getY() - alvoY;
+        if (Math.pow(dX, 2) + Math.pow(dY, 2) <= Math.pow(alcance, 2)) {
+            municaoAtual -= nTiros;
+            if (alvo == null) {
+                return String.format("Disparado realizado no alvo (%d, %d)\nNenhum alvo foi atingido!\n", alvoX,
+                        alvoY);
             } else {
-                return "Alvo fora do alcance";
+                String result = null;
+                if (alvo.getTipo() == TipoEntidade.ROBO) {
+                    Robo alvodef = (Robo) alvo;
+                    String defesa = alvodef.defender(nTiros, ambiente);
+                    result = String.format(
+                            "Disparo realizado no alvo (%d, %d)\n" +
+                                    "Robô %s foi atingido!\n" +
+                                    defesa,
+                            alvoX, alvoY, alvodef.getNome());
+                } else if (alvo.getTipo() == TipoEntidade.OBSTACULO) {
+                    Obstaculo alvodef = (Obstaculo) alvo;
+                    String defesa = alvodef.defender(nTiros, ambiente);
+                    result = String.format(
+                            "Disparo realizado no alvo (%d, %d)\n" +
+                                    "Obstáculo %s foi atingido!\n" +
+                                    defesa,
+                            alvoX, alvoY, alvodef.getTipoObstaculo());
+
+                }
+                return result;
             }
+        } else {
+            return "Alvo fora do alcance";
         }
     }
 
