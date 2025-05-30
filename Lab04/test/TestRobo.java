@@ -4,7 +4,7 @@ import ambiente.TipoObstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
-public class TestRobo {
+public class TestRobo extends TestBase {
     
     public static void main(String[] args) {
         executarTestes();
@@ -46,7 +46,7 @@ public class TestRobo {
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
         Robo robo = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidade(robo);
+        ambiente.adicionarEntidadeTest(robo);
         
         robo.mover(1, 1, ambiente);
         verificar("Posição X após movimento deve ser 3", robo.getX() == 3);
@@ -54,7 +54,7 @@ public class TestRobo {
         
         // Teste com obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 4, 4, 4, 4);
-        ambiente.adicionarEntidade(obstaculo);
+        ambiente.adicionarEntidadeTest(obstaculo);
         robo.mover(1, 1, ambiente);
         verificar("Movimento deve ser bloqueado por obstáculo", robo.getX() == 3 && robo.getY() == 5);
     }
@@ -98,8 +98,8 @@ public class TestRobo {
         Robo robo1 = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 0, 0, 0, 2, 5, 100, 10);
         Robo robo2 = ambiente.criarRobo(1, 1, "T2", "Sul", MateriaisRobo.ACO, 3, 4, 0, 2, 5, 100, 10);
         
-        ambiente.adicionarEntidade(robo1);
-        ambiente.adicionarEntidade(robo2);
+        ambiente.adicionarEntidadeTest(robo1);
+        ambiente.adicionarEntidadeTest(robo2);
         
         double distancia = robo1.distanciaRobo(robo2);
         verificar("Distância calculada deve ser 5.0", Math.abs(distancia - 5.0) < 0.001);
@@ -124,7 +124,7 @@ public class TestRobo {
         verificar("Posição X inicial deve ser 2", robo.getX() == 2);
         verificar("Posição Y inicial deve ser 3", robo.getY() == 3);
         
-        ambiente.adicionarEntidade(robo);
+        ambiente.adicionarEntidadeTest(robo);
         robo.mover(1, 1, ambiente);
         
         verificar("GPS deve atualizar posição X após movimento", robo.getX() == 3);
@@ -139,15 +139,15 @@ public class TestRobo {
         Robo robo1 = ambiente.criarRobo(1, 1, "T1", "Norte", MateriaisRobo.ACO, 2, 3, 0, 2, 5, 100, 10);
         Robo robo2 = ambiente.criarRobo(1, 1, "T2", "Sul", MateriaisRobo.ACO, 2, 4, 0, 2, 5, 100, 10);
         
-        ambiente.adicionarEntidade(robo1);
-        ambiente.adicionarEntidade(robo2);
+        ambiente.adicionarEntidadeTest(robo1);
+        ambiente.adicionarEntidadeTest(robo2);
         
         robo1.mover(0, 2, ambiente);
         verificar("Movimento deve ser bloqueado por colisão", robo1.getY() == 3);
         
         // Teste com obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 3, 3, 3, 3);
-        ambiente.adicionarEntidade(obstaculo);
+        ambiente.adicionarEntidadeTest(obstaculo);
         
         robo1.mover(1, 0, ambiente);
         verificar("Movimento deve ser bloqueado por obstáculo", robo1.getX() == 2);

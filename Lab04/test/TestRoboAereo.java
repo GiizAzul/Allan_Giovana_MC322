@@ -7,7 +7,7 @@ import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
 
-public class TestRoboAereo {
+public class TestRoboAereo extends TestBase {
     
     public static void main(String[] args) {
         executarTestes();
@@ -58,7 +58,7 @@ public class TestRoboAereo {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque)ambiente.criarRobo(2, 1, "DA2", "Norte", MateriaisRobo.ALUMINIO, 
                                       10, 10, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
         
         int altitudeInicial = drone.getZ();
         drone.mover(0, 0, 2, ambiente);
@@ -74,7 +74,7 @@ public class TestRoboAereo {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA3", "Leste", MateriaisRobo.FIBRA_CARBONO, 
                                       5, 5, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
         
         drone.mover(3, 4, 2, ambiente);
         verificar("Posição X após movimento deve ser 8", drone.getX() == 8);
@@ -88,7 +88,7 @@ public class TestRoboAereo {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA4", "Sul", MateriaisRobo.PLASTICO, 
                                       10, 10, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
         
         drone.mover(0, 0, 10, ambiente);
         verificar("Altitude não deve ultrapassar o máximo", drone.getZ() <= 8);
@@ -107,8 +107,8 @@ public class TestRoboAereo {
         Robo roboTerrestre = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 
                                               3, 4, 0, 2, 5, 100, 10);
         
-        ambiente.adicionarEntidade(droneAereo);
-        ambiente.adicionarEntidade(roboTerrestre);
+        ambiente.adicionarEntidadeTest(droneAereo);
+        ambiente.adicionarEntidadeTest(roboTerrestre);
         
         double distancia = droneAereo.distanciaRobo(roboTerrestre);
         verificar("Distância deve ser calculada em 3D", distancia > 0);
@@ -124,8 +124,8 @@ public class TestRoboAereo {
         Robo drone2 = ambiente.criarRobo(2, 1, "DA7", "Sul", MateriaisRobo.ALUMINIO, 
                                        3, 4, 3, 5, 8, 5, 200, 10);
         
-        ambiente.adicionarEntidade(drone1);
-        ambiente.adicionarEntidade(drone2);
+        ambiente.adicionarEntidadeTest(drone1);
+        ambiente.adicionarEntidadeTest(drone2);
         
         double distancia = drone1.distanciaRobo(drone2);
         verificar("Distância deve ser calculada em 3D", distancia > 0);
@@ -137,7 +137,7 @@ public class TestRoboAereo {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         Robo drone = ambiente.criarRobo(2, 1, "DA8", "Oeste", MateriaisRobo.PLASTICO, 
                                       15, 25, 3, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
         
         String posicao = drone.exibirPosicao();
         verificar("Exibição deve incluir posição X", posicao.contains("15"));
@@ -151,7 +151,7 @@ public class TestRoboAereo {
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA9", "Norte", MateriaisRobo.ALUMINIO, 
                                       10, 10, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
         
         int altitudeInicial = drone.getZ();
         drone.mover(0, 0, 2, ambiente);
@@ -168,7 +168,7 @@ public class TestRoboAereo {
         DroneAtaque drone = (DroneAtaque) ambiente.criarRobo(2, 1, "DA1", "Norte", 
                                                            MateriaisRobo.FIBRA_CARBONO, 
                                                            5, 5, 2, 5, 8, 5, 200, 10);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
 
         // Teste de ataque em coordenadas
         String resultado = drone.executarTarefa("atirar coord", 7, 7, 2, 1, ambiente);
@@ -178,7 +178,7 @@ public class TestRoboAereo {
 
         // Teste de ataque em robô
         Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 7, 7, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidade(alvo);
+        ambiente.adicionarEntidadeTest(alvo);
         resultado = drone.executarTarefa("atirar coord", 7, 7, 0, 2, ambiente);
         verificar("Deve acertar robô alvo", resultado.contains("Robô T1 foi atingido"));
 
@@ -207,11 +207,11 @@ public class TestRoboAereo {
         DroneVigilancia drone = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV1", "Norte", 
                                                                     MateriaisRobo.PLASTICO, 
                                                                     10, 10, 2, 5, 8, 5, 50.0f, 60.0f, 160.0f);
-        ambiente.adicionarEntidade(drone);
+        ambiente.adicionarEntidadeTest(drone);
 
         // Teste de varredura de área
         Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 12, 12, 0, 2, 5, 100, 10);
-        ambiente.adicionarEntidade(alvo);
+        ambiente.adicionarEntidadeTest(alvo);
         
         String resultado = drone.executarTarefa("varrer", ambiente, 10, 10, 5);
         verificar("Deve identificar objetos na área de varredura", 
@@ -245,8 +245,8 @@ public class TestRoboAereo {
         DroneVigilancia drone2 = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV2", "Sul", 
                                                                      MateriaisRobo.PLASTICO, 
                                                                      15, 15, 2, 5, 8, 5, 50.0f, 60.0f, 90.0f);
-        ambiente.adicionarEntidade(drone1);
-        ambiente.adicionarEntidade(drone2);
+        ambiente.adicionarEntidadeTest(drone1);
+        ambiente.adicionarEntidadeTest(drone2);
 
         try {
             // Teste de envio de mensagem
