@@ -7,6 +7,8 @@ import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
 import interfaces.*;
+import excecoes.*;
+import excecoes.sensor.*;
 
 /**
  * Classe que representa um robô com funcionalidades básicas de movimento e
@@ -14,8 +16,8 @@ import interfaces.*;
  */
 public abstract class Robo implements Entidade, Destrutivel {
     // Propriedades
-    private final int id;
-    private static int cont_robo = 0;
+    private final int id; // Identificador único do robô
+    private static int cont_robo = 0; // Contador estático para gerar IDs únicos
     private String nome; // Nome do robô
     private String direcao; // Direção atual do robô (Norte, Sul, Leste, Oeste)
     private int posicaoX; // Coordenada X da posição do robô
@@ -25,7 +27,7 @@ public abstract class Robo implements Entidade, Destrutivel {
     private int velocidade; // Velocidade do robô
     private boolean estado; // Estado de operação do robô (true = ligado, false = desligado)
     private MateriaisRobo material; // Material do robô
-    private TipoEntidade tipo;
+    private TipoEntidade tipo; // Tipo de entidade (ROBO, OBSTACULO, etc.)
 
     // Lista de sensores do robô padrões
     private GPS gps; // Sensor de GPS -> Informar a posição dos Robôs
@@ -41,6 +43,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param direcao    Direção inicial do robô
      * @param posicaoX   Posição inicial X
      * @param posicaoY   Posição inicial Y
+     * @param posicaoZ   Posição inicial Z
      * @param velocidade Velocidade inicial do robô
      */
     public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int posicaoZ,
@@ -73,10 +76,15 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param ambiente Ambiente onde o robô está
      */
 
-    public void mover(int deltaX, int deltaY, Ambiente ambiente) {
+    public void mover(int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = posicaoX + deltaX >= ambiente.getTamX() ? ambiente.getTamX()-1 : posicaoX + deltaX;
-        int destinoY = posicaoY + deltaY >= ambiente.getTamY() ? ambiente.getTamY()-1 : posicaoY + deltaY;
+        if (posicaoX + deltaX < 0 || posicaoY + deltaY < 0 || posicaoX + deltaX >= ambiente.getTamX()
+                || posicaoY + deltaY >= ambiente.getTamY()) {
+            throw new ForaDosLimitesException("O robô " + this.nome + " tentou se mover para fora dos limites do ambiente");
+        }
+
+        int destinoX = posicaoX + deltaX;
+        int destinoY = posicaoY + deltaY;
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {
@@ -84,23 +92,17 @@ public abstract class Robo implements Entidade, Destrutivel {
             for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
                 Object obj = ambiente.identificarEntidadePosicao(x, posicaoY, posicaoZ);
                 if (obj != null) {
-                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
+                    if (obj instanceof Obstaculo && 
+                        ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
-                        System.out.println(
-                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY);
-                        System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
                         ambiente.removerEntidade(this);
-                        break;
+                        throw new RoboDestruidoPorBuracoException(
+                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY + " e foi destruído");
                     } else {
                         // Para outros obstáculos ou robôs, apenas para o movimento
-                        System.out.println("O robô " + this.nome
-                                + " interrompeu o movimento devido a um objeto na posição X:" + x + " Y:" + posicaoY);
-
-                        // Ainda pode se movimentar no outro eixo
-                        break;
+                        throw new ColisaoException("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + x + " Y:" + posicaoY);
                     }
                 }
-                ambiente.moverEntidade(this, x, posicaoY, posicaoZ);
                 posicaoX = x; // Atualiza a posição X antes da colisão
             }
         }
@@ -110,19 +112,17 @@ public abstract class Robo implements Entidade, Destrutivel {
             int passoY = deltaY > 0 ? 1 : -1;
             for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
                 Object obj = ambiente.identificarEntidadePosicao(posicaoX, y, posicaoZ);
+                
                 if (obj != null) {
-                    if (obj instanceof Obstaculo && ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
+                    if (obj instanceof Obstaculo && 
+                        ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
-                        System.out.println(
-                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y);
-                        System.out.println("O robô " + this.nome + " caiu no buraco e foi destruido");
                         ambiente.removerEntidade(this);
-                        break;
+                        throw new RoboDestruidoPorBuracoException(
+                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y + " e foi destruído");
                     } else {
                         // Para outros obstáculos ou robôs, apenas para o movimento
-                        System.out.println("O robô " + this.nome
-                                + " interrompeu o movimento devido a um objeto na posição X:" + posicaoX + " Y:" + y);
-                        break; // Para a movimentação
+                        throw new ColisaoException("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + posicaoX + " Y:" + y);
                     }
                 }
                 ambiente.moverEntidade(this, posicaoX, y, posicaoZ);
@@ -137,20 +137,23 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return String formatada com nome e posição do robô
      */
-    public String exibirPosicao() {
+    public String exibirPosicao() throws SensorInativoException {
+        verificarGPSAtivo();
+
         int x = this.getX();
         int y = this.getY();
         int z = this.getZ();
-        if (x == -1 || y == -1) {
-            return this.nome + " está com o GPS inativo ou não disponível";
-        } else {
-            return this.nome + " está na posição X:" + x + " Y:" + y + " Z:" + z;
-        }
+        return this.nome + " está na posição X:" + x + " Y:" + y + " Z:" + z;
+
     }
 
     public String getDescricao() {
-        return exibirPosicao() + "\nSua direção é " + direcao + "\nO robô está "
-                + (estado ? "ligado\n" : "desligado\n");
+        try {
+            return exibirPosicao() + "\nSua direção é " + direcao + "\nO robô está "
+                    + (estado ? "ligado\n" : "desligado\n");
+        } catch (SensorInativoException e) {
+            return "Erro ao exibir posição: " + e.getMessage();
+        }
     }
 
     public String getRepresentacao() {
@@ -161,7 +164,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * Método interno para acesso direto à posição X
      * Este método é usado apenas pelo GPS e internamente
      */
-    public int getPosicaoXInterna() {
+    public int getXInterno() {
         return this.posicaoX;
     }
 
@@ -169,8 +172,16 @@ public abstract class Robo implements Entidade, Destrutivel {
      * Método interno para acesso direto à posição Y
      * Este método é usado apenas pelo GPS e internamente
      */
-    public int getPosicaoYInterna() {
+    public int getYInterno() {
         return this.posicaoY;
+    }
+
+    /**
+     * Método interno para acesso direto à posição Y
+     * Este método é usado apenas pelo GPS e internamente
+     */
+    public int getZInterno() {
+        return this.posicaoZ;
     }
 
     /**
@@ -178,14 +189,9 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return Posição X
      */
-    public int getX() {
-        // Verificar se o GPS está disponível e ativo
-        if (this.gps != null && this.gps.isAtivo()) {
-            return this.gps.obterPosicaoX();
-        } else {
-            // Retornar -1 se o GPS não estiver disponível ou ativo
-            return -1;
-        }
+    public int getX() throws SensorInativoException {
+        verificarGPSAtivo();
+        return this.gps.obterPosicaoX();
     }
 
     /**
@@ -193,14 +199,9 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return Posição Y
      */
-    public int getY() {
-        // Verificar se o GPS está disponível e ativo
-        if (this.gps != null && this.gps.isAtivo()) {
-            return this.gps.obterPosicaoY();
-        } else {
-            // Retornar -1 se o GPS não estiver disponível ou ativo
-            return -1;
-        }
+    public int getY() throws SensorInativoException {
+        verificarGPSAtivo();
+        return this.gps.obterPosicaoY();
     }
 
     /**
@@ -208,7 +209,8 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return Posição Z
      */
-    public int getZ() {
+    public int getZ() throws SensorInativoException {
+        verificarGPSAtivo();
         return this.posicaoZ;
     }
 
@@ -373,12 +375,11 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param robo Robô alvo para cálculo de distância
      * @return Distância calculada
      */
-    public double distanciaRobo(Robo robo) {
-        if (!this.getGPS().isAtivo()) {
-            return -1;
-        }
-        return Math.sqrt(Math.pow(robo.getPosicaoXInterna() - this.getX(), 2)
-                + Math.pow(robo.getPosicaoYInterna() - this.getY(), 2));
+    public double distanciaRobo(Robo robo) throws SensorInativoException {
+        verificarGPSAtivo();
+
+        return Math.sqrt(Math.pow(robo.getXInterno() - this.getX(), 2)
+                + Math.pow(robo.getYInterno() - this.getY(), 2));
     }
 
     /**
@@ -387,7 +388,9 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param obstaculo obstaculo alvo para cálculo de distância
      * @return Distância calculada
      */
-    public double distanciaObstaculo(Obstaculo obstaculo) {
+    public double distanciaObstaculo(Obstaculo obstaculo) throws SensorInativoException {
+        verificarGPSAtivo();
+
         if (getX() <= obstaculo.getX1() && getX() <= obstaculo.getX2()) {
             return Math.min(Math.abs(getY() - obstaculo.getY1()), Math.abs(getY() - obstaculo.getY2()));
         } else if (getY() <= obstaculo.getY1() && getY() <= obstaculo.getY2()) {
@@ -433,11 +436,18 @@ public abstract class Robo implements Entidade, Destrutivel {
         return this.gps;
     }
 
+    protected void verificarGPSAtivo() throws SensorInativoException {
+        if (this.gps == null || !this.gps.isAtivo()) {
+            throw new SensorInativoException("O GPS do robô " + this.nome + " está inativo ou não disponível");
+        }
+    }
+
     public TipoEntidade getTipo() {
         return this.tipo;
     }
 
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws 
+    AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "direção":
@@ -449,7 +459,12 @@ public abstract class Robo implements Entidade, Destrutivel {
                 int deltaX = (Integer) argumentos[1];
                 int deltaY = (Integer) argumentos[2];
                 Ambiente ambiente = (Ambiente) argumentos[3];
-                mover(deltaX, deltaY, ambiente);
+                try {
+                    mover(deltaX, deltaY, ambiente);
+                } catch (ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException e) {
+                    return "Não foi possível mover o Robô: " + e.getMessage();
+                }
+
                 return "";
 
             case "desligar":
