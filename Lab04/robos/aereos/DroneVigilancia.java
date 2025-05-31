@@ -55,7 +55,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
                         } else {
                             Obstaculo o = (Obstaculo) obj;
                             result += String.format("Obstáculo: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
-                                    o.getTipo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
+                                    o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
                                     o.getAltura());
                         }
                     }

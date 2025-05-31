@@ -4,7 +4,7 @@ public enum TipoObstaculo {
     PAREDE(3, 100, false, 0.2f,"⬜"),
     ARVORE(5, 50, false, 0.2f, "🌲"),
     PREDIO(10, 200, false, 0.7f,"🏢"),
-    BURACO(0, 0, true, 0, "🕳️"),
+    BURACO(1, 0, true, 0, "🕳️"),
     OUTRO(-1, -1, false, 0, "O"); // Altura -1 representa valor variavel
 
     private final int alturaPadrao;

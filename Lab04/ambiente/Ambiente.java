@@ -87,7 +87,7 @@ public class Ambiente {
     public void removerEntidade(Entidade entidade) {
         entidades.remove(entidade);
         if (entidade.getTipo() == TipoEntidade.ROBO) {
-            mapa[entidade.getXInterno()][entidade.getYInterno()][entidade.getZInterno()] = TipoEntidade.VAZIO;
+            mapa[entidade.getYInterno()][entidade.getXInterno()][entidade.getZInterno()] = TipoEntidade.VAZIO;
         } else if (entidade.getTipo() == TipoEntidade.OBSTACULO) {
             Obstaculo obstaculo = (Obstaculo) entidade;
             for (int x = obstaculo.getX1(); x <= obstaculo.getX2(); x++) {

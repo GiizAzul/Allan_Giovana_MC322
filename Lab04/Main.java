@@ -25,6 +25,7 @@ public class Main {
         System.out.println(
                 "Gostaria de utilizar nosso modo padrão com ambiente e entidades padrão ou o modo de criação livre?\n1 - Modo Padrão\n2 - Modo Criação Livre");
         int modo = scanner.nextInt();
+        limparTerminal();
         if (modo == 1) {
             Ambiente ambiente = new Ambiente(10, 10, 10);
             try {
@@ -40,9 +41,9 @@ public class Main {
                 System.out.println("Erro ao adicionar robôs: " + e.getMessage());
             }
             try {
-                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PAREDE, 1, 2, 1, 2));
+                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.BURACO, 1, 2, 1, 2));
                 ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.ARVORE, 5, 6, 6, 7));
-                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.BURACO, 4, 6, 4, 5));
+                ambiente.adicionarEntidade(new Obstaculo(TipoObstaculo.PAREDE, 4, 6, 4, 5));
             } catch (ForaDosLimitesException e) {
                 System.out.println("Erro ao adicionar obstáculos: " + e.getMessage());
             }
@@ -106,6 +107,7 @@ public class Main {
     public static void acoesRobo(Scanner scanner, ArrayList<Robo> listaRobo, Ambiente ambiente,
             CentralComunicacao central) throws ErroComunicacaoException, RoboDesligadoException {
         String menu;
+        vizualizarMapa(ambiente);
         System.out.println("Escolha o Robô:\n");
         int i = 1;
         for (Robo robo : listaRobo) {
@@ -145,6 +147,7 @@ public class Main {
                     int alvoY = scanner.nextInt();
                     System.out.print("Digite o número de tiros: ");
                     int nTiros = scanner.nextInt();
+                    limparTerminal();
                     try {
                         System.out.println(
                             roboEscolhido.executarTarefa("atirar", alvoX, alvoY, nTiros, ambiente));
@@ -156,18 +159,19 @@ public class Main {
                     // Recarregar balas do Tanque
                     System.out.print("Digite o número de balas recarregadas:");
                     int nBalas = scanner.nextInt();
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("recarregar", nBalas));
                     } catch (Exception e) {
                         System.out.println("Não foi possível fazer a recarga, erro: " + e.getMessage());
                     }
-
                 } else if (acao == 3) {
                     // Movimentação do Robô por DeltaX e DeltaY
                     System.out.print("Digite as coordenadas X e Y do destino:\n");
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a velocidade do movimento: ");
                     int vel = scanner.nextInt();
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
                                 coordenadas[1] - roboSelecionado.getY(), vel, ambiente);
@@ -175,13 +179,13 @@ public class Main {
                     } catch (Exception e) {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }
-
                 } else if (acao == 4) {
                     System.out.print("Digite a nova direção (Norte/Sul/Leste/Oeste): ");
                     String direcao;
                     do {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("direção", direcao);
                     } catch (Exception e) {
@@ -189,6 +193,7 @@ public class Main {
                     }
 
                 } else if (acao == 5) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("desligar"));
                     } catch (Exception e) {
@@ -196,12 +201,14 @@ public class Main {
                     }
                 }
             } else if (acao == 5) {
+                limparTerminal();
                 try {
                     System.out.println(roboEscolhido.executarTarefa("ligar"));
                 } catch (Exception e) {
                     System.out.println("Não foi possível ligar o robô, erro: " + e.getMessage());
                 }
             } else {
+                limparTerminal();
                 System.out.println("O robô está desligado\n");
             }
 
@@ -228,6 +235,7 @@ public class Main {
                     String id = scanner.nextLine();
                     System.out.print("Digite o peso do pacote: ");
                     float peso = scanner.nextFloat();
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("carregar", id, peso));
                     } catch (Exception e) {
@@ -239,6 +247,7 @@ public class Main {
                     String id = scanner.nextLine();
                     System.out.print("Digite as coordenadas X e Y do destino: ");
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
+                    limparTerminal();
                     try {
                         System.out.println(
                                 roboEscolhido.executarTarefa("entregar", id, coordenadas[0], coordenadas[1],
@@ -247,6 +256,7 @@ public class Main {
                         System.out.println("Não foi possível entregar o pacote, erro: " + e.getMessage());
                     }
                 } else if (acao == 3) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("listar"));
                     } catch (Exception e) {
@@ -257,6 +267,7 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a velocidade do movimento: ");
                     int vel = scanner.nextInt();
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
                                 coordenadas[1] - roboSelecionado.getY(), vel, ambiente);
@@ -269,6 +280,7 @@ public class Main {
                     do {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("direção", direcao);
                     } catch (Exception e) {
@@ -295,7 +307,7 @@ public class Main {
 
                     System.out.println("Digite a mensagem a ser enviada:\n");
                     String mensagem = scanner.nextLine();
-
+                    limparTerminal();
                     System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
                 } else if (acao == 7) {
                     try {
@@ -305,12 +317,14 @@ public class Main {
                     }
                 }
             } else if (acao == 7) {
+                limparTerminal();
                 try {
                     System.out.println(roboEscolhido.executarTarefa("ligar"));
                 } catch (Exception e) {
                     System.out.println("Não foi possível ligar o robô, erro: " + e.getMessage());
                 }
             } else {
+                limparTerminal();
                 System.out.println("O robô está desligado\n");
             }
 
@@ -338,6 +352,7 @@ public class Main {
                     int alvoZ = scanner.nextInt();
                     System.out.print("Digite o número de tiros: ");
                     int nTiros = scanner.nextInt();
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("atirar coord", alvoX, alvoY, alvoZ,
                             nTiros, ambiente));
@@ -348,6 +363,7 @@ public class Main {
                 } else if (acao == 2) {
                     System.out.print("Digite o número de balas recarregadas:");
                     int nBalas = scanner.nextInt();
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("recarregar", nBalas));
                     } catch (Exception e) {
@@ -358,6 +374,7 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
                     int nAlt = scanner.nextInt();
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
                                 coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
@@ -367,6 +384,7 @@ public class Main {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }
                 } else if (acao == 4) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("identificar"));
                     } catch (Exception e) {
@@ -378,12 +396,14 @@ public class Main {
                     do {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("direção", direcao);
                     } catch (Exception e) {
                         System.out.println("Não foi possível mudar a direção, erro: " + e.getMessage());
                     }
                 } else if (acao == 6) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("desligar"));
                     } catch (Exception e) {
@@ -391,12 +411,14 @@ public class Main {
                     }
                 }
             } else if (acao == 6) {
+                limparTerminal();
                 try {
                     System.out.println(roboEscolhido.executarTarefa("ligar"));
                 } catch (Exception e) {
                     System.out.println("Não foi possível ligar o robô, erro: " + e.getMessage());
                 }
             } else {
+                limparTerminal();
                 System.out.println("Robô desligado!");
             }
 
@@ -425,6 +447,7 @@ public class Main {
                     int[] coordenadas = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite a altura do destino: ");
                     int nAlt = scanner.nextInt();
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
                                 coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
@@ -434,6 +457,7 @@ public class Main {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }
                 } else if (acao == 2) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("identificar"));
                     } catch (Exception e) {
@@ -445,6 +469,7 @@ public class Main {
                     do {
                         direcao = scanner.nextLine();
                     } while (!Robo.getDirecoesPossiveis().contains(direcao));
+                    limparTerminal();
                     try {
                         roboEscolhido.executarTarefa("direção", direcao);
                     } catch (Exception e) {
@@ -455,6 +480,7 @@ public class Main {
                     int[] centro = Main.obterPosicao(ambiente, scanner);
                     System.out.print("Digite o raio da varredura: ");
                     int raio = scanner.nextInt();
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("varrer", ambiente, centro[0],
                                 centro[1], raio));
@@ -462,6 +488,7 @@ public class Main {
                         System.out.println("Não foi possível realizar a varredura, erro: " + e.getMessage());
                     }
                 } else if (acao == 5) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("camuflagem"));
                     } catch (Exception e) {
@@ -487,9 +514,10 @@ public class Main {
 
                     System.out.println("Digite a mensagem a ser enviada:\n");
                     String mensagem = scanner.nextLine();
-
+                    limparTerminal();
                     System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
                 } else if (acao == 7) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("desligar"));
                     } catch (Exception e) {
@@ -497,12 +525,14 @@ public class Main {
                     }
                 }
             } else if (acao == 7) {
+                limparTerminal();
                 try {
                     System.out.println(roboEscolhido.executarTarefa("ligar"));
                 } catch (Exception e) {
                     System.out.println("Não foi possível ligar o robô, erro: " + e.getMessage());
                 }
             } else {
+                limparTerminal();
                 System.out.println("Robô desligado!");
             }
         } else {
@@ -514,6 +544,7 @@ public class Main {
             ArrayList<Entidade> listaEntidades, ArrayList<Robo> listaRobo, int numTotal, boolean livre,
             Object... atributos) throws ErroComunicacaoException, RoboDesligadoException {
         while (true) {
+            vizualizarMapa(ambiente);
             String menu = String.format(
                     "Digite o número da ação que deseja realizar:\n\n" +
                             "0 - Fechar o simulador\n" +
@@ -551,13 +582,7 @@ public class Main {
             if (comando == 0) {
                 break;
             } else if (comando == 3) {
-                String[][] vizumapa = ambiente.visualizarAmbiente();
-                for (String[] linha : vizumapa) {
-                    for (String chara : linha) {
-                        System.out.print(chara);
-                    }
-                    System.out.println();
-                }
+                vizualizarMapa(ambiente);
             } else if (comando == 4) {
                 System.out.println(central.exibirMensagens());
             } else {
@@ -829,4 +854,21 @@ public class Main {
             }
         }
     }
+
+    public static void vizualizarMapa(Ambiente ambiente) {
+        System.out.println();
+        System.out.println("=== Mapa ===");
+        String[][] vizumapa = ambiente.visualizarAmbiente();
+        int i = 9;
+        for (String[] linha : vizumapa) {
+            System.out.print((i--)+" ");
+            for (String chara : linha) {
+                System.out.print(chara);
+            }
+            System.out.println();
+        }
+        System.out.println("  0 1 2 3 4 5 6 7 8 9");
+        System.out.println();
+    }
+
 }

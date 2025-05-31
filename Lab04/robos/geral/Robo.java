@@ -222,15 +222,15 @@ public abstract class Robo implements Entidade, Destrutivel {
         return this.material;
     }
 
-    protected void setPosicaoX(int posicaoX) {
+    public void setPosicaoX(int posicaoX) {
         this.posicaoX = posicaoX;
     }
 
-    protected void setPosicaoY(int posicaoY) {
+    public void setPosicaoY(int posicaoY) {
         this.posicaoY = posicaoY;
     }
 
-    protected void setPosicaoZ(int posicaoZ) {
+    public void setPosicaoZ(int posicaoZ) {
         this.posicaoZ = posicaoZ;
     }
 

@@ -173,15 +173,17 @@ public class RoboAereo extends Robo implements Identificantes {
             for (int x = getX() + passoX; x != X + passoX; x += passoX) {
                 Object obj = ambiente.identificarEntidadePosicao(x, getY(),getZ());
                 if (obj != null) {
-                    System.out.print("O robô "+getNome()+" colidiu com o objeto: ");
-                    if (obj instanceof RoboAereo){
-                        System.out.println(((RoboAereo)obj).getNome()+" na posição X:"+x+" Y:"+getY()+" Z:"+getZ());
-                    }else if(((Obstaculo)obj).getTipoObstaculo()==TipoObstaculo.BURACO){
-                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getY());
-                        System.out.println("O robô "+getNome()+" caiu no buraco e foi destruido");
+                    System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
+                    if (obj instanceof RoboAereo) {
+                        System.out.println(
+                                ((RoboAereo) obj).getNome() + " na posição X:" + x + " Y:" + getY() + " Z:" + getZ());
+                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
+                        System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY());
+                        System.out.println("O robô " + getNome() + " caiu no buraco e foi destruido");
                         ambiente.removerEntidade(this);
-                    }else{
-                        System.out.println(((Obstaculo)obj).getTipo()+" na posição X:"+x+" Y:"+getY()+" Z:"+getZ());
+                    } else {
+                        System.out.println(
+                                ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY() + " Z:" + getZ());
                     }
                     return; // Para uma casa antes do obstáculo
                 }

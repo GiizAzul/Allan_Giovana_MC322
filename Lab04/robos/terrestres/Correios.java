@@ -94,7 +94,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                         return true;
                     } else {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + x + " Y:" + getY());
+                        System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY());
                         return false;
                     }
                 }
@@ -117,7 +117,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                         return true;
                     } else {
                         System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Obstaculo) obj).getTipo() + " na posição X:" + getX() + " Y:" + y);
+                        System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y);
                         return false;
                     }
                 }

@@ -48,8 +48,8 @@ public class RoboTerrestre extends Robo {
         int posicaoY = this.getYInterno();
 
         // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = posicaoX + deltaX >= ambiente.getTamX() ? ambiente.getTamX()-1 : posicaoX + deltaX;
-        int destinoY = posicaoY + deltaY >= ambiente.getTamY() ? ambiente.getTamY()-1 : posicaoY + deltaY;
+        int destinoX = posicaoX + deltaX >= ambiente.getTamX() ? ambiente.getTamX() - 1 : posicaoX + deltaX;
+        int destinoY = posicaoY + deltaY >= ambiente.getTamY() ? ambiente.getTamY() - 1 : posicaoY + deltaY;
 
         // Movimentação em linha reta no eixo X
         if (deltaX != 0) {
@@ -66,16 +66,21 @@ public class RoboTerrestre extends Robo {
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
                         System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
-                        ambiente.removerEntidade(this);
                     } else {
                         System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: "
-                                + sensorColisao.getUltimoObstaculoColidido().getTipo() + " na posição X:" + x + " Y:"
+                                + sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() + " na posição X:" + x
+                                + " Y:"
                                 + posicaoY);
                     }
                     break; // Para uma casa antes do obstáculo
                 }
             }
-            if (detectado != 0) {
+            if (detectado == 2 && sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO){
+                ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
+                this.setPosicaoX(x - passoX); // Corrige a posição do robô
+                ambiente.removerEntidade(this);
+            }
+            else if (detectado != 0) {
                 ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
                 this.setPosicaoX(x - passoX); // Corrige a posição do robô
             }
@@ -95,16 +100,21 @@ public class RoboTerrestre extends Robo {
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
                         System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
-                        ambiente.removerEntidade(this);
                     } else {
                         System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: "
-                                + sensorColisao.getUltimoObstaculoColidido().getTipo() + " na posição X:" + posicaoX
+                                + sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() + " na posição X:"
+                                + posicaoX
                                 + " Y:" + y);
                     }
                     break; // Para uma casa antes do obstáculo
                 }
             }
-            if (detectado != 0) {
+            if (detectado == 2 && sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO){
+                ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
+                this.setPosicaoY(y - passoY); // Corrige a posição do robô
+                ambiente.removerEntidade(this);
+            }
+            else if (detectado != 0) {
                 ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
                 this.setPosicaoY(y - passoY); // Corrige a posição do robô
             }
