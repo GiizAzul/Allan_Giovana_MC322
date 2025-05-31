@@ -310,6 +310,7 @@ public class Main {
                     limparTerminal();
                     System.out.println(roboEscolhido.enviarMensagem((Comunicavel) destinatario, mensagem, central));
                 } else if (acao == 7) {
+                    limparTerminal();
                     try {
                         System.out.println(roboEscolhido.executarTarefa("desligar"));
                     } catch (Exception e) {
