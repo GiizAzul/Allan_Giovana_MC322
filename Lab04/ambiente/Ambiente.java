@@ -2,6 +2,7 @@ package ambiente;
 
 import java.util.ArrayList;
 
+import excecoes.ColisaoException;
 import excecoes.ForaDosLimitesException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
@@ -121,10 +122,10 @@ public class Ambiente {
         mapa[novoY][novoX][novoZ] = entidade.getTipo();
     }
 
-    public void executarSensores() {
-    }
-
-    public void verificarColisoes() {
+    public void verificarColisoes(int x, int y, int z) throws ColisaoException {
+        if (estaOcupado(x, y, z)){
+            throw new ColisaoException(null);
+        }
     }
 
     public String[][] visualizarAmbiente() {

@@ -1,7 +1,7 @@
 package interfaces;
 
 public enum TipoEntidade{
-    VAZIO("▫️"),
+    VAZIO("__"),
     ROBO("🤖"),
     OBSTACULO("O"),
     DESCONHECIDO("?");
