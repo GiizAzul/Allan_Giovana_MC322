@@ -6,17 +6,18 @@ import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
-import excecoes.sensor.SensorInativoException;
+import excecoes.sensor.SensorException;
+import excecoes.sensor.SensorException;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
 public class TestRobo extends TestBase {
     
-    public static void main(String[] args) throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public static void main(String[] args) throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         executarTestes();
     }
     
-    public static void executarTestes() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public static void executarTestes() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("Iniciando testes da classe Robo...");
         
         testarConstrutor();
@@ -46,7 +47,7 @@ public class TestRobo extends TestBase {
         verificar("Integridade inicial deve ser 100", robo.getIntegridade() == 100);
     }
     
-    private static void testarMovimento() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarMovimento() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Movimento ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -86,7 +87,7 @@ public class TestRobo extends TestBase {
         verificar("Direção após mudança deve ser Sul", robo.getDirecao().equals("Sul"));
     }
     
-    private static void testarDistanciaEntreRobos() throws SensorInativoException {
+    private static void testarDistanciaEntreRobos() throws SensorException {
         System.out.println("\n== Teste de Distância Entre Robôs ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -100,7 +101,7 @@ public class TestRobo extends TestBase {
         verificar("Distância calculada deve ser 5.0", Math.abs(distancia - 5.0) < 0.001);
     }
     
-    private static void testarAcessoGPS() throws SensorInativoException {
+    private static void testarAcessoGPS() throws SensorException {
         System.out.println("\n== Teste de Acesso via GPS ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -110,7 +111,7 @@ public class TestRobo extends TestBase {
         verificar("Posição Y deve ser obtida corretamente", robo.getY() == 3);
     }
     
-    private static void testarFuncionamentoGPS() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarFuncionamentoGPS() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Funcionamento do GPS ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -126,7 +127,7 @@ public class TestRobo extends TestBase {
         verificar("GPS deve atualizar posição Y após movimento", robo.getY() == 4);
     }
     
-    private static void testarColisoes() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarColisoes() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Colisões ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -147,7 +148,7 @@ public class TestRobo extends TestBase {
         verificar("Movimento deve ser bloqueado por obstáculo", robo1.getX() == 2);
     }
     
-    private static void testarExibirPosicao() throws SensorInativoException {
+    private static void testarExibirPosicao() throws SensorException {
         System.out.println("\n== Teste de Exibição de Posição ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);

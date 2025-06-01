@@ -9,8 +9,7 @@ import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
-import excecoes.sensor.SensorInativoException;
-import robos.aereos.DroneAtaque;
+import excecoes.sensor.SensorException;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
@@ -19,11 +18,11 @@ import robos.terrestres.TanqueGuerra;
 
 public class TestRoboTerrestre extends TestBase {
 
-    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException, SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         executarTestes();
     }
 
-    public static void executarTestes() throws ErroComunicacaoException, RoboDesligadoException, SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public static void executarTestes() throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("Iniciando testes da classe RoboTerrestre...");
 
         testarConstrutor();
@@ -62,7 +61,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Material deve ser PLASTICO", correio.getMateriaisRobo() == MateriaisRobo.PLASTICO);
     }
 
-    private static void testarMovimentoComVelocidade() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarMovimentoComVelocidade() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Movimento com Velocidade ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -82,7 +81,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Movimento deve ser bloqueado pelo obstáculo", robo.getX() == 4);
     }
 
-    private static void testarAlteracaoVelocidadeMaxima() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarAlteracaoVelocidadeMaxima() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Alteração da Velocidade Máxima ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -96,7 +95,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Deve permitir movimento com velocidade dentro do novo limite", robo.getX() == 6 && robo.getY() == 6);
     }
 
-    private static void testarDistanciaEntreRobosTerrestre() throws SensorInativoException {
+    private static void testarDistanciaEntreRobosTerrestre() throws SensorException {
         System.out.println("\n== Teste de Distância Entre Robôs Terrestres ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -111,7 +110,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Distância deve ser 5.0", Math.abs(distancia - 5.0) < 0.001);
     }
 
-    private static void testarDistanciaComRoboAereo() throws SensorInativoException {
+    private static void testarDistanciaComRoboAereo() throws SensorException {
         System.out.println("\n== Teste de Distância com Robô Aéreo ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -126,7 +125,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Distância 3D deve ser calculada corretamente", Math.abs(distancia - 7.071) < 0.001);
     }
 
-    private static void testarSensorColisao() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarSensorColisao() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Sensor de Colisão ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -140,7 +139,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Movimento deve ser interrompido antes da colisão", robo.getY() == 5);
     }
 
-    private static void testarColisaoComObstaculos() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarColisaoComObstaculos() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Colisão com Obstáculos ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -160,7 +159,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Movimento deve parar antes da árvore", robo.getY() == 6);
     }
 
-    private static void testarColisaoComBuraco() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarColisaoComBuraco() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Colisão com Buraco ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -178,7 +177,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Robô deve ser removido após cair no buraco", !ambiente.getEntidades().contains(robo));
     }
 
-    private static void testarEspecificidadesTanqueGuerra() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarEspecificidadesTanqueGuerra() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Especificidades do TanqueGuerra ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -234,7 +233,7 @@ public class TestRoboTerrestre extends TestBase {
 
     }
 
-    private static void testarEspecificidadesCorreios() throws ErroComunicacaoException, RoboDesligadoException, SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarEspecificidadesCorreios() throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Especificidades do Correios ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -349,7 +348,7 @@ public class TestRoboTerrestre extends TestBase {
         }
     }
 
-    private static void testarLimitesMovimento() throws SensorInativoException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarLimitesMovimento() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
         System.out.println("\n== Teste de Limites de Movimento ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);

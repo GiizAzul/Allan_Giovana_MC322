@@ -153,11 +153,11 @@ public abstract class Robo implements Entidade, Destrutivel {
 
     }
 
-    public String getDescricao() throws SensorException {
+    public String getDescricao() {
         try {
             return exibirPosicao() + "\nSua direção é " + direcao + "\nO robô está "
                     + (estado ? "ligado\n" : "desligado\n");
-        } catch (SensorInativoException e) {
+        } catch (SensorException e) {
             return "Erro ao exibir posição: " + e.getMessage();
         }
     }
