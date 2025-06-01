@@ -1,4 +1,5 @@
 package robos.equipamentos.sensores;
+import excecoes.sensor.*;
 import robos.geral.Robo;
 
 /**
@@ -36,11 +37,16 @@ public class GPS extends Sensor<int[]> {
      * @return Array de inteiros com as coordenadas [x, y, z] do robô, ou null se o sensor estiver inativo ou não vinculado
      */
     @Override
-    public int[] acionar() {
-        if (!isAtivo() || this.robo == null) {
-            return null;
-        }
+    public int[] acionar() throws SensorException {
+        // Verifica as condições necessárias antes de acionar o sensor
+        if (robo == null) {
+           throw new SensorAusenteException("Robo não possui um sensor de GPS.");
+        } 
         
+        if (this.isAtivo() == false) {
+           throw new SensorInativoException("GPS está inativo.");
+        } 
+
         // Acessa diretamente as posições internas do robô
         return new int[] {
             this.robo.getXInterno(), 
@@ -55,11 +61,9 @@ public class GPS extends Sensor<int[]> {
      * 
      * @return Coordenada X do robô, ou -1 se o sensor estiver inativo ou não vinculado
      */
-    public int obterPosicaoX() {
-        if (!isAtivo() || this.robo == null) {
-            return -1; // Código de erro quando o sensor está inativo
-        }
-        return this.robo.getXInterno();
+    public int obterPosicaoX() throws SensorException{
+        int[] posicoes = this.acionar();
+        return posicoes[0];
     }
     
     /**
@@ -68,11 +72,9 @@ public class GPS extends Sensor<int[]> {
      * 
      * @return Coordenada Y do robô, ou -1 se o sensor estiver inativo ou não vinculado
      */
-    public int obterPosicaoY() {
-        if (!isAtivo() || this.robo == null) {
-            return -1; // Código de erro quando o sensor está inativo
-        }
-        return this.robo.getYInterno();
+    public int obterPosicaoY() throws SensorException{
+        int[] posicoes = this.acionar();
+        return posicoes[1];
     }
     
     /**

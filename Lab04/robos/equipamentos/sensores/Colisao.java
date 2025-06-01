@@ -4,6 +4,7 @@ import robos.terrestres.RoboTerrestre;
 import robos.geral.Robo;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import excecoes.sensor.*;
 import interfaces.*;
 
 /**
@@ -40,7 +41,20 @@ public class Colisao extends Sensor<Integer> {
      *         1 - Colisão com outro robô
      *         2 - Colisão com um obstáculo
      */
-    public Integer acionar() {
+    public Integer acionar() throws SensorException {
+        // Faz as verificações necessárias antes de acionar o sensor
+        if (robo == null) {
+           throw new SensorAusenteException("Robo não possui um sensor de colisão.");
+        } 
+
+        if (ambiente == null) {
+            throw new SensorAusenteException("Sensor de colisão não está associado à um ambiente.");
+        }
+        
+        if (this.isAtivo() == false) {
+           throw new SensorInativoException("Barômetro está inativo.");
+        } 
+
         int posX = this.robo.getXInterno();
         int posY = this.robo.getYInterno();
         

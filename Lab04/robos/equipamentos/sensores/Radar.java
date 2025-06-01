@@ -7,6 +7,7 @@ import interfaces.Entidade;
 import interfaces.TipoEntidade;
 import robos.geral.Robo;
 import robos.aereos.RoboAereo;
+import excecoes.sensor.*;;
 
 /**
  * Classe que implementa um sensor de Radar para robôs aéreos.
@@ -46,7 +47,15 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * 
      * @return ArrayList contendo todos os objetos (obstáculos e robôs) detectados pelo radar
      */
-    public ArrayList<Entidade> acionar() {
+    public ArrayList<Entidade> acionar() throws SensorException {
+        // Verifica as condições necessárias antes de acionar o sensor
+        if (robo == null) {
+            throw new SensorAusenteException("Robo não possui um sensor de radar.");
+        }
+        if (ambiente == null) {
+            throw new SensorAusenteException("Radar não está associado a um ambiente.");
+        }
+        
         ArrayList<Entidade> entidadesAmbiente = ambiente.getEntidades();
         ArrayList<Entidade> resultado = new ArrayList<Entidade>();
         
