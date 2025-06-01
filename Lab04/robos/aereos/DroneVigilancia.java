@@ -9,8 +9,9 @@ import excecoes.*;
 import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.ColisaoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.especificos.VarreduraInvalidaException;
+import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
@@ -44,9 +45,8 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
                 int raio = (Integer) argumentos[4];
                 ArrayList<Entidade> objetos_encontrados;
                 try {
-                    objetos_encontrados = varrerArea(ambiente, centroX,
-                            centroY, raio);
-                } catch (ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException | SensorException e) {
+                    objetos_encontrados = varrerArea(ambiente, centroX, centroY, raio);
+                } catch (VarreduraInvalidaException | ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException | SensorException e) {
                     return "Erro ao varrer a área: " + e.getMessage();
                 }
 
@@ -76,31 +76,12 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
                     acionarCamuflagem();
                 return "";
 
-            case "identificar":
-                ArrayList<Obstaculo> listaObstaculos = identificarObstaculo();
-                ArrayList<Robo> listaRobos = identificarRobo();
-                if (listaObstaculos.isEmpty() && listaRobos.isEmpty()) {
-                    return "Nenhum objeto encontrado!";
-                } else {
-                    for (Obstaculo o : listaObstaculos) {
-                        result += String.format(
-                                "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
-                                o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
-                                o.getAltura());
-                    }
-                    for (Robo r : listaRobos) {
-                        result += String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
-                                r.getNome(), r.getXInterno(), r.getYInterno(), r.getZInterno());
-                    }
-                }
-                return result;
-
             default:
                 return "";
         }
     }
 
-    private ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException {
+    private ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio) throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, VarreduraInvalidaException {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura
         // Baseado na capacidade da câmera do drone
@@ -114,8 +95,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
         // Verifica se a câmera possui abertura para fazer a varredura
         double ang_rad = Math.toRadians(this.angulo_camera);
         if (raio > this.getZ() * Math.tan(ang_rad / 2)) {
-            System.out.println("Não é possível varrer tal raio com a câmera atual!");
-            return new ArrayList<>();
+            throw new VarreduraInvalidaException("Não é possível varrer tal raio com a câmera atual!");
         }
 
         ArrayList<Entidade> lista_entidades = ambiente.getEntidades();
@@ -201,7 +181,6 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
 
         try {
             central.registrarMensagem(this, destinatario, mensagem);
-            
             return "Mensagem enviada com sucesso por " + this.getNome() + "\n"+destinatario.receberMensagem(this, mensagem);
         } catch (Exception e) {
             throw new ErroComunicacaoException("Falha ao enviar mensagem: " + e.getMessage());
@@ -219,8 +198,6 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
             throw new ErroComunicacaoException("Remetente não pode ser nulo.");
         }
 
-        // A mensagem já foi registrada pela central no método enviarMensagem
-        // Aqui podemos adicionar lógica adicional de processamento da mensagem
         return getNome() + " recebeu mensagem de " + ((Robo)remetente).getNome() + ": " + mensagem;
     }
 

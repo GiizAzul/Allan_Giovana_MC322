@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import interfaces.Atacante;
-import interfaces.Entidade;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import excecoes.*;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.ColisaoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;;
 
@@ -83,27 +81,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                     return e.getMessage();
                 }
 
-            case "identificar":
-                ArrayList<Obstaculo> listaoObstaculos = identificarObstaculo();
-                ArrayList<Robo> listaoRobos = identificarRobo();
-                if (listaoObstaculos.isEmpty() && listaoRobos.isEmpty()) {
-                    return "Nenhum objeto encontrado!";
-                } else {
-                    for (Obstaculo o : listaoObstaculos) {
-                        result += String.format(
-                                "Obstáculo encontrado: %s, X1: %d, X2: %d, Y1: %d, Y2: %d, Altura: %d\n",
-                                o.getTipoObstaculo(), o.getX1(), o.getX2(), o.getY1(), o.getY2(),
-                                o.getAltura());
-                    }
-                    for (Robo r : listaoRobos) {
-                        result += String.format("Robô encontrado: %s, X: %d, Y: %d, Z: %d\n",
-                                r.getNome(), r.getXInterno(), r.getYInterno(), r.getZInterno());
-                    }
-                }
-                return result;
-
             default:
-            // TO DO: Tarefa Exception
                 return "";
         }
 
