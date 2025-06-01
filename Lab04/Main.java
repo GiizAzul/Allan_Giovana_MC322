@@ -5,8 +5,6 @@ import ambiente.Ambiente;
 import ambiente.CentralComunicacao;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import excecoes.ErroComunicacaoException;
-import excecoes.RoboDesligadoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;
@@ -15,6 +13,9 @@ import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
 import interfaces.*;
 import excecoes.*;
+import excecoes.ambiente.ErroComunicacaoException;
+import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.robos.gerais.RoboDesligadoException;
 
 public class Main {
 

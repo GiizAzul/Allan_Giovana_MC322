@@ -5,6 +5,11 @@ import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import excecoes.*;
+import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.robos.especificos.AlvoInvalidoException;
+import excecoes.robos.especificos.ColisaoException;
+import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;;
 
 /**

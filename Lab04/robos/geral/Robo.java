@@ -8,6 +8,11 @@ import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
 import interfaces.*;
 import excecoes.*;
+import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.robos.especificos.AlvoInvalidoException;
+import excecoes.robos.especificos.ColisaoException;
+import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
 
 /**

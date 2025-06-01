@@ -1,11 +1,11 @@
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
-import excecoes.AlvoInvalidoException;
-import excecoes.ColisaoException;
-import excecoes.ForaDosLimitesException;
-import excecoes.MunicaoInsuficienteException;
-import excecoes.RoboDestruidoPorBuracoException;
+import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.robos.especificos.AlvoInvalidoException;
+import excecoes.robos.especificos.ColisaoException;
+import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorInativoException;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;

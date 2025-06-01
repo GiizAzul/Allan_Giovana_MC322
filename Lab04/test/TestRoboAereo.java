@@ -1,11 +1,11 @@
 import ambiente.Ambiente;
 import ambiente.CentralComunicacao;
-import excecoes.AlvoInvalidoException;
-import excecoes.ColisaoException;
-import excecoes.ForaDosLimitesException;
-import excecoes.MunicaoInsuficienteException;
-import excecoes.RoboDesligadoException;
-import excecoes.RoboDestruidoPorBuracoException;
+import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.robos.especificos.AlvoInvalidoException;
+import excecoes.robos.especificos.ColisaoException;
+import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.RoboDesligadoException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
 import excecoes.sensor.SensorInativoException;
 import robos.aereos.DroneAtaque;

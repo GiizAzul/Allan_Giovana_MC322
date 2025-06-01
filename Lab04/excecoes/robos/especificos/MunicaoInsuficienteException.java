@@ -1,4 +1,4 @@
-package excecoes;
+package excecoes.robos.especificos;
 
 public class MunicaoInsuficienteException extends Exception {
     public MunicaoInsuficienteException() {

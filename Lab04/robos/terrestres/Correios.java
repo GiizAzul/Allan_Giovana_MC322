@@ -9,6 +9,13 @@ import ambiente.TipoObstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import excecoes.*;
+import excecoes.ambiente.ErroComunicacaoException;
+import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.robos.especificos.AlvoInvalidoException;
+import excecoes.robos.especificos.ColisaoException;
+import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.RoboDesligadoException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
 import interfaces.*;
 

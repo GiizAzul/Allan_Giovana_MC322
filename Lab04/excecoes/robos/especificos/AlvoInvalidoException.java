@@ -1,4 +1,4 @@
-package excecoes;
+package excecoes.robos.especificos;
 
 public class AlvoInvalidoException extends Exception {
     public AlvoInvalidoException() {

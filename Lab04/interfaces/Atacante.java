@@ -2,6 +2,8 @@ package interfaces;
 
 import ambiente.Ambiente;
 import excecoes.*;
+import excecoes.robos.especificos.AlvoInvalidoException;
+import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.sensor.SensorInativoException;
 
 public interface Atacante {
