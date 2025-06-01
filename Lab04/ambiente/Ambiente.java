@@ -3,7 +3,7 @@ package ambiente;
 import java.util.ArrayList;
 
 import excecoes.ambiente.ForaDosLimitesException;
-import excecoes.robos.especificos.ColisaoException;
+import excecoes.robos.gerais.ColisaoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;

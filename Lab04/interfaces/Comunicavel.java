@@ -1,7 +1,6 @@
 package interfaces;
 
 import ambiente.CentralComunicacao;
-import excecoes.*;
 import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 

@@ -10,8 +10,8 @@ import interfaces.*;
 import excecoes.*;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.ColisaoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
 
@@ -339,7 +339,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Lista vazia na classe base; em subclasses, retorna robôs detectados
      *         pelos sensores
      */
-    public ArrayList<Robo> identificarRobo() {
+    public ArrayList<Robo> identificarRobo() throws SensorException {
         return new ArrayList<Robo>();
     }
 
@@ -352,7 +352,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Lista vazia na classe base; em subclasses, retorna obstáculos
      *         detectados pelos sensores
      */
-    public ArrayList<Obstaculo> identificarObstaculo() {
+    public ArrayList<Obstaculo> identificarObstaculo() throws SensorException {
         return new ArrayList<Obstaculo>();
     }
 
@@ -380,7 +380,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param robo Robô alvo para cálculo de distância
      * @return Distância calculada
      */
-    public double distanciaRobo(Robo robo) throws SensorInativoException {
+    public double distanciaRobo(Robo robo) throws SensorException {
         verificarGPSAtivo();
 
         return Math.sqrt(Math.pow(robo.getXInterno() - this.getX(), 2)

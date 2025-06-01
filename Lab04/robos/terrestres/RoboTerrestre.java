@@ -4,12 +4,12 @@ import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import excecoes.*;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.ColisaoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
+import excecoes.robos.gerais.VelocidadeMaximaException;
 import excecoes.sensor.*;;
 
 /**
@@ -42,10 +42,9 @@ public class RoboTerrestre extends Robo {
      * @param deltaY   Deslocamento na direção Y
      * @param ambiente Ambiente onde o robô está
      */
-    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) {
+    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException {
         if (velocidade > this.velocidadeMaxima) {
-            System.out.println("A velocidade do robô " + this.getNome() + " ultrapassa a velocidade máxima permitida.");
-            return;
+            throw new VelocidadeMaximaException();
         }
 
         // Robo Terrestre não precisa do GPS para se movimentar (v*t)
@@ -65,6 +64,7 @@ public class RoboTerrestre extends Robo {
                 ambiente.moverEntidade(this, x, getYInterno(), getZInterno());
                 this.setPosicaoX(x);
                 detectado = sensorColisao.acionar();
+            
                 if (detectado == 1) {
                     System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
                     break; // Para uma casa antes do obstáculo
