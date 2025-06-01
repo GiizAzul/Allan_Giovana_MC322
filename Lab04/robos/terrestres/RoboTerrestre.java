@@ -4,11 +4,7 @@ import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import excecoes.ambiente.ForaDosLimitesException;
-import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
-import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.robos.gerais.VelocidadeMaximaException;
 import excecoes.sensor.*;;
 

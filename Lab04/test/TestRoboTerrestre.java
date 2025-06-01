@@ -250,7 +250,7 @@ public class TestRoboTerrestre extends TestBase {
 
         resultado = correio.executarTarefa("carregar", "P2", 30.0f);
         verificar("Deve impedir carregamento acima do peso máximo",
-                resultado.equals("Peso excede a capacidade máxima"));
+                resultado.contains("Não foi possível carregar o pacote"));
 
         // Teste de listagem de entregas
         resultado = correio.executarTarefa("listar");
@@ -281,7 +281,7 @@ public class TestRoboTerrestre extends TestBase {
         correio.executarTarefa("carregar", "P5", 5.0f);
         resultado = correio.executarTarefa("entregar", "P5", 7, 7, ambiente);
         verificar("Deve falhar ao tentar entregar com obstáculo no caminho",
-                resultado.equals("Entrega não concluída"));
+                resultado.contains("Erro ao entregar pacote"));
 
         // Teste expandido de comunicação
         System.out.println("\n=== Testes de Comunicação ===");

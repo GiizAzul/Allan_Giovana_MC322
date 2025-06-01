@@ -8,7 +8,6 @@ import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import excecoes.*;
 import excecoes.robos.especificos.*;
 import excecoes.ambiente.*;
 import excecoes.robos.gerais.*;

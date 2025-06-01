@@ -5,17 +5,13 @@ import java.util.ArrayList;
 import robos.geral.*;
 import robos.terrestres.RoboTerrestre;
 import interfaces.*;
-import excecoes.*;
 import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.ambiente.ForaDosLimitesException;
-import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.especificos.VarreduraInvalidaException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
-import excecoes.sensor.SensorInativoException;
 import ambiente.*;
 
 public class DroneVigilancia extends RoboAereo implements Comunicavel {

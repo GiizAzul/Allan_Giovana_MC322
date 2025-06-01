@@ -1,18 +1,13 @@
 package robos.aereos;
 
-import java.util.ArrayList;
-
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import interfaces.Atacante;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
-import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
-import excecoes.robos.gerais.ColisaoException;
-import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
-import excecoes.sensor.*;;
+import excecoes.sensor.*;
 
 public class DroneAtaque extends RoboAereo implements Atacante {
 

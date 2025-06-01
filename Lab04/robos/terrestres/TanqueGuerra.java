@@ -1,18 +1,12 @@
 package robos.terrestres;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
-import robos.equipamentos.sensores.Sensor;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import interfaces.*;
-import excecoes.*;
-import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
-import excecoes.robos.gerais.ColisaoException;
-import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
-import excecoes.sensor.SensorInativoException;
 
 public class TanqueGuerra extends RoboTerrestre implements Atacante {
     private int municaoMax;

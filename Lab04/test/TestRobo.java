@@ -7,7 +7,6 @@ import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
-import excecoes.sensor.SensorException;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 

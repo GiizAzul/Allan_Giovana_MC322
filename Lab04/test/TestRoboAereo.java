@@ -7,7 +7,6 @@ import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
-import excecoes.sensor.SensorException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;
