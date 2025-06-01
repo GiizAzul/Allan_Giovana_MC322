@@ -31,7 +31,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
         this.camuflado = false;
     }
 
-    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+     public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != "") {
             return result;

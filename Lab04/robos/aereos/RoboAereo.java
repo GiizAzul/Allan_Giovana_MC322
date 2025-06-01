@@ -73,7 +73,7 @@ public class RoboAereo extends Robo implements Identificantes {
      *                 O movimento é interrompido se houver colisão ou se a altitude
      *                 máxima for atingida.
      */
-    private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorInativoException, MovimentoInvalidoException, ColisaoException {
+    private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorException, MovimentoInvalidoException, ColisaoException {
         // Calcula a altitude alvo baseada na direção do movimento
         int altitudeAlvo = passo > 0 ? getZ() + metros : getZ() - metros;
         
@@ -110,7 +110,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * @param metros Quantidade de metros a subir
      * @param ambiente Ambiente onde o robô se encontra
      */
-    public void subir(int metros, Ambiente ambiente) throws SensorInativoException, ColisaoException, MovimentoInvalidoException {
+    public void subir(int metros, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
         this.movimentoZ(1, metros, ambiente);
     }
 
@@ -118,7 +118,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * Diminui a altitude do robô aéreo
      * @param metros Quantidade de metros a descer
      */
-    public void descer(int metros, Ambiente ambiente) throws SensorInativoException, ColisaoException, MovimentoInvalidoException {
+    public void descer(int metros, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
         this.movimentoZ(-1, metros, ambiente);
     }
 
@@ -256,7 +256,7 @@ public class RoboAereo extends Robo implements Identificantes {
         return this.sensorBarometro;
     }
 
-    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;

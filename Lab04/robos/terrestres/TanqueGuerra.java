@@ -11,6 +11,7 @@ import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
+import excecoes.sensor.SensorException;
 import excecoes.sensor.SensorInativoException;
 
 public class TanqueGuerra extends RoboTerrestre implements Atacante {
@@ -28,7 +29,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
         setIntegridade(100);
     }
 
-    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;
@@ -42,7 +43,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
                 Ambiente ambiente = (Ambiente) argumentos[4];
                 try {
                     return atirar(alvoX, alvoY, 0, nTiros, ambiente);
-                } catch (SensorInativoException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                } catch (SensorException | MunicaoInsuficienteException | AlvoInvalidoException e) {
                     return e.getMessage();
                 }
         
@@ -55,7 +56,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
         }
     }
 
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorInativoException, MunicaoInsuficienteException, AlvoInvalidoException {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException {
         verificarGPSAtivo();
 
         Entidade alvo = ambiente.identificarEntidadePosicao(alvoX, alvoY, 0);

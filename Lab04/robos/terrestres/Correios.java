@@ -9,6 +9,10 @@ import ambiente.TipoObstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import excecoes.*;
+import excecoes.robos.especificos.*;
+import excecoes.ambiente.*;
+import excecoes.robos.gerais.*;
+import excecoes.sensor.SensorException;
 import interfaces.*;
 
 public class Correios extends RoboTerrestre implements Comunicavel {
@@ -29,7 +33,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         setIntegridade(50);
     }
 
-    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;
@@ -39,7 +43,11 @@ public class Correios extends RoboTerrestre implements Comunicavel {
             case "carregar":
                 String id = (String) argumentos[1];
                 float peso = (Float) argumentos[2];
-                return carregarPacote(id, peso);  
+                try {
+                    return carregarPacote(id, peso);
+                } catch (CapacidadeInsuficienteException | PesoAcimaPermitidoException e) {
+                    return "Não foi possível carregar o pacote, erro: " + e.getMessage();
+                }
 
             case "entregar":
                 id = (String) argumentos[1];
@@ -49,8 +57,8 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                 
                 try {
                     return entregarPacote(id, destinoX, destinoY, ambiente);
-                } catch (SensorInativoException e) {
-                    return "Erro ao entregar pacote: " + e.getMessage();
+                } catch (PacoteNaoEncontrado | SensorException e) {
+                    return "Não foi possível entregar o pacote, erro: " + e.getMessage();
                 }
             
             case "listar":
@@ -60,12 +68,12 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         }
     }
 
-    private String carregarPacote(String id, float peso) {
+    private String carregarPacote(String id, float peso) throws CapacidadeInsuficienteException, PesoAcimaPermitidoException {
         if (entregas.size() >= capacidadeMax) {
-            return "Não há espaço para mais pacotes";
+            throw new CapacidadeInsuficienteException("Não há espaço para mais pacotes");
         }
         if (pesoAtual + peso > pesoMax) {
-            return "Peso excede a capacidade máxima";
+            throw new PesoAcimaPermitidoException("Peso excede a capacidade máxima");
         }
         entregas.add(id);
         pesos.add(peso);
@@ -74,7 +82,9 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         return "Pacote carregado com sucesso";
     }
 
-    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) throws SensorInativoException {
+    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) throws SensorException, ColisaoException {
+        verificarGPSAtivo();
+
         // Verifica se o robô está dentro dos limites do ambiente
         int destinoX = getX() + deltaX > ambiente.getTamX() ? ambiente.getTamX() : getX() + deltaX;
         int destinoY = getY() + deltaY > ambiente.getTamY() ? ambiente.getTamY() : getY() + deltaY;
@@ -86,15 +96,11 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                 Entidade obj = ambiente.identificarEntidadePosicao(x, getY(), 0);
                 if (obj != null) {
                     if (obj.getTipo() == TipoEntidade.ROBO) {
-                        System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getY());
-                        return false;
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getY());
                     } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
-                        System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY());
-                        return false;
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY());
                     }
                 }
                 ambiente.moverEntidade(this,x,getY(),getZ());
@@ -109,15 +115,11 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                 Entidade obj = ambiente.identificarEntidadePosicao(getX(), y, 0);
                 if (obj != null) {
                     if (obj.getTipo() == TipoEntidade.ROBO) {
-                        System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Robo) obj).getNome() + " na posição X:" + getX() + " Y:" + y);
-                        return false;
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Robo) obj).getNome() + " na posição X:" + getX() + " Y:" + y);
                     } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
-                        System.out.print("O robô " + getNome() + " colidiu com o objeto: ");
-                        System.out.println(((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y);
-                        return false;
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y);
                     }
                 }
                 ambiente.moverEntidade(this,getX(),y,getZ());
@@ -127,13 +129,19 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         return true;
     }
 
-    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) throws SensorInativoException {
+    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) throws SensorException, PacoteNaoEncontrado {
         if (!entregas.contains(id)) {
-            return ("Pacote " + id + " não encontrado na carga.");
+            throw new PacoteNaoEncontrado("Pacote " + id + " não encontrado na carga.");
         }
         int i = entregas.indexOf(id);
         Entidade objeto_posicao = ambiente.identificarEntidadePosicao(destinoX, destinoY, 0);
-        if (moverEntrega(destinoX - getX(), destinoY - getY(), ambiente)) {
+        boolean resEntrega;
+        try {
+            resEntrega = moverEntrega(destinoX - getX(), destinoY - getY(), ambiente);
+        } catch (SensorException | ColisaoException e) {
+            return "Erro ao entregar pacote: " + e.getMessage();
+        }
+        if (resEntrega) {
             if (objeto_posicao != null && objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
                 pesoAtual -= pesos.get(i);
                 entregas.remove(i);
@@ -143,7 +151,6 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                         + ((Obstaculo) objeto_posicao).getX2() + " Y1:" + ((Obstaculo) objeto_posicao).getY1()
                         + " Y2:" + ((Obstaculo) objeto_posicao).getY2();
                 ambiente.removerEntidade(objeto_posicao);
-
                 return texto;
             }
 
@@ -164,7 +171,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         }
     }
 
-    public String enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws  ErroComunicacaoException, RoboDesligadoException{
+    public String enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws ErroComunicacaoException, RoboDesligadoException {
         if (destinatario == null){
             throw new ErroComunicacaoException("Destinatário não pode ser nulo");
         }

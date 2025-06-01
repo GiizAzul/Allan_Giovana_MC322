@@ -1,15 +1,15 @@
 package interfaces;
 
-import excecoes.sensor.SensorInativoException;
+import excecoes.sensor.SensorException;
 
 public interface Entidade {
-    int getX() throws SensorInativoException;
-    int getY() throws SensorInativoException;
-    int getZ() throws SensorInativoException;
+    int getX() throws SensorException;
+    int getY() throws SensorException;
+    int getZ() throws SensorException;
     int getXInterno();
     int getYInterno();
     int getZInterno();
     TipoEntidade getTipo();
-    String getDescricao();
+    String getDescricao() throws SensorException;
     String getRepresentacao();
 }

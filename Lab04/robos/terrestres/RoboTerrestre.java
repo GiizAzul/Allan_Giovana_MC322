@@ -42,7 +42,7 @@ public class RoboTerrestre extends Robo {
      * @param deltaY   Deslocamento na direção Y
      * @param ambiente Ambiente onde o robô está
      */
-    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException {
+    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException, ColisaoException {
         if (velocidade > this.velocidadeMaxima) {
             throw new VelocidadeMaximaException();
         }
@@ -64,30 +64,25 @@ public class RoboTerrestre extends Robo {
                 ambiente.moverEntidade(this, x, getYInterno(), getZInterno());
                 this.setPosicaoX(x);
                 detectado = sensorColisao.acionar();
-            
                 if (detectado == 1) {
-                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
-                    break; // Para uma casa antes do obstáculo
+                    ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
+                    this.setPosicaoX(x - passoX); // Corrige a posição do robô
+                    throw new ColisaoException("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
+                        ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
+                        this.setPosicaoX(x - passoX); // Corrige a posição do robô
+                        ambiente.removerEntidade(this);
+                        throw new ColisaoException("O robô " + this.getNome() + " caiu no buraco e foi destruido");
                     } else {
-                        System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: "
+                        ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
+                        this.setPosicaoX(x - passoX); // Corrige a posição do robô
+                        throw new ColisaoException("O robô " + this.getNome() + " colidiu com o obstáculo: "
                                 + sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() + " na posição X:" + x
                                 + " Y:"
                                 + posicaoY);
                     }
-                    break; // Para uma casa antes do obstáculo
                 }
-            }
-            if (detectado == 2 && sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO){
-                ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
-                this.setPosicaoX(x - passoX); // Corrige a posição do robô
-                ambiente.removerEntidade(this);
-            }
-            else if (detectado != 0) {
-                ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
-                this.setPosicaoX(x - passoX); // Corrige a posição do robô
             }
         }
 
@@ -100,28 +95,24 @@ public class RoboTerrestre extends Robo {
                 this.setPosicaoY(y);
                 detectado = sensorColisao.acionar();
                 if (detectado == 1) {
-                    System.out.println("O robô " + this.getNome() + " colidiu com outro robô na posição X:"+ posicaoX + " Y:" + y);
-                    break; // Para uma casa antes do obstáculo
+                    ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
+                    this.setPosicaoY(y - passoY); // Corrige a posição do robô
+                    throw new ColisaoException("O robô " + this.getNome() + " colidiu com outro robô na posição X:"+ posicaoX + " Y:" + y);
                 } else if (detectado == 2) {
                     if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        System.out.println("O robô " + this.getNome() + " caiu no buraco e foi destruido");
+                        ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
+                        this.setPosicaoY(y - passoY); // Corrige a posição do robô
+                        ambiente.removerEntidade(this);
+                        throw new ColisaoException("O robô " + this.getNome() + " caiu no buraco e foi destruido");
                     } else {
-                        System.out.println("O robô " + this.getNome() + " colidiu com o obstáculo: "
+                        ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
+                        this.setPosicaoY(y - passoY); // Corrige a posição do robô
+                        throw new ColisaoException("O robô " + this.getNome() + " colidiu com o obstáculo: "
                                 + sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() + " na posição X:"
                                 + posicaoX
                                 + " Y:" + y);
                     }
-                    break; // Para uma casa antes do obstáculo
                 }
-            }
-            if (detectado == 2 && sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO){
-                ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
-                this.setPosicaoY(y - passoY); // Corrige a posição do robô
-                ambiente.removerEntidade(this);
-            }
-            else if (detectado != 0) {
-                ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
-                this.setPosicaoY(y - passoY); // Corrige a posição do robô
             }
         }
     }
@@ -147,7 +138,7 @@ public class RoboTerrestre extends Robo {
      * @param alvo Robô aéreo alvo
      * @return Distância euclidiana 3D (considerando altitude do robô)
      */
-    public double distanciaRobo(Robo alvo) throws SensorInativoException {
+    public double distanciaRobo(Robo alvo) throws SensorException {
         super.verificarGPSAtivo();
 
         return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
@@ -158,7 +149,7 @@ public class RoboTerrestre extends Robo {
         return sensorColisao;
     }
 
-    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;
@@ -170,7 +161,11 @@ public class RoboTerrestre extends Robo {
                 int deltaY = (Integer) argumentos[2];
                 int velocidade = (Integer) argumentos[3];
                 Ambiente ambiente = (Ambiente) argumentos[4];
-                mover(deltaX, deltaY, velocidade, ambiente);
+                try {
+                    mover(deltaX, deltaY, velocidade, ambiente);
+                } catch (VelocidadeMaximaException | SensorException | ColisaoException e) {
+                    return "Não foi possível mover o robô, erro: " + e.getMessage();
+                }
                 return "";
 
             case "velocidade":

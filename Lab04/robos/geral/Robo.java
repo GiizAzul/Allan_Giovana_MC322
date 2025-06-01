@@ -7,7 +7,6 @@ import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
 import interfaces.*;
-import excecoes.*;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
@@ -81,8 +80,10 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param ambiente Ambiente onde o robô está
      */
 
-    public void mover(int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public void mover(int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, RoboDestruidoPorBuracoException, ColisaoException {
         // Verifica se o robô está dentro dos limites do ambiente
+        verificarGPSAtivo();
+
         if (posicaoX + deltaX < 0 || posicaoY + deltaY < 0 || posicaoX + deltaX >= ambiente.getTamX()
                 || posicaoY + deltaY >= ambiente.getTamY()) {
             throw new ForaDosLimitesException("O robô " + this.nome + " tentou se mover para fora dos limites do ambiente");
@@ -142,7 +143,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return String formatada com nome e posição do robô
      */
-    public String exibirPosicao() throws SensorInativoException {
+    public String exibirPosicao() throws SensorException {
         verificarGPSAtivo();
 
         int x = this.getX();
@@ -152,7 +153,7 @@ public abstract class Robo implements Entidade, Destrutivel {
 
     }
 
-    public String getDescricao() {
+    public String getDescricao() throws SensorException {
         try {
             return exibirPosicao() + "\nSua direção é " + direcao + "\nO robô está "
                     + (estado ? "ligado\n" : "desligado\n");
@@ -194,7 +195,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return Posição X
      */
-    public int getX() throws SensorInativoException {
+    public int getX() throws SensorException {
         verificarGPSAtivo();
         return this.gps.obterPosicaoX();
     }
@@ -204,7 +205,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return Posição Y
      */
-    public int getY() throws SensorInativoException {
+    public int getY() throws SensorException {
         verificarGPSAtivo();
         return this.gps.obterPosicaoY();
     }
@@ -214,7 +215,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * 
      * @return Posição Z
      */
-    public int getZ() throws SensorInativoException {
+    public int getZ() throws SensorException {
         verificarGPSAtivo();
         return this.posicaoZ;
     }
@@ -393,7 +394,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param obstaculo obstaculo alvo para cálculo de distância
      * @return Distância calculada
      */
-    public double distanciaObstaculo(Obstaculo obstaculo) throws SensorInativoException {
+    public double distanciaObstaculo(Obstaculo obstaculo) throws SensorException {
         verificarGPSAtivo();
 
         if (getX() <= obstaculo.getX1() && getX() <= obstaculo.getX2()) {
@@ -451,8 +452,7 @@ public abstract class Robo implements Entidade, Destrutivel {
         return this.tipo;
     }
 
-    public String executarTarefa(Object... argumentos) throws 
-    AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public String executarTarefa(Object... argumentos) {
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "direção":
@@ -466,7 +466,7 @@ public abstract class Robo implements Entidade, Destrutivel {
                 Ambiente ambiente = (Ambiente) argumentos[3];
                 try {
                     mover(deltaX, deltaY, ambiente);
-                } catch (ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException e) {
+                } catch (SensorException | ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException e) {
                     return "Não foi possível mover o Robô: " + e.getMessage();
                 }
 

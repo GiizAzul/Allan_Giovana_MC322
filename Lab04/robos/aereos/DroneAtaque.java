@@ -52,7 +52,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
         }
     }
 
-    public String executarTarefa(Object... argumentos) throws AlvoInvalidoException, MunicaoInsuficienteException, SensorInativoException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != "") {
             return result;
@@ -67,7 +67,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                 Ambiente ambiente = (Ambiente) argumentos[5];
                 try {
                     return atirar(alvoX, alvoY, alvoZ, nTiros, ambiente);
-                } catch (SensorInativoException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                } catch (SensorException | MunicaoInsuficienteException | AlvoInvalidoException e) {
                     return e.getMessage();
                 }
 
@@ -77,7 +77,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                 ambiente = (Ambiente) argumentos[3];
                 try {
                     return atirar(robo, nTiros, ambiente);
-                } catch (SensorInativoException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                } catch (SensorException | MunicaoInsuficienteException | AlvoInvalidoException e) {
                     return e.getMessage();
                 }
 
@@ -87,7 +87,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
 
     }
 
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorInativoException, MunicaoInsuficienteException, AlvoInvalidoException {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException {
 
         verificarGPSAtivo();
 
@@ -107,7 +107,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
     }
 
     private String atirar(Robo robo, int nTiros, Ambiente ambiente)
-    throws SensorInativoException, MunicaoInsuficienteException, AlvoInvalidoException {
+    throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException {
         verificarGPSAtivo();
         if (this.municao < nTiros) {
             throw new MunicaoInsuficienteException();
