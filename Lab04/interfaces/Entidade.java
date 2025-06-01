@@ -6,6 +6,7 @@ public interface Entidade {
     int getX() throws SensorException;
     int getY() throws SensorException;
     int getZ() throws SensorException;
+    // Obtenção interna das coordenadas sem intermediários de sensores
     int getXInterno();
     int getYInterno();
     int getZInterno();
