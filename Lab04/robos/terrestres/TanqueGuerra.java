@@ -35,7 +35,11 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
                 int alvoY = (Integer) argumentos[2];
                 int nTiros = (Integer) argumentos[3];
                 Ambiente ambiente = (Ambiente) argumentos[4];
-                return atirar(alvoX, alvoY, 0,nTiros,ambiente);
+                try {
+                    return atirar(alvoX, alvoY, 0, nTiros, ambiente);
+                } catch (SensorInativoException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                    return e.getMessage();
+                }
         
             case "recarregar":
                 int nBalas = (Integer) argumentos[1];
