@@ -90,6 +90,8 @@ public class Main {
 
             menu(scanner, ambiente, central, listaEntidades, listaRobo, 7, true, atributos);
 
+        } else {
+            System.err.println("Opção inválida! Por favor, escolha 1 ou 2.");
         }
         scanner.close();
     }
@@ -607,7 +609,15 @@ public class Main {
             }
             System.out.print(menu);
             System.out.print("Comando: ");
-            int comando = scanner.nextInt();
+            int comando;
+            try {
+                comando = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Entrada inválida! Por favor, digite um número.");
+                scanner.nextLine(); // Consumir entrada inválida
+                continue;
+            }
+
             scanner.nextLine(); // Consumir quebra de linha
             System.out.println();
 

@@ -27,6 +27,9 @@ public class CentralComunicacao {
         for (String msg : mensagens){
             texto += msg;
         }
+        if (mensagens.isEmpty()) {
+            texto += "Nenhuma mensagem registrada.\n";
+        }
         texto+="Fim do Histórico de Comunicação";
         return texto;
     }
