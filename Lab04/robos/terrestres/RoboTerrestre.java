@@ -17,12 +17,15 @@ public class RoboTerrestre extends Robo {
     private Colisao sensorColisao; // Sensor de colisão
 
     /**
-     * Construtor de RoboTerrestre
-     * 
-     * @param nome             Nome do robô
-     * @param direcao          Direção inicial
-     * @param posicaoX         Posição X inicial
-     * @param posicaoY         Posição Y inicial
+     * Construtor de RoboTerrestre que inicializa o robô na superfície (Z=0)
+     * Cria e adiciona o sensor de colisão específico para robôs terrestres
+     * @param nome Nome do robô
+     * @param direcao Direção inicial
+     * @param ambiente Ambiente onde o robô opera (necessário para sensor de colisão)
+     * @param material Material de construção do robô
+     * @param posicaoX Posição X inicial
+     * @param posicaoY Posição Y inicial
+     * @param velocidade Velocidade inicial do robô
      * @param velocidadeMaxima Velocidade máxima do robô
      */
     public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
@@ -32,11 +35,16 @@ public class RoboTerrestre extends Robo {
     }
 
     /**
-     * Move o robô de acordo com o delta especificado
-     * 
-     * @param deltaX   Deslocamento na direção X
-     * @param deltaY   Deslocamento na direção Y
-     * @param ambiente Ambiente onde o robô está
+     * Move o robô terrestre de acordo com o delta especificado, considerando velocidade máxima
+     * Utiliza sensor de colisão para detectar obstáculos e outros robôs durante o movimento
+     * Robôs terrestres não precisam de GPS para movimentação (usam velocidade * tempo)
+     * @param deltaX Deslocamento na direção X
+     * @param deltaY Deslocamento na direção Y
+     * @param velocidade Velocidade para o movimento atual
+     * @param ambiente Ambiente onde o robô está se movendo
+     * @throws VelocidadeMaximaException Se a velocidade exceder o limite máximo
+     * @throws SensorException Se houver problemas com o sensor de colisão
+     * @throws ColisaoException Se houver colisão com obstáculos ou outros robôs
      */
     public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException, ColisaoException {
         if (velocidade > this.velocidadeMaxima) {
@@ -130,9 +138,11 @@ public class RoboTerrestre extends Robo {
     }
 
     /**
-     * Calcula a distância entre este robô terrestre e um robô
-     * @param alvo Robô aéreo alvo
-     * @return Distância euclidiana 3D (considerando altitude do robô)
+     * Calcula a distância euclidiana 3D entre este robô terrestre e outro robô
+     * Considera que robôs terrestres estão sempre na altura 0 (superfície)
+     * @param alvo Robô alvo para calcular a distância
+     * @return Distância euclidiana 3D (considerando altitude do robô alvo)
+     * @throws SensorException Se houver problemas com o GPS
      */
     public double distanciaRobo(Robo alvo) throws SensorException {
         super.verificarGPSAtivo();
@@ -141,10 +151,20 @@ public class RoboTerrestre extends Robo {
                 + Math.pow(alvo.getYInterno() - this.getY(), 2) + Math.pow(alvo.getZ() - 0, 2));
     }
 
+    /**
+     * Retorna o sensor de colisão do robô terrestre
+     * @return Instância do sensor de colisão
+     */
     public Colisao getSensorColisao() {
         return sensorColisao;
     }
 
+    /**
+     * Executa tarefas específicas de robôs terrestres baseadas nos argumentos fornecidos
+     * Suporta movimento com velocidade controlada e configuração de velocidade máxima
+     * @param argumentos Array de argumentos variados dependendo da tarefa
+     * @return String com o resultado da execução da tarefa
+     */
     public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != ""){

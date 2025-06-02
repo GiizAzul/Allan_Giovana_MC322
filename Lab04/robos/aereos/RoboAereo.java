@@ -12,7 +12,6 @@ import robos.equipamentos.sensores.*;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 
-
 /**
  * Classe que representa um robô aéreo, especialização de Robo
  * com capacidade de voar em diferentes altitudes
@@ -24,14 +23,17 @@ public class RoboAereo extends Robo implements Identificantes {
     private Radar sensorRadar; // Sensor de radar para detecção de objetos
 
     /**
-     * Construtor de RoboAereo
-     * 
-     * @param n    Nome do Robô
-     * @param d    Direção inicial
-     * @param x    Posição X inicial
-     * @param y    Posição Y inicial
-     * @param h    Altura inicial
+     * Construtor de RoboAereo com parâmetros básicos
+     * Inicializa sensores de barômetro e radar com configurações padrão
+     * @param n Nome do Robô
+     * @param d Direção inicial
+     * @param m Material de construção do robô
+     * @param x Posição X inicial
+     * @param y Posição Y inicial
+     * @param vel Velocidade de movimento
+     * @param h Altura inicial
      * @param hmax Altura máxima permitida
+     * @param ambiente Ambiente onde o robô opera
      */
     public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente) {
         super(n, d, m, x, y, h, vel);
@@ -42,6 +44,21 @@ public class RoboAereo extends Robo implements Identificantes {
         this.addSensor(sensorRadar);
     }
 
+    /**
+     * Construtor de RoboAereo com configuração personalizada de radar
+     * Permite especificar alcance e ângulo do radar
+     * @param n Nome do Robô
+     * @param d Direção inicial
+     * @param m Material de construção do robô
+     * @param x Posição X inicial
+     * @param y Posição Y inicial
+     * @param vel Velocidade de movimento
+     * @param h Altura inicial
+     * @param hmax Altura máxima permitida
+     * @param ambiente Ambiente onde o robô opera
+     * @param alc_radar Alcance do radar em unidades de distância
+     * @param ang_radar Ângulo de abertura do radar em graus
+     */
     public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, float alc_radar, float ang_radar) {
         super(n, d, m, x, y, h, vel);
         this.altitudeMaxima = hmax;
@@ -52,22 +69,14 @@ public class RoboAereo extends Robo implements Identificantes {
     }
     
     /**
-     * Realiza o movimento vertical (eixo Z) do robô aéreo.
-     * 
-     * @param passoZ   O incremento (positivo) ou decremento (negativo) a ser
-     *                 aplicado em cada passo do movimento.
-     * @param metros   A distância total a ser percorrida. O valor é subtraído da
-     *                 altitude atual para calcular a altitude alvo.
-     * @param ambiente O ambiente em que o robô está se movendo, usado para
-     *                 verificar colisões.
-     * 
-     *                 O método move o robô verticalmente, verificando:
-     *                 - Se a altitude máxima foi atingida (limitando o movimento
-     *                 quando necessário)
-     *                 - Se há colisões com outros objetos (robôs ou obstáculos)
-     * 
-     *                 O movimento é interrompido se houver colisão ou se a altitude
-     *                 máxima for atingida.
+     * Realiza o movimento vertical (eixo Z) do robô aéreo passo a passo
+     * Verifica colisões e limites de altitude durante o movimento
+     * @param passo O incremento (positivo) ou decremento (negativo) a ser aplicado em cada passo
+     * @param metros A distância total a ser percorrida
+     * @param ambiente O ambiente em que o robô está se movendo, usado para verificar colisões
+     * @throws SensorException Se houver problemas com os sensores durante o movimento
+     * @throws MovimentoInvalidoException Se o movimento exceder limites de altitude
+     * @throws ColisaoException Se houver colisão com outros objetos
      */
     private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorException, MovimentoInvalidoException, ColisaoException {
         // Calcula a altitude alvo baseada na direção do movimento
@@ -102,46 +111,60 @@ public class RoboAereo extends Robo implements Identificantes {
     }
 
     /**
-     * Aumenta a altitude do robô aéreo
+     * Aumenta a altitude do robô aéreo de forma controlada
      * @param metros Quantidade de metros a subir
      * @param ambiente Ambiente onde o robô se encontra
+     * @throws SensorException Se houver problemas com os sensores
+     * @throws ColisaoException Se houver colisão durante a subida
+     * @throws MovimentoInvalidoException Se exceder a altitude máxima
      */
     public void subir(int metros, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
         this.movimentoZ(1, metros, ambiente);
     }
 
     /**
-     * Diminui a altitude do robô aéreo
+     * Diminui a altitude do robô aéreo de forma controlada
      * @param metros Quantidade de metros a descer
+     * @param ambiente Ambiente onde o robô se encontra
+     * @throws SensorException Se houver problemas com os sensores
+     * @throws ColisaoException Se houver colisão durante a descida
+     * @throws MovimentoInvalidoException Se tentar descer abaixo do solo
      */
     public void descer(int metros, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
         this.movimentoZ(-1, metros, ambiente);
     }
 
     /**
-     * Obtém a altitude máxima do robô
+     * Obtém a altitude máxima configurada para o robô
      * @return Altitude máxima em metros
      */
     public int getAltitudeMaxima() {
         return this.altitudeMaxima;
     }
 
+    /**
+     * Obtém a pressão atmosférica atual através do barômetro
+     * @return Pressão atmosférica medida pelo sensor
+     * @throws SensorException Se houver problemas com o sensor barômetro
+     */
     public double getPressao() throws SensorException {
         return this.sensorBarometro.acionar();
     }
 
     /**
-     * Define uma nova altitude máxima
-     * @param hMax Nova altitude máxima
+     * Define uma nova altitude máxima para o robô
+     * @param hMax Nova altitude máxima em metros
      */
     public void setAltitudeMaxima(int hMax) {
         this.altitudeMaxima = hMax;
     }
 
     /**
-     * Calcula a distância entre este robô aéreo e outro robô aéreo
-     * @param alvo Robô aéreo alvo
-     * @return Distância euclidiana 3D (considerando altitudes)
+     * Calcula a distância euclidiana 3D entre este robô e outro robô
+     * Considera as coordenadas X, Y e Z (altitude) para o cálculo
+     * @param alvo Robô alvo para calcular a distância
+     * @return Distância euclidiana 3D em unidades de ambiente
+     * @throws SensorException Se houver problemas com o GPS
      */
     public double distanciaRobo(Robo alvo) throws SensorException {
         verificarGPSAtivo();
@@ -152,11 +175,33 @@ public class RoboAereo extends Robo implements Identificantes {
     }
 
     /**
-     * Move o robô aéreo para uma nova posição 3D
+     * Calcula a distância euclidiana entre este robô e um obstáculo
+     * Usa o ponto central do obstáculo para o cálculo
+     * @param obstaculo Obstáculo alvo para calcular a distância
+     * @return Distância euclidiana até o obstáculo
+     */
+    public double distanciaObstaculo(Obstaculo obstaculo) {
+        // Calcula o centro do obstáculo
+        double centroX = (obstaculo.getX1() + obstaculo.getX2()) / 2.0;
+        double centroY = (obstaculo.getY1() + obstaculo.getY2()) / 2.0;
+        double centroZ = obstaculo.getAltura() / 2.0;
+
+        return Math.sqrt(Math.pow(centroX - this.getXInterno(), 2)
+                + Math.pow(centroY - this.getYInterno(), 2)
+                + Math.pow(centroZ - this.getZInterno(), 2));
+    }
+
+    /**
+     * Move o robô aéreo para uma nova posição 3D no ambiente
+     * Realiza movimento sequencial nos eixos X, Y e depois Z
+     * Verifica colisões a cada passo do movimento
      * @param X Nova coordenada X
      * @param Y Nova coordenada Y
      * @param Z Nova altitude
      * @param ambiente Ambiente onde o robô se encontra
+     * @throws SensorException Se houver problemas com sensores
+     * @throws ColisaoException Se houver colisão durante o movimento
+     * @throws MovimentoInvalidoException Se o movimento for inválido
      */
     public void mover(int X, int Y, int Z, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
         int deltaX = X - getX();
@@ -208,7 +253,7 @@ public class RoboAereo extends Robo implements Identificantes {
             }
         }
 
-        
+        // Ajusta a altitude final - sobe ou desce conforme necessário
         int h = this.getZ();
         if (Z > h) {
             this.subir(Z - h, ambiente);
@@ -218,8 +263,10 @@ public class RoboAereo extends Robo implements Identificantes {
     }
 
     /**
-     * Sobrescreve o método da classe pai para identificar Robôs
-     * @return Lista de robôs que são encontrados por meio do sensor de Radar
+     * Identifica robôs no alcance do radar
+     * Filtra entidades detectadas pelo radar para retornar apenas robôs
+     * @return Lista de robôs detectados pelo sensor radar
+     * @throws SensorException Se houver problemas com o sensor radar
      */
     @Override
     public ArrayList<Robo> identificarRobo() throws SensorException {
@@ -233,6 +280,12 @@ public class RoboAereo extends Robo implements Identificantes {
         return robosEncontrados;
     }
 
+    /**
+     * Identifica obstáculos no alcance do radar
+     * Filtra entidades detectadas pelo radar para retornar apenas obstáculos
+     * @return Lista de obstáculos detectados pelo sensor radar
+     * @throws SensorException Se houver problemas com o sensor radar
+     */
     public ArrayList<Obstaculo> identificarObstaculo() throws SensorException {
         ArrayList<Entidade> objetosEncontrados = this.sensorRadar.acionar();
         ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
@@ -244,14 +297,28 @@ public class RoboAereo extends Robo implements Identificantes {
         return obstaculosEncontrados;
     }
 
+    /**
+     * Retorna o sensor radar do robô aéreo
+     * @return Instância do sensor radar
+     */
     public Radar getRadar() {
         return this.sensorRadar;
     }
 
+    /**
+     * Retorna o sensor barômetro do robô aéreo
+     * @return Instância do sensor barômetro
+     */
     public Barometro getBarometro() {
         return this.sensorBarometro;
     }
 
+    /**
+     * Executa tarefas específicas de robôs aéreos baseadas nos argumentos fornecidos
+     * Suporta movimento 3D e identificação de objetos via radar
+     * @param argumentos Array de argumentos variados dependendo da tarefa
+     * @return String com o resultado da execução da tarefa
+     */
     public String executarTarefa(Object... argumentos) {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
