@@ -189,3 +189,91 @@ Sistema que gerencia a comunicação entre os robôs:
 #### Restrições
 - Robôs precisam estar ligados para se comunicar
 - Apenas robôs com interface `Comunicavel`
+
+### **Interfaces do Software**
+
+#### 1. `Entidade`
+
+* Função: Base para objetos com posição e representação.
+* Métodos: `getX/Y/Z()`, `getXInterno/YInterno/ZInterno()`, `getTipo()`, `getDescricao()`, `getRepresentacao()`
+* Usada por: `Robo`, `Obstaculo`, sistema de mapa e movimentação
+
+#### 2. `Destrutivel`
+
+* Função: Receber dano.
+* Método: `defender(int dano, Ambiente)`
+* Usada por: `Robo`, `Obstaculo`, sistema de combate
+
+#### 3. `Atacante`
+
+* Função: Realizar ataques.
+* Métodos: `atirar(...)`, `recarregar(int)`
+* Usada por: `DroneAtaque`, `TanqueGuerra`
+
+#### 4. `Comunicavel`
+
+* Função: Enviar/receber mensagens.
+* Métodos: `enviarMensagem(...)`, `receberMensagem(...)`
+* Usada por: `DroneVigilancia`, `Correios`, central de comunicação
+
+#### 5. `Identificantes`
+
+* Função: Detecção via sensores.
+* Métodos: `identificarObstaculo()`, `identificarRobo()`
+* Usada por: `RoboAereo`, tarefas de radar e vigilância
+
+#### 6. `Sensoreavel`
+
+* Função: Suporte a sensores (GPS, radar etc.)
+* Usada por: Robôs com sensoriamento
+
+#### 7. `TipoEntidade` (enum)
+
+* Valores: `ROBO`, `OBSTACULO`
+* Usada em: Classificação e exibição no mapa
+
+---
+
+## Hierarquia Resumida
+
+```
+Entidade
+ └── Destrutivel
+      └── Robo (base)
+          ├── RoboAereo + Identificantes
+          │    ├── DroneAtaque + Atacante
+          │    └── DroneVigilancia + Comunicavel
+          └── RoboTerrestre
+               ├── TanqueGuerra + Atacante
+               └── Correios + Comunicavel
+```
+
+### Exceções do Software
+
+#### 1. Ambiente (`excecoes.ambiente`)
+
+* `ForaDosLimitesException` — `Robo.mover()`, `DroneVigilancia.varrerArea()`
+* `ErroComunicacaoException` — `enviarMensagem()`, `receberMensagem()`
+
+#### 2. Robôs – Gerais (`excecoes.robos.gerais`)
+
+* `ColisaoException` — Movimento de `Robo` e derivados
+* `RoboDestruidoPorBuracoException` — Robô cai em buraco (`Robo.mover()`)
+* `MovimentoInvalidoException` — Altitude fora dos limites (`RoboAereo.movimentoZ()`)
+* `VelocidadeMaximaException` — Excesso de velocidade (`RoboTerrestre.mover()`)
+* `RoboDesligadoException` — Robô inativo em `enviarMensagem()`/`receberMensagem()`
+
+#### 3. Robôs – Específicas
+
+* `MunicaoInsuficienteException` — Sem munição ao `atirar()`
+* `AlvoInvalidoException` — Alvo incorreto em `atirar()`
+* `VarreduraInvalidaException` — Parâmetros inválidos em `varrerArea()`
+* `PacoteNaoEncontrado` — Pacote ausente em `entregarPacote()`
+* `PesoAcimaPermitidoException` — Carga excedida em `carregarPacote()`
+* `CapacidadeInsuficienteException` — Limite atingido em `carregarPacote()`
+
+#### 4. Sensores (`excecoes.sensor`)
+
+* `SensorException` — Erros gerais de sensores (ex: GPS)
+* `SensorInativoException` — GPS inativo (`verificarGPSAtivo()`)
+* `SensorAusenteException` — Sensor não instalado ou falha na inicialização
