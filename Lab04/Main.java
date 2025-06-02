@@ -12,13 +12,23 @@ import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
 import interfaces.*;
-import excecoes.*;
 import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.gerais.RoboDesligadoException;
 
+/**
+ * Classe principal que implementa o simulador de robôs interativo
+ * Oferece interface de linha de comando para controlar robôs e ambiente
+ */
 public class Main {
 
+    /**
+     * Método principal que inicia o simulador de robôs
+     * Oferece dois modos: padrão (com ambiente pré-configurado) e criação livre
+     * @param args Argumentos da linha de comando (não utilizados)
+     * @throws ErroComunicacaoException Se houver problemas na comunicação entre robôs
+     * @throws RoboDesligadoException Se tentar operar robô desligado
+     */
     public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException {
         Scanner scanner = new Scanner(System.in);
         CentralComunicacao central = new CentralComunicacao();
@@ -84,11 +94,22 @@ public class Main {
         scanner.close();
     }
 
+    /**
+     * Limpa o terminal usando códigos ANSI de escape
+     * Funciona em terminais que suportam ANSI (Linux, macOS, Windows moderno)
+     */
     public static void limparTerminal() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * Obtém coordenadas válidas do usuário dentro dos limites do ambiente
+     * Continua solicitando até que coordenadas válidas sejam fornecidas
+     * @param ambiente Ambiente para verificar limites das coordenadas
+     * @param scanner Scanner para leitura da entrada do usuário
+     * @return Array de inteiros com coordenadas [X, Y] válidas
+     */
     public static int[] obterPosicao(Ambiente ambiente, Scanner scanner) {
         System.out.print("Posição X: ");
         int destinoX = scanner.nextInt();
@@ -105,6 +126,16 @@ public class Main {
         return new int[] { destinoX, destinoY };
     }
 
+    /**
+     * Gerencia as ações específicas que podem ser executadas por cada tipo de robô
+     * Apresenta menus contextuais baseados no tipo de robô selecionado e seu estado
+     * @param scanner Scanner para leitura da entrada do usuário
+     * @param listaRobo Lista de robôs disponíveis no ambiente
+     * @param ambiente Ambiente onde os robôs operam
+     * @param central Central de comunicação para troca de mensagens
+     * @throws ErroComunicacaoException Se houver problemas na comunicação
+     * @throws RoboDesligadoException Se tentar operar robô desligado
+     */
     public static void acoesRobo(Scanner scanner, ArrayList<Robo> listaRobo, Ambiente ambiente,
             CentralComunicacao central) throws ErroComunicacaoException, RoboDesligadoException {
         String menu;
@@ -542,6 +573,20 @@ public class Main {
         }
     }
 
+    /**
+     * Menu principal do simulador que coordena todas as funcionalidades
+     * Gerencia navegação entre opções, atualização de listas e modo livre/padrão
+     * @param scanner Scanner para leitura da entrada do usuário
+     * @param ambiente Ambiente do simulador
+     * @param central Central de comunicação
+     * @param listaEntidades Lista de todas as entidades (pode ser null)
+     * @param listaRobo Lista de robôs no ambiente
+     * @param numTotal Número total de opções disponíveis no menu
+     * @param livre Indica se está no modo de criação livre
+     * @param atributos Array de atributos para criação de robôs (usado no modo livre)
+     * @throws ErroComunicacaoException Se houver problemas na comunicação
+     * @throws RoboDesligadoException Se tentar operar robô desligado
+     */
     public static void menu(Scanner scanner, Ambiente ambiente, CentralComunicacao central,
             ArrayList<Entidade> listaEntidades, ArrayList<Robo> listaRobo, int numTotal, boolean livre,
             Object... atributos) throws ErroComunicacaoException, RoboDesligadoException {
@@ -633,6 +678,15 @@ public class Main {
 
     }
 
+    /**
+     * Gerencia as funcionalidades específicas do modo de criação livre
+     * Permite criar robôs, remover robôs e criar obstáculos de forma interativa
+     * @param comando Comando selecionado pelo usuário (5, 6 ou 7)
+     * @param scanner Scanner para leitura da entrada do usuário
+     * @param ambiente Ambiente onde as entidades serão criadas/removidas
+     * @param listaRobo Lista atual de robôs no ambiente
+     * @param atributos Array para armazenar atributos dos robôs sendo criados
+     */
     public static void menuLivre(int comando, Scanner scanner, Ambiente ambiente, ArrayList<Robo> listaRobo,
             Object... atributos) {
         if (comando == 5) {
@@ -857,6 +911,11 @@ public class Main {
         }
     }
 
+    /**
+     * Exibe uma representação visual do ambiente em formato de mapa
+     * Mostra um grid 2D com as entidades representadas por símbolos específicos
+     * @param ambiente Ambiente a ser visualizado
+     */
     public static void vizualizarMapa(Ambiente ambiente) {
         System.out.println();
         System.out.println("=== Mapa ===");
