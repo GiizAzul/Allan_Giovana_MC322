@@ -4,6 +4,7 @@ import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
+import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
@@ -15,11 +16,11 @@ import robos.geral.Robo;
 
 public class TestRoboAereo extends TestBase {
     
-    public static void main(String[] args) throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException {
+    public static void main(String[] args) throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException {
         executarTestes();
     }
     
-    public static void executarTestes() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException {
+    public static void executarTestes() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException {
         System.out.println("Iniciando testes da classe RoboAereo...");
         
         testarConstrutor();
@@ -58,7 +59,7 @@ public class TestRoboAereo extends TestBase {
         verificar("Direção deve ser Oeste", droneVigilancia.getDirecao().equals("Oeste"));
     }
     
-    private static void testarSubirDescer() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarSubirDescer() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Subir e Descer ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -74,7 +75,7 @@ public class TestRoboAereo extends TestBase {
         verificar("Drone deve descer 1 unidade", drone.getZ() == altitudeInicial - 1);
     }
     
-    private static void testarMovimento3D() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarMovimento3D() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Movimento 3D ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -87,7 +88,7 @@ public class TestRoboAereo extends TestBase {
         verificar("Posição Z após movimento deve ser 4", drone.getZ() == 4);
     }
     
-    private static void testarAltitudeMaxima() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarAltitudeMaxima() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Altitude Máxima ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -150,7 +151,7 @@ public class TestRoboAereo extends TestBase {
         verificar("Exibição deve incluir posição Z", posicao.contains("3"));
     }
     
-    private static void testarBarometro() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException {
+    private static void testarBarometro() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException {
         System.out.println("\n== Teste do Barômetro ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -166,7 +167,7 @@ public class TestRoboAereo extends TestBase {
         verificar("Altitude deve diminuir após descida", drone.getBarometro().acionar() > pressaoInicial); 
     }
     
-    private static void testarEspecificidadesDroneAtaque() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarEspecificidadesDroneAtaque() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Especificidades do DroneAtaque ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -205,7 +206,7 @@ public class TestRoboAereo extends TestBase {
                  resultado.contains("Robô encontrado") || resultado.contains("Obstáculo encontrado"));
     }
 
-    private static void testarEspecificidadesDroneVigilancia() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException {
+    private static void testarEspecificidadesDroneVigilancia() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Especificidades do DroneVigilancia ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
