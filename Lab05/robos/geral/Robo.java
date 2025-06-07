@@ -6,11 +6,11 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
+import robos.subsistemas.movimento.ControleMovimento;
 import interfaces.*;
 import excecoes.ambiente.ForaDosLimitesException;
-import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
+import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
 
@@ -37,6 +37,9 @@ public abstract class Robo implements Entidade, Destrutivel {
     private GPS gps; // Sensor de GPS -> Informar a posição dos Robôs
     private ArrayList<Sensor<?>> listaSensores; // Lista de sensores do robô
 
+
+    protected ControleMovimento controleMovimento;
+
     // Acessível somente para subclasses
     protected boolean visivel = true; // Indica se o robô está visível para outros robôs
 
@@ -50,9 +53,10 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param posicaoY Posição inicial Y
      * @param posicaoZ Posição inicial Z
      * @param velocidade Velocidade inicial do robô
+     * @param controleMovimento 
      */
     public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int posicaoZ,
-            int velocidade) {
+            int velocidade, ControleMovimento controleMovimento) {
         this.id = ++cont_robo;
         this.nome = nome;
         this.direcao = direcao;
@@ -67,6 +71,7 @@ public abstract class Robo implements Entidade, Destrutivel {
         this.listaSensores = new ArrayList<>();
         this.listaSensores.add(gps);
         this.tipo = TipoEntidade.ROBO;
+        this.controleMovimento = controleMovimento;
     }
 
     /**
@@ -503,8 +508,10 @@ public abstract class Robo implements Entidade, Destrutivel {
      * Suporta mudança de direção, movimento básico 2D e controle de estado (ligar/desligar)
      * @param argumentos Array de argumentos variados dependendo da tarefa
      * @return String com resultado da execução ou vazia se delegada para subclasse
+     * @throws MovimentoInvalidoException 
+     * @throws RoboDestruidoPorBuracoException 
      */
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         String tarefa = (String) argumentos[0];
         switch (tarefa) {
             case "direção":

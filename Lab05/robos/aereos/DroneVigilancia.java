@@ -9,6 +9,7 @@ import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.especificos.VarreduraInvalidaException;
 import excecoes.robos.gerais.ColisaoException;
+import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
@@ -51,8 +52,10 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
      * Suporta varredura de área e controle de camuflagem
      * @param argumentos Array de argumentos variados dependendo da tarefa
      * @return String com o resultado da execução da tarefa
+     * @throws MovimentoInvalidoException 
+     * @throws RoboDestruidoPorBuracoException 
      */
-     public String executarTarefa(Object... argumentos) {
+     public String executarTarefa(Object... argumentos) throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         String result = super.executarTarefa(argumentos);
         if (result != "") {
             return result;

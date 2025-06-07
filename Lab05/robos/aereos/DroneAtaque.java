@@ -7,6 +7,8 @@ import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.MovimentoInvalidoException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
 
 /**
@@ -77,8 +79,10 @@ public class DroneAtaque extends RoboAereo implements Atacante {
      * Suporta ataques por coordenadas e ataques diretos em robôs
      * @param argumentos Array de argumentos variados dependendo da tarefa
      * @return String com o resultado da execução da tarefa
+     * @throws MovimentoInvalidoException 
+     * @throws RoboDestruidoPorBuracoException 
      */
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         String result = super.executarTarefa(argumentos);
         if (result != "") {
             return result;

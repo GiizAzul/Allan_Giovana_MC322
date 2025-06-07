@@ -6,6 +6,8 @@ import robos.geral.Robo;
 import interfaces.*;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
+import excecoes.robos.gerais.MovimentoInvalidoException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
 
 /**
@@ -45,8 +47,10 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
      * Suporta ataques e recarregamento de munição
      * @param argumentos Array de argumentos variados dependendo da tarefa
      * @return String com o resultado da execução da tarefa
+     * @throws MovimentoInvalidoException 
+     * @throws RoboDestruidoPorBuracoException 
      */
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;

@@ -1,10 +1,12 @@
 package robos.terrestres;
 import ambiente.Ambiente;
-import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.Colisao;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import robos.subsistemas.movimento.ControleMovimentoTerrestre;
 import excecoes.robos.gerais.ColisaoException;
+import excecoes.robos.gerais.MovimentoInvalidoException;
+import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.robos.gerais.VelocidadeMaximaException;
 import excecoes.sensor.*;;
 
@@ -29,7 +31,7 @@ public class RoboTerrestre extends Robo {
      * @param velocidadeMaxima Velocidade máxima do robô
      */
     public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
-        super(nome, direcao, material, posicaoX, posicaoY, 0, velocidade);
+        super(nome, direcao, material, posicaoX, posicaoY, 0, velocidade, new ControleMovimentoTerrestre());
         this.velocidadeMaxima = velocidadeMaxima;
         this.sensorColisao = new Colisao(this, ambiente); // Inicializa o sensor de colisão
     }
@@ -45,80 +47,11 @@ public class RoboTerrestre extends Robo {
      * @throws VelocidadeMaximaException Se a velocidade exceder o limite máximo
      * @throws SensorException Se houver problemas com o sensor de colisão
      * @throws ColisaoException Se houver colisão com obstáculos ou outros robôs
+     * @throws MovimentoInvalidoException 
+     * @throws RoboDestruidoPorBuracoException 
      */
-    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException, ColisaoException {
-        if (velocidade > this.velocidadeMaxima) {
-            throw new VelocidadeMaximaException();
-        }
-
-        // Robo Terrestre não precisa do GPS para se movimentar (v*t)
-        int posicaoX = this.getXInterno();
-        int posicaoY = this.getYInterno();
-
-        // Verifica se o robô está dentro dos limites do ambiente
-        int destinoX = posicaoX + deltaX >= ambiente.getTamX() ? ambiente.getTamX() - 1 : posicaoX + deltaX;
-        int destinoY = posicaoY + deltaY >= ambiente.getTamY() ? ambiente.getTamY() - 1 : posicaoY + deltaY;
-
-        // Movimentação em linha reta no eixo X
-        if (deltaX != 0) {
-            int passoX = deltaX > 0 ? 1 : -1;
-            int x = 0;
-            int detectado = 0;
-            for (x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
-                ambiente.moverEntidade(this, x, getYInterno(), getZInterno());
-                this.setPosicaoX(x);
-                detectado = sensorColisao.acionar();
-                if (detectado == 1) {
-                    ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
-                    this.setPosicaoX(x - passoX); // Corrige a posição do robô
-                    throw new ColisaoException("O robô " + this.getNome() + " colidiu com outro robô na posição X:" + x + " Y:" + posicaoY);
-                } else if (detectado == 2) {
-                    if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
-                        this.setPosicaoX(x - passoX); // Corrige a posição do robô
-                        ambiente.removerEntidade(this);
-                        throw new ColisaoException("O robô " + this.getNome() + " caiu no buraco e foi destruido");
-                    } else {
-                        ambiente.moverEntidade(this, x - passoX, getYInterno(), getZInterno());
-                        this.setPosicaoX(x - passoX); // Corrige a posição do robô
-                        throw new ColisaoException("O robô " + this.getNome() + " colidiu com o obstáculo: "
-                                + sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() + " na posição X:" + x
-                                + " Y:"
-                                + posicaoY);
-                    }
-                }
-            }
-        }
-
-        // Movimentação em linha reta no eixo Y
-        if (deltaY != 0) {
-            int passoY = deltaY > 0 ? 1 : -1;
-            int y = 0, detectado = 0;
-            for (y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
-                ambiente.moverEntidade(this, getXInterno(), y, getZInterno());
-                this.setPosicaoY(y);
-                detectado = sensorColisao.acionar();
-                if (detectado == 1) {
-                    ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
-                    this.setPosicaoY(y - passoY); // Corrige a posição do robô
-                    throw new ColisaoException("O robô " + this.getNome() + " colidiu com outro robô na posição X:"+ posicaoX + " Y:" + y);
-                } else if (detectado == 2) {
-                    if (sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
-                        this.setPosicaoY(y - passoY); // Corrige a posição do robô
-                        ambiente.removerEntidade(this);
-                        throw new ColisaoException("O robô " + this.getNome() + " caiu no buraco e foi destruido");
-                    } else {
-                        ambiente.moverEntidade(this, getXInterno(), y - passoY, getZInterno());
-                        this.setPosicaoY(y - passoY); // Corrige a posição do robô
-                        throw new ColisaoException("O robô " + this.getNome() + " colidiu com o obstáculo: "
-                                + sensorColisao.getUltimoObstaculoColidido().getTipoObstaculo() + " na posição X:"
-                                + posicaoX
-                                + " Y:" + y);
-                    }
-                }
-            }
-        }
+    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException, ColisaoException, RoboDestruidoPorBuracoException, MovimentoInvalidoException {
+        ((ControleMovimentoTerrestre) this.controleMovimento).mover(this, deltaX, deltaY, velocidade, ambiente);
     }
 
     /**
@@ -164,8 +97,10 @@ public class RoboTerrestre extends Robo {
      * Suporta movimento com velocidade controlada e configuração de velocidade máxima
      * @param argumentos Array de argumentos variados dependendo da tarefa
      * @return String com o resultado da execução da tarefa
+     * @throws MovimentoInvalidoException 
+     * @throws RoboDestruidoPorBuracoException 
      */
-    public String executarTarefa(Object... argumentos) {
+    public String executarTarefa(Object... argumentos) throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         String result = super.executarTarefa(argumentos);
         if (result != ""){
             return result;
