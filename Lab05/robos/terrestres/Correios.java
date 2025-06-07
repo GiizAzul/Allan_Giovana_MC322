@@ -8,6 +8,7 @@ import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import robos.subsistemas.ModuloComunicacao;
 import excecoes.robos.especificos.*;
 import excecoes.ambiente.*;
 import excecoes.robos.gerais.*;
@@ -15,30 +16,34 @@ import excecoes.sensor.SensorException;
 import interfaces.*;
 
 /**
- * Classe que representa um robô de correios terrestre com capacidades de entrega
- * Estende RoboTerrestre e implementa Comunicavel para coordenação de entregas
+ * Classe que representa um robô de correios terrestre com capacidades de
+ * entrega
+ * Estende RoboTerrestre e implementa Comunicavel
  */
 public class Correios extends RoboTerrestre implements Comunicavel {
-    private int capacidadeMax;          // Capacidade máxima de pacotes
-    private float pesoMax;              // Peso máximo suportado
-    private float pesoAtual;            // Peso atual carregado
+    private int capacidadeMax; // Capacidade máxima de pacotes
+    private float pesoMax; // Peso máximo suportado
+    private float pesoAtual; // Peso atual carregado
     private ArrayList<String> entregas; // Lista de IDs dos pacotes
-    private ArrayList<Float> pesos;     // Lista de pesos dos pacotes
+    private ArrayList<Float> pesos; // Lista de pesos dos pacotes
+    private ModuloComunicacao moduloComunicacao;
 
     /**
      * Construtor do robô de correios com especificações completas
-     * @param nome Nome identificador do robô
-     * @param direcao Direção inicial do robô
-     * @param ambiente Ambiente onde o robô opera
-     * @param material Material de construção do robô
-     * @param posicaoX Coordenada X inicial
-     * @param posicaoY Coordenada Y inicial
-     * @param velocidade Velocidade inicial do robô
+     * 
+     * @param nome             Nome identificador do robô
+     * @param direcao          Direção inicial do robô
+     * @param ambiente         Ambiente onde o robô opera
+     * @param material         Material de construção do robô
+     * @param posicaoX         Coordenada X inicial
+     * @param posicaoY         Coordenada Y inicial
+     * @param velocidade       Velocidade inicial do robô
      * @param velocidadeMaxima Velocidade máxima do robô
-     * @param capacidadeMax Capacidade máxima de pacotes
-     * @param pesoMax Peso máximo suportado
+     * @param capacidadeMax    Capacidade máxima de pacotes
+     * @param pesoMax          Peso máximo suportado
      */
-    public Correios(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima, int capacidadeMax,
+    public Correios(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY,
+            int velocidade, int velocidadeMaxima, int capacidadeMax,
             float pesoMax) {
         super(nome, direcao, ambiente, material, posicaoX, posicaoY, velocidade, velocidadeMaxima);
         this.capacidadeMax = capacidadeMax;
@@ -47,19 +52,22 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         entregas = new ArrayList<String>();
         pesos = new ArrayList<Float>();
         setIntegridade(50);
+        this.moduloComunicacao = new ModuloComunicacao(this);
     }
 
     /**
      * Executa tarefas específicas do robô de correios
      * Suporta carregamento, entrega e listagem de pacotes
+     * 
      * @param argumentos Array de argumentos variados dependendo da tarefa
      * @return String com o resultado da execução da tarefa
-     * @throws MovimentoInvalidoException 
-     * @throws RoboDestruidoPorBuracoException 
+     * @throws MovimentoInvalidoException
+     * @throws RoboDestruidoPorBuracoException
      */
-    public String executarTarefa(Object... argumentos) throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
+    public String executarTarefa(Object... argumentos)
+            throws RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         String result = super.executarTarefa(argumentos);
-        if (result != ""){
+        if (result != "") {
             return result;
         }
         String tarefa = (String) argumentos[0];
@@ -75,16 +83,16 @@ public class Correios extends RoboTerrestre implements Comunicavel {
 
             case "entregar":
                 id = (String) argumentos[1];
-                int destinoX = (Integer) argumentos[2];    
+                int destinoX = (Integer) argumentos[2];
                 int destinoY = (Integer) argumentos[3];
                 Ambiente ambiente = (Ambiente) argumentos[4];
-                
+
                 try {
                     return entregarPacote(id, destinoX, destinoY, ambiente);
                 } catch (PacoteNaoEncontrado | SensorException e) {
                     return "Não foi possível entregar o pacote, erro: " + e.getMessage();
                 }
-            
+
             case "listar":
                 return listarEntregas();
             default:
@@ -94,13 +102,16 @@ public class Correios extends RoboTerrestre implements Comunicavel {
 
     /**
      * Carrega um pacote no robô verificando capacidade e peso
-     * @param id Identificador único do pacote
+     * 
+     * @param id   Identificador único do pacote
      * @param peso Peso do pacote a ser carregado
      * @return String confirmando o carregamento
-     * @throws CapacidadeInsuficienteException Se não houver espaço para mais pacotes
-     * @throws PesoAcimaPermitidoException Se o peso exceder a capacidade máxima
+     * @throws CapacidadeInsuficienteException Se não houver espaço para mais
+     *                                         pacotes
+     * @throws PesoAcimaPermitidoException     Se o peso exceder a capacidade máxima
      */
-    private String carregarPacote(String id, float peso) throws CapacidadeInsuficienteException, PesoAcimaPermitidoException {
+    private String carregarPacote(String id, float peso)
+            throws CapacidadeInsuficienteException, PesoAcimaPermitidoException {
         if (entregas.size() >= capacidadeMax) {
             throw new CapacidadeInsuficienteException("Não há espaço para mais pacotes");
         }
@@ -117,11 +128,12 @@ public class Correios extends RoboTerrestre implements Comunicavel {
     /**
      * Move o robô para entrega considerando obstáculos especiais como buracos
      * Implementa lógica específica para entregas onde buracos podem ser preenchidos
-     * @param deltaX Deslocamento na direção X
-     * @param deltaY Deslocamento na direção Y
+     * 
+     * @param deltaX   Deslocamento na direção X
+     * @param deltaY   Deslocamento na direção Y
      * @param ambiente Ambiente onde o robô se move
      * @return true se o movimento foi bem-sucedido, false caso contrário
-     * @throws SensorException Se houver problemas com sensores
+     * @throws SensorException  Se houver problemas com sensores
      * @throws ColisaoException Se houver colisão com obstáculos impeditivos
      */
     private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) throws SensorException, ColisaoException {
@@ -138,14 +150,16 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                 Entidade obj = ambiente.identificarEntidadePosicao(x, getY(), 0);
                 if (obj != null) {
                     if (obj.getTipo() == TipoEntidade.ROBO) {
-                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getY());
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: "
+                                + ((Robo) obj).getNome() + " na posição X:" + x + " Y:" + getY());
                     } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
-                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY());
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: "
+                                + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + getY());
                     }
                 }
-                ambiente.moverEntidade(this,x,getY(),getZ());
+                ambiente.moverEntidade(this, x, getY(), getZ());
                 setPosicaoX(x);
             }
         }
@@ -157,14 +171,16 @@ public class Correios extends RoboTerrestre implements Comunicavel {
                 Entidade obj = ambiente.identificarEntidadePosicao(getX(), y, 0);
                 if (obj != null) {
                     if (obj.getTipo() == TipoEntidade.ROBO) {
-                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Robo) obj).getNome() + " na posição X:" + getX() + " Y:" + y);
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: "
+                                + ((Robo) obj).getNome() + " na posição X:" + getX() + " Y:" + y);
                     } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         return true;
                     } else {
-                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: " + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y);
+                        throw new ColisaoException("O robô " + getNome() + " colidiu com o objeto: "
+                                + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + getX() + " Y:" + y);
                     }
                 }
-                ambiente.moverEntidade(this,getX(),y,getZ());
+                ambiente.moverEntidade(this, getX(), y, getZ());
                 setPosicaoY(y);
             }
         }
@@ -174,15 +190,17 @@ public class Correios extends RoboTerrestre implements Comunicavel {
     /**
      * Entrega um pacote específico no destino indicado
      * Remove o pacote da carga e pode preencher buracos com a entrega
-     * @param id Identificador do pacote a ser entregue
+     * 
+     * @param id       Identificador do pacote a ser entregue
      * @param destinoX Coordenada X de destino da entrega
      * @param destinoY Coordenada Y de destino da entrega
      * @param ambiente Ambiente onde realizar a entrega
      * @return String detalhando o resultado da entrega
-     * @throws SensorException Se houver problemas com sensores
+     * @throws SensorException     Se houver problemas com sensores
      * @throws PacoteNaoEncontrado Se o pacote não estiver na carga
      */
-    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente) throws SensorException, PacoteNaoEncontrado {
+    private String entregarPacote(String id, int destinoX, int destinoY, Ambiente ambiente)
+            throws SensorException, PacoteNaoEncontrado {
         if (!entregas.contains(id)) {
             throw new PacoteNaoEncontrado("Pacote " + id + " não encontrado na carga.");
         }
@@ -195,7 +213,8 @@ public class Correios extends RoboTerrestre implements Comunicavel {
             return "Erro ao entregar pacote: " + e.getMessage();
         }
         if (resEntrega) {
-            if (objeto_posicao != null && objeto_posicao.getTipo() == TipoEntidade.OBSTACULO && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
+            if (objeto_posicao != null && objeto_posicao.getTipo() == TipoEntidade.OBSTACULO
+                    && ((Obstaculo) objeto_posicao).getTipoObstaculo() == TipoObstaculo.BURACO) {
                 pesoAtual -= pesos.get(i);
                 entregas.remove(i);
                 pesos.remove(i);
@@ -210,7 +229,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
             pesoAtual -= pesos.get(i);
             entregas.remove(i);
             pesos.remove(i);
-    
+
             return ("Pacote " + id + " entregue na posição (" + destinoX + ", " + destinoY + ").");
         }
         return "Entrega não concluída";
@@ -218,6 +237,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
 
     /**
      * Lista todas as entregas pendentes no robô
+     * 
      * @return String com lista de IDs dos pacotes pendentes ou mensagem se vazio
      */
     private String listarEntregas() {
@@ -231,51 +251,31 @@ public class Correios extends RoboTerrestre implements Comunicavel {
     /**
      * Envia uma mensagem para outro robô comunicável através da central
      * Registra a mensagem na central e processa a resposta do destinatário
+     * 
      * @param destinatario Robô que receberá a mensagem
-     * @param mensagem Conteúdo da mensagem a ser enviada
-     * @param central Central de comunicação para registro
+     * @param mensagem     Conteúdo da mensagem a ser enviada
+     * @param central      Central de comunicação para registro
      * @return String confirmando envio e resposta do destinatário
      * @throws ErroComunicacaoException Se houver problemas na comunicação
-     * @throws RoboDesligadoException Se o robô estiver desligado
+     * @throws RoboDesligadoException   Se o robô estiver desligado
      */
-    public String enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central) throws ErroComunicacaoException, RoboDesligadoException {
-        if (destinatario == null){
-            throw new ErroComunicacaoException("Destinatário não pode ser nulo");
-        }
-        if (!getEstado()){
-            throw new RoboDesligadoException("Robô " + getNome() + " está desligado e não pode enviar mensagens.");
-        }
-
-        try {
-            central.registrarMensagem(this, destinatario, mensagem);
-            return "Mensagem enviada com sucesso por " + this.getNome() + "\n" + destinatario.receberMensagem(this, mensagem);
-        } catch (RoboDesligadoException | ErroComunicacaoException e) {
-            throw new ErroComunicacaoException("Falha ao enviar mensagem: " + e.getMessage());
-        }
+    public String enviarMensagem(Comunicavel destinatario, String mensagem, CentralComunicacao central)
+            throws ErroComunicacaoException, RoboDesligadoException {
+        return this.moduloComunicacao.enviarMensagem(destinatario, mensagem, central);
     }
 
     /**
      * Recebe uma mensagem de outro robô comunicável
      * Verifica se o robô está operacional antes de processar a mensagem
+     * 
      * @param remetente Robô que enviou a mensagem
-     * @param mensagem Conteúdo da mensagem recebida
+     * @param mensagem  Conteúdo da mensagem recebida
      * @return String confirmando recebimento da mensagem
      * @throws ErroComunicacaoException Se houver problemas na comunicação
-     * @throws RoboDesligadoException Se o robô estiver desligado
+     * @throws RoboDesligadoException   Se o robô estiver desligado
      */
-    public String receberMensagem(Comunicavel remetente, String mensagem) 
+    public String receberMensagem(Comunicavel remetente, String mensagem)
             throws ErroComunicacaoException, RoboDesligadoException {
-        
-        if (!getEstado()) {
-            throw new RoboDesligadoException("Robô " + getNome() + " está desligado e não pode receber mensagens.");
-        }
-
-        if (remetente == null) {
-            throw new ErroComunicacaoException("Remetente não pode ser nulo.");
-        }
-
-        // A mensagem já foi registrada pela central no método enviarMensagem
-        // Aqui podemos adicionar lógica adicional de processamento da mensagem
-        return getNome() + " recebeu mensagem de " + ((Robo)remetente).getNome() + ": " + mensagem;
+        return this.moduloComunicacao.receberMensagem(remetente, mensagem);
     }
 }
