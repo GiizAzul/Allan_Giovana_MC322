@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
-import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
 import robos.subsistemas.GerenciadorSensores;
 import robos.subsistemas.movimento.ControleMovimento;
@@ -91,60 +90,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @throws ColisaoException Se houver colisão com outros objetos
      */
     public void mover(int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, RoboDestruidoPorBuracoException, ColisaoException {
-        // Verifica se o robô está dentro dos limites do ambiente
-        verificarGPSAtivo();
-
-        if (posicaoX + deltaX < 0 || posicaoY + deltaY < 0 || posicaoX + deltaX >= ambiente.getTamX()
-                || posicaoY + deltaY >= ambiente.getTamY()) {
-            throw new ForaDosLimitesException("O robô " + this.nome + " tentou se mover para fora dos limites do ambiente");
-        }
-
-        int destinoX = posicaoX + deltaX;
-        int destinoY = posicaoY + deltaY;
-
-        // Movimentação em linha reta no eixo X
-        if (deltaX != 0) {
-            int passoX = deltaX > 0 ? 1 : -1;
-            for (int x = posicaoX + passoX; x != destinoX + passoX; x += passoX) {
-                Object obj = ambiente.identificarEntidadePosicao(x, posicaoY, posicaoZ);
-                if (obj != null) {
-                    if (obj instanceof Obstaculo && 
-                        ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        // Tratamento especial para buraco
-                        ambiente.removerEntidade(this);
-                        throw new RoboDestruidoPorBuracoException(
-                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + x + " Y:" + posicaoY + " e foi destruído");
-                    } else {
-                        // Para outros obstáculos ou robôs, apenas para o movimento
-                        throw new ColisaoException("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + x + " Y:" + posicaoY);
-                    }
-                }
-                posicaoX = x; // Atualiza a posição X antes da colisão
-            }
-        }
-
-        // Movimentação em linha reta no eixo Y
-        if (deltaY != 0) {
-            int passoY = deltaY > 0 ? 1 : -1;
-            for (int y = posicaoY + passoY; y != destinoY + passoY; y += passoY) {
-                Object obj = ambiente.identificarEntidadePosicao(posicaoX, y, posicaoZ);
-                
-                if (obj != null) {
-                    if (obj instanceof Obstaculo && 
-                        ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        // Tratamento especial para buraco
-                        ambiente.removerEntidade(this);
-                        throw new RoboDestruidoPorBuracoException(
-                                "O robô " + this.nome + " caiu em um BURACO na posição X:" + posicaoX + " Y:" + y + " e foi destruído");
-                    } else {
-                        // Para outros obstáculos ou robôs, apenas para o movimento
-                        throw new ColisaoException("O robô " + this.nome + " interrompeu o movimento devido a um objeto na posição X:" + posicaoX + " Y:" + y);
-                    }
-                }
-                ambiente.moverEntidade(this, posicaoX, y, posicaoZ);
-                posicaoY = y; // Atualiza a posição Y antes da colisão
-            }
-        }
+        this.controleMovimento.mover(this, deltaX, deltaY, ambiente);
     }
 
     /**

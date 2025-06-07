@@ -2,12 +2,14 @@
 package robos.subsistemas.movimento;
 
 import ambiente.Ambiente;
+import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.robos.gerais.VelocidadeMaximaException;
 import excecoes.sensor.SensorException;
 import robos.aereos.RoboAereo;
+import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
 
 /**
@@ -37,5 +39,7 @@ public interface ControleMovimento {
      */
     void mover(RoboAereo robo, int novoX, int novoY, int novaZ, Ambiente ambiente)
             throws SensorException, ColisaoException, MovimentoInvalidoException, RoboDestruidoPorBuracoException;
+
+    void mover(Robo robo, int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, RoboDestruidoPorBuracoException, ColisaoException;
 
 }

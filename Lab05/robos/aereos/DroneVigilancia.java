@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import robos.geral.*;
 import robos.subsistemas.ModuloComunicacao;
+import robos.subsistemas.movimento.ControleMovimentoAereo;
 import robos.terrestres.RoboTerrestre;
 import interfaces.*;
 import excecoes.ambiente.ErroComunicacaoException;
@@ -145,7 +146,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
         // Move o drone para ficar sobre a região central
         verificarGPSAtivo();
 
-        this.mover(centroX - this.getX(), centroY - this.getY(), ambiente);
+        ((ControleMovimentoAereo) this.controleMovimento).mover(this, centroX - this.getX(), centroY - this.getY(), ambiente);
 
         // Verifica se a câmera possui abertura para fazer a varredura
         double ang_rad = Math.toRadians(this.angulo_camera);
