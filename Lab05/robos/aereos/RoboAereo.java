@@ -20,8 +20,6 @@ import robos.subsistemas.movimento.ControleMovimentoAereo;
 public class RoboAereo extends Robo implements Identificantes {
 
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
-    private Barometro sensorBarometro;      // Sensor de pressão atmosférica
-    private Radar sensorRadar; // Sensor de radar para detecção de objetos
 
     /**
      * Construtor de RoboAereo com parâmetros básicos
@@ -39,10 +37,9 @@ public class RoboAereo extends Robo implements Identificantes {
     public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente) {
         super(n, d, m, x, y, h, vel, new ControleMovimentoAereo());
         this.altitudeMaxima = hmax;
-        this.sensorBarometro = new Barometro(this);
-        this.sensorRadar = new Radar(this, ambiente, 100, 30);
-        this.addSensor(sensorBarometro);
-        this.addSensor(sensorRadar);
+        super.gerenciadorSensores.adicionarSensor(new Barometro(this));
+        super.gerenciadorSensores.adicionarSensor(new Radar(this, ambiente, 100, 30));
+  
     }
 
     /**
@@ -63,10 +60,8 @@ public class RoboAereo extends Robo implements Identificantes {
     public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, float alc_radar, float ang_radar) {
         super(n, d, m, x, y, h, vel, new ControleMovimentoAereo());
         this.altitudeMaxima = hmax;
-        this.sensorBarometro = new Barometro(this);
-        this.sensorRadar = new Radar(this, ambiente, alc_radar, ang_radar);
-        this.addSensor(sensorBarometro);
-        this.addSensor(sensorRadar);
+        super.gerenciadorSensores.adicionarSensor(new Barometro(this));
+        super.gerenciadorSensores.adicionarSensor(new Radar(this, ambiente, alc_radar, ang_radar));
     }
     
     /**
@@ -149,7 +144,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * @throws SensorException Se houver problemas com o sensor barômetro
      */
     public double getPressao() throws SensorException {
-        return this.sensorBarometro.acionar();
+        return super.gerenciadorSensores.getPressaoAtmosferica();
     }
 
     /**
@@ -216,7 +211,7 @@ public class RoboAereo extends Robo implements Identificantes {
      */
     @Override
     public ArrayList<Robo> identificarRobo() throws SensorException {
-        ArrayList<Entidade> objetosEncontrados = this.sensorRadar.acionar();
+        ArrayList<Entidade> objetosEncontrados = super.gerenciadorSensores.identificarComRadar();
         ArrayList<Robo> robosEncontrados = new ArrayList<Robo>();
         for (Entidade objectEnc : objetosEncontrados) {
             if (objectEnc.getTipo() == TipoEntidade.ROBO) {
@@ -233,7 +228,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * @throws SensorException Se houver problemas com o sensor radar
      */
     public ArrayList<Obstaculo> identificarObstaculo() throws SensorException {
-        ArrayList<Entidade> objetosEncontrados = this.sensorRadar.acionar();
+        ArrayList<Entidade> objetosEncontrados = super.gerenciadorSensores.identificarComRadar();
         ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
         for (Entidade objectEnc : objetosEncontrados) {
             if (objectEnc.getTipo() == TipoEntidade.OBSTACULO) {
@@ -248,7 +243,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * @return Instância do sensor radar
      */
     public Radar getRadar() {
-        return this.sensorRadar;
+        return super.gerenciadorSensores.getRadar();
     }
 
     /**
@@ -256,7 +251,7 @@ public class RoboAereo extends Robo implements Identificantes {
      * @return Instância do sensor barômetro
      */
     public Barometro getBarometro() {
-        return this.sensorBarometro;
+        return super.gerenciadorSensores.getBarometro();
     }
 
     /**

@@ -6,6 +6,7 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import robos.equipamentos.sensores.*;
+import robos.subsistemas.GerenciadorSensores;
 import robos.subsistemas.movimento.ControleMovimento;
 import interfaces.*;
 import excecoes.ambiente.ForaDosLimitesException;
@@ -33,11 +34,8 @@ public abstract class Robo implements Entidade, Destrutivel {
     private MateriaisRobo material; // Material do robô
     private TipoEntidade tipo; // Tipo de entidade (ROBO, OBSTACULO, etc.)
 
-    // Lista de sensores do robô padrões
-    private GPS gps; // Sensor de GPS -> Informar a posição dos Robôs
-    private ArrayList<Sensor<?>> listaSensores; // Lista de sensores do robô
-
-
+    
+    protected GerenciadorSensores gerenciadorSensores;
     protected ControleMovimento controleMovimento;
 
     // Acessível somente para subclasses
@@ -67,11 +65,10 @@ public abstract class Robo implements Entidade, Destrutivel {
         this.estado = true;
         this.integridade = 100;
         this.velocidade = velocidade;
-        this.gps = new GPS(this);
-        this.listaSensores = new ArrayList<>();
-        this.listaSensores.add(gps);
         this.tipo = TipoEntidade.ROBO;
         this.controleMovimento = controleMovimento;
+        this.gerenciadorSensores = new GerenciadorSensores(this);
+        this.gerenciadorSensores.adicionarSensor(new GPS(this));
     }
 
     /**
@@ -219,8 +216,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @throws SensorException Se o GPS estiver inativo ou com problemas
      */
     public int getX() throws SensorException {
-        verificarGPSAtivo();
-        return this.gps.obterPosicaoX();
+        return this.gerenciadorSensores.getPosicaoGPS()[0];
     }
 
     /**
@@ -228,9 +224,9 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Posição Y obtida via GPS
      * @throws SensorException Se o GPS estiver inativo ou com problemas
      */
+    @Override
     public int getY() throws SensorException {
-        verificarGPSAtivo();
-        return this.gps.obterPosicaoY();
+        return this.gerenciadorSensores.getPosicaoGPS()[1];
     }
 
     /**
@@ -461,27 +457,11 @@ public abstract class Robo implements Entidade, Destrutivel {
     }
 
     /**
-     * Adiciona um sensor à lista de sensores do robô
-     * @param sensor Sensor a ser adicionado
-     */
-    public void addSensor(Sensor<?> sensor) {
-        listaSensores.add(sensor);
-    }
-
-    /**
-     * Retorna a lista de todos os sensores do robô
-     * @return ArrayList contendo todos os sensores
-     */
-    public ArrayList<Sensor<?>> getListaSensores() {
-        return listaSensores;
-    }
-
-    /**
      * Retorna o sensor GPS do robô
      * @return Instância do GPS ou null se não disponível
      */
     public GPS getGPS() {
-        return this.gps;
+        return this.gerenciadorSensores.getGPS();
     }
 
     /**
@@ -489,9 +469,14 @@ public abstract class Robo implements Entidade, Destrutivel {
      * Método protegido usado internamente antes de operações que dependem do GPS
      * @throws SensorInativoException Se o GPS estiver inativo ou não disponível
      */
-    protected void verificarGPSAtivo() throws SensorInativoException {
-        if (this.gps == null || !this.gps.isAtivo()) {
-            throw new SensorInativoException("O GPS do robô " + this.nome + " está inativo ou não disponível");
+    protected void verificarGPSAtivo() throws SensorInativoException, SensorAusenteException {
+        // A própria chamada a getPosicaoGPS() já faz a verificação.
+        // Se quisermos apenas verificar sem pegar a posição, podemos fazer:
+        if (this.gerenciadorSensores.getGPS() == null) {
+            throw new SensorAusenteException("O GPS do robô " + this.nome + " não está disponível");
+        }
+        if (!this.gerenciadorSensores.getGPS().isAtivo()) {
+            throw new SensorInativoException("O GPS do robô " + this.nome + " está inativo");
         }
     }
 

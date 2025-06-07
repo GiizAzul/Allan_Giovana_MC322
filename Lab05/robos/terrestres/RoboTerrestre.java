@@ -16,7 +16,6 @@ import excecoes.sensor.*;;
  */
 public class RoboTerrestre extends Robo {
     private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
-    private Colisao sensorColisao; // Sensor de colisão
 
     /**
      * Construtor de RoboTerrestre que inicializa o robô na superfície (Z=0)
@@ -33,7 +32,7 @@ public class RoboTerrestre extends Robo {
     public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
         super(nome, direcao, material, posicaoX, posicaoY, 0, velocidade, new ControleMovimentoTerrestre());
         this.velocidadeMaxima = velocidadeMaxima;
-        this.sensorColisao = new Colisao(this, ambiente); // Inicializa o sensor de colisão
+        super.gerenciadorSensores.adicionarSensor(new Colisao(this, ambiente));
     }
 
     /**
@@ -89,8 +88,8 @@ public class RoboTerrestre extends Robo {
      * @return Instância do sensor de colisão
      */
     public Colisao getSensorColisao() {
-        return sensorColisao;
-    }
+        return super.gerenciadorSensores.getSensorColisao();
+  }
 
     /**
      * Executa tarefas específicas de robôs terrestres baseadas nos argumentos fornecidos

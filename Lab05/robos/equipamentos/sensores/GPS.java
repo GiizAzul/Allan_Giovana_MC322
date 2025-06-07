@@ -56,28 +56,6 @@ public class GPS extends Sensor<int[]> {
     }
     
     /**
-     * Método específico para obter apenas a coordenada X do robô.
-     * Útil quando apenas a posição horizontal no eixo X é necessária.
-     * 
-     * @return Coordenada X do robô, ou -1 se o sensor estiver inativo ou não vinculado
-     */
-    public int obterPosicaoX() throws SensorException{
-        int[] posicoes = this.acionar();
-        return posicoes[0];
-    }
-    
-    /**
-     * Método específico para obter apenas a coordenada Y do robô.
-     * Útil quando apenas a posição horizontal no eixo Y é necessária.
-     * 
-     * @return Coordenada Y do robô, ou -1 se o sensor estiver inativo ou não vinculado
-     */
-    public int obterPosicaoY() throws SensorException{
-        int[] posicoes = this.acionar();
-        return posicoes[1];
-    }
-    
-    /**
      * Vincula o GPS a um robô específico.
      * Este método permite que um GPS criado sem vínculo a um robô
      * seja posteriormente associado a um robô específico.
