@@ -1,6 +1,7 @@
 package robos.terrestres;
 import ambiente.Ambiente;
 import robos.equipamentos.sensores.Colisao;
+import robos.geral.AgenteInteligente;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.subsistemas.movimento.ControleMovimentoTerrestre;
@@ -14,7 +15,7 @@ import excecoes.sensor.*;;
  * Classe que representa um robô terrestre, especialização de Robo
  * com capacidade de velocidade limitada
  */
-public class RoboTerrestre extends Robo {
+public class RoboTerrestre extends AgenteInteligente {
     private int velocidadeMaxima;  // Velocidade máxima do robô terrestre
 
     /**
@@ -126,6 +127,9 @@ public class RoboTerrestre extends Robo {
             default:
                 return "";
         }
+    }
+
+    public void executarMissao ( Ambiente a ) {
     }
 
 }

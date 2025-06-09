@@ -9,6 +9,7 @@ import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
 import interfaces.*;
 import robos.equipamentos.sensores.*;
+import robos.geral.AgenteInteligente;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.subsistemas.movimento.ControleMovimentoAereo;
@@ -17,7 +18,7 @@ import robos.subsistemas.movimento.ControleMovimentoAereo;
  * Classe que representa um robô aéreo, especialização de Robo
  * com capacidade de voar em diferentes altitudes
  */
-public class RoboAereo extends Robo implements Identificantes {
+public class RoboAereo extends AgenteInteligente implements Identificantes {
 
     private int altitudeMaxima = -1;  // Altitude máxima que o robô pode atingir
 
@@ -310,6 +311,9 @@ public class RoboAereo extends Robo implements Identificantes {
             default:
                 return "";
         }
+    }
+
+    public void executarMissao ( Ambiente a ) {
     }
 
 }
