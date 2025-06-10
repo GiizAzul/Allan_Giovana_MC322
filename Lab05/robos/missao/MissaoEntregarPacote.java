@@ -19,17 +19,20 @@ public class MissaoEntregarPacote implements Missao {
     }
 
     @Override
-    public void executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente) {
         if (robo instanceof Correios) {
             Correios correio = (Correios) robo;
-            System.out.println("Iniciando missão: Entregar pacote " + idPacote);
+            String resultado="MISSÃO: Entregar pacote " + idPacote+"\n";
             try {
                 correio.executarTarefa("carregar", idPacote, peso);
-                System.out.println(correio.executarTarefa("entregar", idPacote, destinoX, destinoY, ambiente));
-                System.out.println("Missão de entrega concluída.");
+                resultado+=correio.executarTarefa("entregar", idPacote, destinoX, destinoY, ambiente);
+                resultado+="\nMissão de entrega concluída.";
             } catch (Exception e) {
-                System.err.println("Falha na missão de entrega: " + e.getMessage());
+                resultado+= "Falha na missão de entrega: " + e.getMessage();
             }
+            return resultado;
+        } else {
+            return "Missão EntregarPacote só pode ser executada por um Correio.";
         }
     }
 }

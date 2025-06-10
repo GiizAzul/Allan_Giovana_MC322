@@ -1,21 +1,11 @@
-import ambiente.Ambiente;
-import ambiente.CentralComunicacao;
-import ambiente.Obstaculo;
-import ambiente.TipoObstaculo;
-import excecoes.ambiente.ErroComunicacaoException;
-import excecoes.ambiente.ForaDosLimitesException;
-import excecoes.robos.especificos.AlvoInvalidoException;
-import excecoes.robos.especificos.MunicaoInsuficienteException;
-import excecoes.robos.gerais.ColisaoException;
-import excecoes.robos.gerais.MovimentoInvalidoException;
-import excecoes.robos.gerais.RoboDesligadoException;
-import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
+import ambiente.*;
+import excecoes.ambiente.*;
+import excecoes.robos.especificos.*;
+import excecoes.robos.gerais.*;
 import excecoes.sensor.SensorException;
-import robos.geral.MateriaisRobo;
-import robos.geral.Robo;
-import robos.terrestres.Correios;
-import robos.terrestres.RoboTerrestre;
-import robos.terrestres.TanqueGuerra;
+import robos.missao.*;
+import robos.geral.*;
+import robos.terrestres.*;
 
 public class TestRoboTerrestre extends TestBase {
 
@@ -188,44 +178,50 @@ public class TestRoboTerrestre extends TestBase {
         adicionarEntidadeTest(tanque, ambiente);
 
         // Teste de ataque sem alvo
-        String resultado = tanque.executarTarefa("atirar", 10, 10, 1, ambiente);
+        tanque.definirMissao(new MissaoDestruirAlvo(10,10,1));
+        String resultado = tanque.executarMissao(ambiente);
         verificar("Deve permitir atirar em posição vazia",
-                resultado.contains("Disparado realizado no alvo (10, 10)") &&
-                        resultado.contains("Nenhum alvo foi atingido"));
-
+        resultado.contains("Disparado realizado no alvo (10, 10)") &&
+        resultado.contains("Nenhum alvo foi atingido"));
+        
         // Teste de ataque em alvo fora de alcance
-        resultado = tanque.executarTarefa("atirar", 18, 18, 1, ambiente);
+        tanque.definirMissao(new MissaoDestruirAlvo(18,18,1));
+        resultado = tanque.executarMissao(ambiente);
         verificar("Deve identificar alvo fora de alcance",
-                resultado.equals("Alvo fora do alcance"));
-
+        resultado.contains("Alvo fora do alcance"));
+        
         // Teste de ataque em robô
         Robo alvo = ambiente.criarRobo(1, 2, "C1", "Sul", MateriaisRobo.PLASTICO, 7, 7, 0, 3, 5, 50, 25.0f);
         adicionarEntidadeTest(alvo, ambiente);
-        resultado = tanque.executarTarefa("atirar", 7, 7, 2, ambiente);
+        tanque.definirMissao(new MissaoDestruirAlvo(7,7,2));
+        resultado = tanque.executarMissao(ambiente);
         verificar("Deve acertar robô alvo",
-                resultado.contains("Robô C1 foi atingido"));
-
+        resultado.contains("Robô C1 foi atingido"));
+        
         // Teste de ataque em obstáculo
         Obstaculo obstaculo = new Obstaculo(TipoObstaculo.PAREDE, 6, 6, 6, 6);
         adicionarEntidadeTest(obstaculo, ambiente);
-        resultado = tanque.executarTarefa("atirar", 6, 6, 1, ambiente);
+        tanque.definirMissao(new MissaoDestruirAlvo(6,6,1));
+        resultado = tanque.executarMissao(ambiente);
         verificar("Deve acertar obstáculo",
                 resultado.contains("Obstáculo PAREDE foi atingido"));
 
         // Teste de munição insuficiente
-        resultado = tanque.executarTarefa("atirar", 7, 7, 200, ambiente);
+        tanque.definirMissao(new MissaoDestruirAlvo(7,7,200));
+        resultado = tanque.executarMissao(ambiente);
         verificar("Deve identificar munição insuficiente",
-                resultado.equals("Municao insuficiente para realizar o disparo"));
-
+        resultado.contains("Municao insuficiente para realizar o disparo"));
+        
         // Teste de recarga
         resultado = tanque.executarTarefa("recarregar", 50);
         verificar("Deve permitir recarregar munição",
-                resultado.equals("Recarregamento concluido"));
-
+        resultado.contains("Recarregamento concluido"));
+        
         // Teste de auto-ataque
-        resultado = tanque.executarTarefa("atirar", 5, 5, 1, ambiente);
+        tanque.definirMissao(new MissaoDestruirAlvo(5,5,1));
+        resultado = tanque.executarMissao(ambiente);
         verificar("Não deve permitir atirar na própria posição",
-                resultado.equals("Não é possível atirar no próprio robô"));
+                resultado.contains("Não é possível atirar no próprio robô"));
 
         // Teste de resistência
         verificar("Tanque deve ter alta resistência", tanque.getIntegridade() == 100);
@@ -268,19 +264,24 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Deve indicar pacote inexistente",
                 resultado.contains("Pacote P3 não encontrado na carga"));
 
+        correio.definirMissao(new MissaoEntregarPacote("P4", 6, 6, 5.0f));
+        resultado = correio.executarMissao(ambiente);
+        verificar("Deve entregar pacote em posição válida",
+        resultado.contains("Pacote P4 entregue na posição (6, 6)"));
+        
         // Teste de entrega em buraco
         Obstaculo buraco = new Obstaculo(TipoObstaculo.BURACO, 8, 8, 8, 8);
         adicionarEntidadeTest(buraco, ambiente);
-        correio.executarTarefa("carregar", "P4", 5.0f);
-        resultado = correio.executarTarefa("entregar", "P4", 8, 8, ambiente);
+        correio.executarTarefa("carregar", "P5", 5.0f);
+        resultado = correio.executarTarefa("entregar", "P5", 8, 8, ambiente);
         verificar("Deve cobrir buraco ao entregar pacote",
-                resultado.contains("Buraco coberto na posição"));
-
+        resultado.contains("Buraco coberto na posição"));
+        
         // Teste de entrega com obstáculo no caminho
         Obstaculo parede = new Obstaculo(TipoObstaculo.PAREDE, 7, 7, 7, 7);
         adicionarEntidadeTest(parede, ambiente);
-        correio.executarTarefa("carregar", "P5", 5.0f);
-        resultado = correio.executarTarefa("entregar", "P5", 7, 7, ambiente);
+        correio.executarTarefa("carregar", "P6", 5.0f);
+        resultado = correio.executarTarefa("entregar", "P6", 7, 7, ambiente);
         verificar("Deve falhar ao tentar entregar com obstáculo no caminho",
                 resultado.contains("Erro ao entregar pacote"));
 

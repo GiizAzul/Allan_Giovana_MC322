@@ -16,20 +16,21 @@ public class MissaoDestruirAlvo implements Missao {
     }
 
     @Override
-    public void executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente) {
         // Verifica se o robô é realmente um TanqueGuerra para usar suas funções específicas
         if (robo instanceof TanqueGuerra) {
             TanqueGuerra tanque = (TanqueGuerra) robo;
-            System.out.println("MISSÃO: Disparando contra (" + alvoX + ", " + alvoY + ")");
+            String resultado = "MISSÃO: Disparando contra (" + alvoX + ", " + alvoY + ")\n";
             try {
                 // Utiliza o método já existente no TanqueGuerra
-                String resultado = tanque.executarTarefa("atirar", alvoX, alvoY, nTiros, ambiente);
-                System.out.println("Resultado do disparo: " + resultado);
+                resultado += tanque.executarTarefa("atirar", alvoX, alvoY, nTiros, ambiente);
+                
             } catch (Exception e) {
-                System.err.println("Falha ao executar a missão de destruição: " + e.getMessage());
+                resultado+="\nFalha ao executar a missão de destruição: " + e.getMessage()+"\n";
             }
+            return resultado;
         } else {
-            System.out.println("Missão DestruirAlvo só pode ser executada por um TanqueGuerra.");
+            return "Missão DestruirAlvo só pode ser executada por um TanqueGuerra.";
         }
     }
 }

@@ -313,7 +313,8 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
         }
     }
 
-    public void executarMissao ( Ambiente a ) {
+    public String executarMissao ( Ambiente a ) {
+        return null;
     }
 
 }

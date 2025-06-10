@@ -290,4 +290,15 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
             throws ErroComunicacaoException, RoboDesligadoException {
         return this.moduloComunicacao.receberMensagem(remetente, mensagem);
     }
+
+    public String executarMissao(Ambiente a) {
+        if (temMissao()) {
+            System.out.println("Drone de Vigiância " + getNome() + " iniciando execução da missão...");
+            missao.executar(this, a);
+            System.out.println("Drone de Vigiância " + getNome() + " finalizou a missão.");
+        } else {
+            System.out.println("Drone de Vigiância " + getNome() + " não possui uma missão para executar.");
+        }
+        return null;
+    }
 }

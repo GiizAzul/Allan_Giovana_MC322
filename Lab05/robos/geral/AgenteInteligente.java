@@ -15,7 +15,7 @@ public abstract class AgenteInteligente extends Robo {
         return missao != null;
     }
 
-    public abstract void executarMissao(Ambiente a);
+    public abstract String executarMissao(Ambiente a);
 
     public AgenteInteligente(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY,
             int posicaoZ, int velocidade, ControleMovimento controleMovimento) {

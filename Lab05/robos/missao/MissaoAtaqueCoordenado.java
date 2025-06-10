@@ -19,22 +19,24 @@ public class MissaoAtaqueCoordenado implements Missao {
     }
 
     @Override
-    public void executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente) {
         if (robo instanceof DroneAtaque) {
             DroneAtaque drone = (DroneAtaque) robo;
-            System.out.println("Iniciando missão: Ataque aéreo coordenado.");
+            String resultado = "Iniciando missão: Ataque aéreo coordenado.\n";
             try {
                 // Mover-se para a posição de ataque
-                drone.mover(alvoX, alvoY, altitudeAtaque, ambiente);
-                System.out.println("Posicionado para o ataque.");
+                drone.mover(alvoX, alvoY, altitudeAtaque+1, ambiente);
+                resultado += "Posicionado para o ataque.\n";
 
-                // Atirar no alvo no solo (Z=0)
-                System.out.println(drone.atirar(alvoX, alvoY, 0, nTiros, ambiente));
-                System.out.println("Missão de ataque aéreo concluída.");
+                resultado += drone.atirar(alvoX, alvoY, altitudeAtaque, nTiros, ambiente);
+                resultado += "Missão de ataque aéreo concluída.\n";
 
             } catch (Exception e) {
-                System.err.println("Falha na missão de ataque: " + e.getMessage());
+                resultado += "Falha na missão de ataque: " + e.getMessage()+"\n";
             }
+            return resultado;
+        } else {
+            return "Missão AtaqueCoordenado só pode ser executada por um DroneAtaque.";
         }
     }
 }

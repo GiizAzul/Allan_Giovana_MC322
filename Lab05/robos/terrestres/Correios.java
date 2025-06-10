@@ -278,4 +278,15 @@ public class Correios extends RoboTerrestre implements Comunicavel {
             throws ErroComunicacaoException, RoboDesligadoException {
         return this.moduloComunicacao.receberMensagem(remetente, mensagem);
     }
+
+    public String executarMissao(Ambiente a) {
+        if (temMissao()) {
+            String resultado = "Correio " + getNome() + " iniciando execução da missão...\n";
+            resultado+=missao.executar(this, a);
+            resultado+="\nCorreio " + getNome() + " finalizou a missão.";
+            return resultado;
+        } else {
+            return "Correio " + getNome() + " não possui uma missão para executar.";
+        }
+    }
 }

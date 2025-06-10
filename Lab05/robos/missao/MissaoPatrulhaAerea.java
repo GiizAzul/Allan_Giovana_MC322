@@ -19,7 +19,7 @@ public class MissaoPatrulhaAerea implements Missao {
     }
 
     @Override
-    public void executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente) {
         if (robo instanceof DroneVigilancia) {
             DroneVigilancia drone = (DroneVigilancia) robo;
             System.out.println("Iniciando missão: Patrulha Aérea.");
@@ -50,5 +50,6 @@ public class MissaoPatrulhaAerea implements Missao {
                 System.err.println("Falha na missão de patrulha: " + e.getMessage());
             }
         }
+        return null;
     }
 }

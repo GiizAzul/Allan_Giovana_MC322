@@ -129,7 +129,8 @@ public class RoboTerrestre extends AgenteInteligente {
         }
     }
 
-    public void executarMissao ( Ambiente a ) {
+    public String executarMissao ( Ambiente a ) {
+        return null;
     }
 
 }
