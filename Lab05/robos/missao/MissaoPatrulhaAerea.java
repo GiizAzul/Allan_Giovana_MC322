@@ -12,6 +12,7 @@ import java.util.List;
 public class MissaoPatrulhaAerea implements Missao {
     private List<int[]> waypoints;
     private Comunicavel base; // Um robô ou entidade para receber o relatório
+    private CentralComunicacao central;
 
     public MissaoPatrulhaAerea(List<int[]> waypoints, Comunicavel base) {
         this.waypoints = waypoints;
@@ -22,7 +23,7 @@ public class MissaoPatrulhaAerea implements Missao {
     public String executar(Robo robo, Ambiente ambiente) {
         if (robo instanceof DroneVigilancia) {
             DroneVigilancia drone = (DroneVigilancia) robo;
-            System.out.println("Iniciando missão: Patrulha Aérea.");
+            System.out.println("MISSÃO: Patrulha Aérea.");
             List<Robo> robosDetectados = new ArrayList<>();
 
             try {
@@ -43,7 +44,7 @@ public class MissaoPatrulhaAerea implements Missao {
                     relatorio += r.getNome() + " ";
                 }
                 
-                drone.enviarMensagem(base, relatorio, new CentralComunicacao());
+                drone.enviarMensagem(base, relatorio, central);
                 System.out.println("Relatório enviado para a base.");
 
             } catch (Exception e) {

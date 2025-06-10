@@ -229,13 +229,14 @@ public class DroneAtaque extends RoboAereo implements Atacante {
 
     public String executarMissao(Ambiente a) {
         if (temMissao()) {
-            System.out.println("Drone de Ataque " + getNome() + " iniciando execução da missão...");
-            missao.executar(this, a);
-            System.out.println("Drone de Ataque " + getNome() + " finalizou a missão.");
+            String resultado = "Drone de Ataque " + getNome() + " iniciando execução da missão...\n";
+            resultado+=missao.executar(this, a);
+            resultado+="\nDrone de Ataque " + getNome() + " finalizou a missão.";
+            return resultado;
         } else {
-            System.out.println("Drone de Ataque " + getNome() + " não possui uma missão para executar.");
+            return "Drone de Ataque " + getNome() + " não possui uma missão para executar.";
         }
-        return null;
+
     }
 
 }

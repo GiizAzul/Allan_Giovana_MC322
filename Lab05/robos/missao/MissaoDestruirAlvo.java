@@ -26,7 +26,7 @@ public class MissaoDestruirAlvo implements Missao {
                 resultado += tanque.executarTarefa("atirar", alvoX, alvoY, nTiros, ambiente);
                 
             } catch (Exception e) {
-                resultado+="\nFalha ao executar a missão de destruição: " + e.getMessage()+"\n";
+                resultado+="\nFalha ao executar a missão de destruição: " + e.getMessage();
             }
             return resultado;
         } else {

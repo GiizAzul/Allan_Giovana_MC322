@@ -22,17 +22,17 @@ public class MissaoAtaqueCoordenado implements Missao {
     public String executar(Robo robo, Ambiente ambiente) {
         if (robo instanceof DroneAtaque) {
             DroneAtaque drone = (DroneAtaque) robo;
-            String resultado = "Iniciando missão: Ataque aéreo coordenado.\n";
+            String resultado = "MISSÃO: Ataque aéreo coordenado.\n";
             try {
                 // Mover-se para a posição de ataque
                 drone.mover(alvoX, alvoY, altitudeAtaque+1, ambiente);
                 resultado += "Posicionado para o ataque.\n";
 
                 resultado += drone.atirar(alvoX, alvoY, altitudeAtaque, nTiros, ambiente);
-                resultado += "Missão de ataque aéreo concluída.\n";
+                resultado += "\nMissão de ataque aéreo concluída.";
 
             } catch (Exception e) {
-                resultado += "Falha na missão de ataque: " + e.getMessage()+"\n";
+                resultado += "Falha na missão de ataque: " + e.getMessage();
             }
             return resultado;
         } else {

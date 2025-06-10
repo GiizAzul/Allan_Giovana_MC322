@@ -12,6 +12,7 @@ import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
+import robos.missao.MissaoAtaqueCoordenado;
 
 
 public class TestRoboAereo extends TestBase {
@@ -177,24 +178,28 @@ public class TestRoboAereo extends TestBase {
         adicionarEntidadeTest(drone, ambiente);
 
         // Teste de ataque em coordenadas
-        String resultado = drone.executarTarefa("atirar coord", 7, 7, 2, 1, ambiente);
+        drone.definirMissao(new MissaoAtaqueCoordenado(7,7,2,1));
+        String resultado = drone.executarMissao(ambiente);
         verificar("Deve permitir atirar em coordenadas vazias", 
-                 resultado.contains("Disparado realizado") && 
-                 resultado.contains("Nenhum alvo foi atingido"));
-
+        resultado.contains("Disparado realizado") && 
+        resultado.contains("Nenhum alvo foi atingido"));
+        
         // Teste de ataque em robô
         Robo alvo = ambiente.criarRobo(1, 1, "T1", "Sul", MateriaisRobo.ACO, 7, 7, 0, 2, 5, 100, 10);
         adicionarEntidadeTest(alvo, ambiente);
-        resultado = drone.executarTarefa("atirar coord", 7, 7, 0, 2, ambiente);
+        drone.definirMissao(new MissaoAtaqueCoordenado(7,7,0,2));
+        resultado = drone.executarMissao(ambiente);
         verificar("Deve acertar robô alvo", resultado.contains("Robô T1 foi atingido"));
-
+        
         // Teste de escudo
         String defesa = drone.defender(30, ambiente);
         verificar("Escudo deve absorver dano", defesa.contains("defendeu o dano em seu escudo"));
-
+        
         // Teste de munição insuficiente
-        resultado = drone.executarTarefa("atirar coord", 7, 7, 0, 300, ambiente);
-        verificar("Deve identificar munição insuficiente", resultado.equals("Municao insuficiente para realizar o disparo"));
+        drone.definirMissao(new MissaoAtaqueCoordenado(7,7,0,300));
+        resultado = drone.executarMissao(ambiente);
+        System.out.println(resultado);
+        verificar("Deve identificar munição insuficiente", resultado.contains("Municao insuficiente para realizar o disparo"));
 
         // Teste de alvo fora de alcance
         resultado = drone.executarTarefa("atirar coord", 50, 50, 0, 1, ambiente);
