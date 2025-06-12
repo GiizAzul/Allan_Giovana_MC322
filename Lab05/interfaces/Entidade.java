@@ -1,6 +1,7 @@
 package interfaces;
 
 import excecoes.sensor.SensorException;
+import excecoes.logger.LoggerException;
 
 /**
  * Interface que define as características básicas de uma entidade no ambiente.
@@ -13,21 +14,21 @@ public interface Entidade {
      * @return Coordenada X da posição atual
      * @throws SensorException Se houver problemas com os sensores ao obter a posição
      */
-    int getX() throws SensorException;
+    int getX() throws SensorException, LoggerException;
     
     /**
      * Retorna a coordenada Y da entidade através dos sensores
      * @return Coordenada Y da posição atual
      * @throws SensorException Se houver problemas com os sensores ao obter a posição
      */
-    int getY() throws SensorException;
+    int getY() throws SensorException, LoggerException;
     
     /**
      * Retorna a coordenada Z (altura) da entidade através dos sensores
      * @return Coordenada Z da posição atual
      * @throws SensorException Se houver problemas com os sensores ao obter a posição
      */
-    int getZ() throws SensorException;
+    int getZ() throws SensorException, LoggerException;
     
     /**
      * Retorna a coordenada X da entidade diretamente, sem usar sensores
@@ -61,7 +62,7 @@ public interface Entidade {
      * @return String contendo informações descritivas da entidade
      * @throws SensorException Se houver problemas com os sensores ao obter informações
      */
-    String getDescricao() throws SensorException;
+    String getDescricao() throws SensorException, LoggerException;
     
     /**
      * Retorna a representação visual da entidade para exibição no mapa

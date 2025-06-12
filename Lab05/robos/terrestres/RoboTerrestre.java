@@ -5,6 +5,7 @@ import robos.geral.AgenteInteligente;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.subsistemas.movimento.ControleMovimentoTerrestre;
+import excecoes.logger.LoggerException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
@@ -50,7 +51,7 @@ public class RoboTerrestre extends AgenteInteligente {
      * @throws MovimentoInvalidoException 
      * @throws RoboDestruidoPorBuracoException 
      */
-    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException, ColisaoException, RoboDestruidoPorBuracoException, MovimentoInvalidoException {
+    public void mover(int deltaX, int deltaY, int velocidade, Ambiente ambiente) throws VelocidadeMaximaException, SensorException, LoggerException, ColisaoException, RoboDestruidoPorBuracoException, MovimentoInvalidoException {
         ((ControleMovimentoTerrestre) this.controleMovimento).mover(this, deltaX, deltaY, velocidade, ambiente);
     }
 
@@ -77,7 +78,7 @@ public class RoboTerrestre extends AgenteInteligente {
      * @return Distância euclidiana 3D (considerando altitude do robô alvo)
      * @throws SensorException Se houver problemas com o GPS
      */
-    public double distanciaRobo(Robo alvo) throws SensorException {
+    public double distanciaRobo(Robo alvo) throws SensorException, LoggerException {
         super.verificarGPSAtivo();
 
         return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
@@ -114,7 +115,7 @@ public class RoboTerrestre extends AgenteInteligente {
                 Ambiente ambiente = (Ambiente) argumentos[4];
                 try {
                     mover(deltaX, deltaY, velocidade, ambiente);
-                } catch (VelocidadeMaximaException | SensorException | ColisaoException e) {
+                } catch (VelocidadeMaximaException | LoggerException | SensorException | ColisaoException e) {
                     return "Não foi possível mover o robô, erro: " + e.getMessage();
                 }
                 return "";

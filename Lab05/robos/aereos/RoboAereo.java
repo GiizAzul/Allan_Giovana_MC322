@@ -7,6 +7,7 @@ import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
+import excecoes.logger.LoggerException;
 import interfaces.*;
 import robos.equipamentos.sensores.*;
 import robos.geral.AgenteInteligente;
@@ -75,7 +76,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @throws MovimentoInvalidoException Se o movimento exceder limites de altitude
      * @throws ColisaoException Se houver colisão com outros objetos
      */
-    private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorException, MovimentoInvalidoException, ColisaoException {
+    private void movimentoZ(int passo, int metros, Ambiente ambiente) throws SensorException, LoggerException, MovimentoInvalidoException, ColisaoException {
         // Calcula a altitude alvo baseada na direção do movimento
         int altitudeAlvo = passo > 0 ? getZ() + metros : getZ() - metros;
         
@@ -115,7 +116,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @throws ColisaoException Se houver colisão durante a subida
      * @throws MovimentoInvalidoException Se exceder a altitude máxima
      */
-    public void subir(int metros, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
+    public void subir(int metros, Ambiente ambiente) throws SensorException, LoggerException, ColisaoException, MovimentoInvalidoException {
         this.movimentoZ(1, metros, ambiente);
     }
 
@@ -127,7 +128,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @throws ColisaoException Se houver colisão durante a descida
      * @throws MovimentoInvalidoException Se tentar descer abaixo do solo
      */
-    public void descer(int metros, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
+    public void descer(int metros, Ambiente ambiente) throws SensorException, LoggerException, ColisaoException, MovimentoInvalidoException {
         this.movimentoZ(-1, metros, ambiente);
     }
 
@@ -144,7 +145,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @return Pressão atmosférica medida pelo sensor
      * @throws SensorException Se houver problemas com o sensor barômetro
      */
-    public double getPressao() throws SensorException {
+    public double getPressao() throws SensorException, LoggerException {
         return super.gerenciadorSensores.getPressaoAtmosferica();
     }
 
@@ -163,7 +164,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @return Distância euclidiana 3D em unidades de ambiente
      * @throws SensorException Se houver problemas com o GPS
      */
-    public double distanciaRobo(Robo alvo) throws SensorException {
+    public double distanciaRobo(Robo alvo) throws SensorException, LoggerException {
         verificarGPSAtivo();
 
         return Math.sqrt(Math.pow(alvo.getXInterno() - this.getX(), 2)
@@ -200,7 +201,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @throws ColisaoException Se houver colisão durante o movimento
      * @throws MovimentoInvalidoException Se o movimento for inválido
      */
-    public void mover(int X, int Y, int Z, Ambiente ambiente) throws SensorException, ColisaoException, MovimentoInvalidoException {
+    public void mover(int X, int Y, int Z, Ambiente ambiente) throws SensorException, LoggerException, ColisaoException, MovimentoInvalidoException {
         ((ControleMovimentoAereo) this.controleMovimento).mover(this, X, Y, Z, ambiente);
     }
 
@@ -211,7 +212,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @throws SensorException Se houver problemas com o sensor radar
      */
     @Override
-    public ArrayList<Robo> identificarRobo() throws SensorException {
+    public ArrayList<Robo> identificarRobo() throws SensorException, LoggerException {
         ArrayList<Entidade> objetosEncontrados = super.gerenciadorSensores.identificarComRadar();
         ArrayList<Robo> robosEncontrados = new ArrayList<Robo>();
         for (Entidade objectEnc : objetosEncontrados) {
@@ -228,7 +229,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @return Lista de obstáculos detectados pelo sensor radar
      * @throws SensorException Se houver problemas com o sensor radar
      */
-    public ArrayList<Obstaculo> identificarObstaculo() throws SensorException {
+    public ArrayList<Obstaculo> identificarObstaculo() throws SensorException, LoggerException {
         ArrayList<Entidade> objetosEncontrados = super.gerenciadorSensores.identificarComRadar();
         ArrayList<Obstaculo> obstaculosEncontrados = new ArrayList<Obstaculo>();
         for (Entidade objectEnc : objetosEncontrados) {
@@ -277,7 +278,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
                 Ambiente ambiente = (Ambiente) argumentos[4];
                 try {
                     mover(x, y, z, ambiente);
-                } catch (SensorException | ColisaoException | MovimentoInvalidoException e) {
+                } catch (SensorException | LoggerException | ColisaoException | MovimentoInvalidoException e) {
                     return "Erro ao mover o robô: " + e.getMessage();
                 }
                 return "";
@@ -288,7 +289,7 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
                 try {
                     listaoObstaculos = identificarObstaculo();
                     listaoRobos = identificarRobo();
-                } catch (SensorException e) {
+                } catch (SensorException | LoggerException e) {
                     return "Erro ao identificar objetos: " + e.getMessage();
                 }
 

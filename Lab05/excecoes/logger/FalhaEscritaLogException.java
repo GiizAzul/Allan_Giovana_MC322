@@ -1,13 +1,13 @@
 package excecoes.logger;
 
-public class FalhaEscritaLogException extends Exception {
+public class FalhaEscritaLogException extends LoggerException {
         
     public FalhaEscritaLogException() {
-        super("Não foi possível escrever o log.");
+        super("[FalhaEscritaLogException] Não foi possível escrever o log.");
     }
 
     public FalhaEscritaLogException(String mensagem) {
-        super(mensagem);
+        super("[FalhaEscritaLogException] " + mensagem);
     }
 
 }

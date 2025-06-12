@@ -1,4 +1,5 @@
 package robos.equipamentos.sensores;
+import excecoes.logger.LoggerException;
 import excecoes.sensor.*;
 import robos.geral.Robo;
 import utils.Logger;
@@ -38,7 +39,7 @@ public class GPS extends Sensor<int[]> {
      * @return Array de inteiros com as coordenadas [x, y, z] do robô, ou null se o sensor estiver inativo ou não vinculado
      */
     @Override
-    public int[] acionar() throws SensorException {
+    public int[] acionar() throws SensorException, LoggerException, LoggerException {
         // Verifica as condições necessárias antes de acionar o sensor
         if (robo == null) {
            throw new SensorAusenteException("Robo não possui um sensor de GPS.");

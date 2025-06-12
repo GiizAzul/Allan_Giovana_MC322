@@ -9,10 +9,14 @@ import java.util.Date;
 
 
 public class Logger {
+    int ativo;
     Formatter logFile;
     Date dataAtual;
 
     public Logger(String nomeLog) throws ArquivoInvalidoException {
+        // Por padrão o logger está desativo, ele é ativado quando uma missão é iniciada!
+        this.ativo = 0;
+
         try {
             this.logFile = new Formatter(new FileWriter(nomeLog));
             this.dataAtual = new Date();
@@ -23,23 +27,36 @@ public class Logger {
 
     protected void escreverLog(String mensagem, String tipoMensagem) throws FalhaEscritaLogException {
         try {
-            this.logFile.format("[%s] %s %s", tipoMensagem, this.dataAtual, mensagem);
+            if (this.ativo == 1) this.logFile.format("[%s] %s %s", tipoMensagem, this.dataAtual, mensagem);
         } catch (Exception e) {
             throw new FalhaEscritaLogException();
         }
+    }
+
+    public void ativarLogger() {
+        this.ativo = 1;
+    }
+
+    public void desativarLogger() {
+        this.ativo = 0;
     }
 
     public void escreverLogAviso(String mensagem) throws FalhaEscritaLogException {
         this.escreverLog(mensagem, "WARNING");
     }
 
-    public void escreverLogFalha(String mensagem, String tipoMensagem) throws FalhaEscritaLogException {
+    public void escreverLogFalha(String mensagem) throws FalhaEscritaLogException {
         this.escreverLog(mensagem, "ERROR");
     }
 
-    public void escreverLogSucesso(String mensagem, String tipoMensagem) throws FalhaEscritaLogException {
+    public void escreverLogSucesso(String mensagem) throws FalhaEscritaLogException {
         this.escreverLog(mensagem, "SUCCESS");
     }
+
+    public void escreverLogInfo(String mensagem) throws FalhaEscritaLogException {
+        this.escreverLog(mensagem, "INFO");
+    }
+
     public void fecharLog() {
         this.logFile.close();
     }

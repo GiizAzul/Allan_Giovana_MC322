@@ -4,6 +4,7 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.logger.LoggerException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
@@ -15,7 +16,7 @@ import robos.terrestres.RoboTerrestre;
 
 public class ControleMovimentoAereo implements ControleMovimento {
     public void mover(RoboAereo robo, int X, int Y, int Z, Ambiente ambiente)
-            throws SensorException, ColisaoException, MovimentoInvalidoException {
+            throws SensorException, LoggerException, ColisaoException, MovimentoInvalidoException {
         int deltaX = X - robo.getX();
         int deltaY = Y - robo.getY();
 
@@ -89,7 +90,7 @@ public class ControleMovimentoAereo implements ControleMovimento {
     }
 
     public void mover(Robo robo, int deltaX, int deltaY, Ambiente ambiente)
-            throws ForaDosLimitesException, SensorException, RoboDestruidoPorBuracoException, ColisaoException {
+            throws ForaDosLimitesException, SensorException, LoggerException, RoboDestruidoPorBuracoException, ColisaoException {
 
         if (robo.getX() + deltaX < 0 || robo.getY() + deltaY < 0 || robo.getX() + deltaX >= ambiente.getTamX()
                 || robo.getY() + deltaY >= ambiente.getTamY()) {

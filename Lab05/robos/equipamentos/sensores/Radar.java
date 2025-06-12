@@ -8,6 +8,7 @@ import interfaces.TipoEntidade;
 import robos.geral.Robo;
 import utils.Logger;
 import robos.aereos.RoboAereo;
+import excecoes.logger.LoggerException;
 import excecoes.sensor.*;;
 
 /**
@@ -48,7 +49,8 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * 
      * @return ArrayList contendo todos os objetos (obstáculos e robôs) detectados pelo radar
      */
-    public ArrayList<Entidade> acionar() throws SensorException {
+    @Override
+    public ArrayList<Entidade> acionar() throws SensorException, LoggerException, LoggerException {
         // Verifica as condições necessárias antes de acionar o sensor
         if (robo == null) {
             throw new SensorAusenteException("Robo não possui um sensor de radar.");

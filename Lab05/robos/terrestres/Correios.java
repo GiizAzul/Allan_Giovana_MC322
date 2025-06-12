@@ -11,6 +11,7 @@ import robos.geral.Robo;
 import robos.subsistemas.ModuloComunicacao;
 import excecoes.robos.especificos.*;
 import excecoes.ambiente.*;
+import excecoes.logger.LoggerException;
 import excecoes.robos.gerais.*;
 import excecoes.sensor.SensorException;
 import interfaces.*;
@@ -136,7 +137,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
      * @throws SensorException  Se houver problemas com sensores
      * @throws ColisaoException Se houver colisão com obstáculos impeditivos
      */
-    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) throws SensorException, ColisaoException {
+    private boolean moverEntrega(int deltaX, int deltaY, Ambiente ambiente) throws SensorException, LoggerException, ColisaoException {
         verificarGPSAtivo();
 
         // Verifica se o robô está dentro dos limites do ambiente
@@ -209,7 +210,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
         boolean resEntrega;
         try {
             resEntrega = moverEntrega(destinoX - getX(), destinoY - getY(), ambiente);
-        } catch (SensorException | ColisaoException e) {
+        } catch (SensorException | LoggerException | ColisaoException e) {
             return "Erro ao entregar pacote: " + e.getMessage();
         }
         if (resEntrega) {

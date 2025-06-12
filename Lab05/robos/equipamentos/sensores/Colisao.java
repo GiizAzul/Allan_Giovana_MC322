@@ -5,6 +5,7 @@ import utils.Logger;
 import robos.geral.Robo;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import excecoes.logger.LoggerException;
 import excecoes.sensor.*;
 import interfaces.*;
 
@@ -42,7 +43,8 @@ public class Colisao extends Sensor<Integer> {
      *         1 - Colisão com outro robô
      *         2 - Colisão com um obstáculo
      */
-    public Integer acionar() throws SensorException {
+    @Override
+    public Integer acionar() throws SensorException, LoggerException, LoggerException {
         // Faz as verificações necessárias antes de acionar o sensor
         if (robo == null) {
            throw new SensorAusenteException("Robo não possui um sensor de colisão.");

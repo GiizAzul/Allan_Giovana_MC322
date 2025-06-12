@@ -17,7 +17,7 @@ public class TestRobo extends TestBase {
         executarTestes();
     }
     
-    public static void executarTestes() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    public static void executarTestes() throws SensorException, LoggerException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("Iniciando testes da classe Robo...");
         
         testarConstrutor();
@@ -47,7 +47,7 @@ public class TestRobo extends TestBase {
         verificar("Integridade inicial deve ser 100", robo.getIntegridade() == 100);
     }
     
-    private static void testarMovimento() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    private static void testarMovimento() throws SensorException, LoggerException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Movimento ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -87,7 +87,7 @@ public class TestRobo extends TestBase {
         verificar("Direção após mudança deve ser Sul", robo.getDirecao().equals("Sul"));
     }
     
-    private static void testarDistanciaEntreRobos() throws SensorException {
+    private static void testarDistanciaEntreRobos() throws SensorException, LoggerException {
         System.out.println("\n== Teste de Distância Entre Robôs ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -101,7 +101,7 @@ public class TestRobo extends TestBase {
         verificar("Distância calculada deve ser 5.0", Math.abs(distancia - 5.0) < 0.001);
     }
     
-    private static void testarAcessoGPS() throws SensorException {
+    private static void testarAcessoGPS() throws SensorException, LoggerException {
         System.out.println("\n== Teste de Acesso via GPS ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -111,7 +111,7 @@ public class TestRobo extends TestBase {
         verificar("Posição Y deve ser obtida corretamente", robo.getY() == 3);
     }
     
-    private static void testarFuncionamentoGPS() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    private static void testarFuncionamentoGPS() throws SensorException, LoggerException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Funcionamento do GPS ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -127,7 +127,7 @@ public class TestRobo extends TestBase {
         verificar("GPS deve atualizar posição Y após movimento", robo.getY() == 4);
     }
     
-    private static void testarColisoes() throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    private static void testarColisoes() throws SensorException, LoggerException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
         System.out.println("\n== Teste de Colisões ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -148,7 +148,7 @@ public class TestRobo extends TestBase {
         verificar("Movimento deve ser bloqueado por obstáculo", robo1.getX() == 2);
     }
     
-    private static void testarExibirPosicao() throws SensorException {
+    private static void testarExibirPosicao() throws SensorException, LoggerException {
         System.out.println("\n== Teste de Exibição de Posição ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);

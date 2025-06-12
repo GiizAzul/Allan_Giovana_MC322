@@ -15,6 +15,8 @@ import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
+import excecoes.logger.LoggerException;
+
 import ambiente.*;
 
 /**
@@ -82,7 +84,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
                 try {
                     objetos_encontrados = varrerArea(ambiente, centroX, centroY, raio);
                 } catch (VarreduraInvalidaException | ForaDosLimitesException | RoboDestruidoPorBuracoException
-                        | ColisaoException | SensorException e) {
+                        | ColisaoException | SensorException | LoggerException e) {
                     return "Erro ao varrer a área: " + e.getMessage();
                 }
 
@@ -136,7 +138,7 @@ public class DroneVigilancia extends RoboAereo implements Comunicavel {
      *                                         ângulo da câmera
      */
     private ArrayList<Entidade> varrerArea(Ambiente ambiente, int centroX, int centroY, int raio)
-            throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException,
+            throws ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, LoggerException,
             VarreduraInvalidaException {
         // Sistema de varredura, melhor quanto mais alto está o drone
         // Reposiciona o drone para o centro da varredura

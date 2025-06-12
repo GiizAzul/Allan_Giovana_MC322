@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import ambiente.Obstaculo;
 import excecoes.sensor.SensorException;
+import excecoes.logger.LoggerException;
 import robos.geral.*;
 
 /**
@@ -16,12 +17,12 @@ public interface Identificantes {
      * @return ArrayList contendo todos os obstáculos detectados pelos sensores
      * @throws SensorException Se houver problemas com os sensores durante a identificação
      */
-    ArrayList<Obstaculo> identificarObstaculo() throws SensorException;
+    ArrayList<Obstaculo> identificarObstaculo() throws SensorException, LoggerException;
     
     /**
      * Identifica outros robôs presentes no alcance dos sensores do robô
      * @return ArrayList contendo todos os robôs detectados pelos sensores
      * @throws SensorException Se houver problemas com os sensores durante a identificação
      */
-    ArrayList<Robo> identificarRobo() throws SensorException;
+    ArrayList<Robo> identificarRobo() throws SensorException, LoggerException;
 }

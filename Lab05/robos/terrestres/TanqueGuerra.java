@@ -10,6 +10,7 @@ import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.SensorException;
+import excecoes.logger.LoggerException;
 
 /**
  * Classe que representa um tanque de guerra terrestre com capacidades de ataque
@@ -69,7 +70,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
                 Ambiente ambiente = (Ambiente) argumentos[4];
                 try {
                     return atirar(alvoX, alvoY, 0, nTiros, ambiente);
-                } catch (SensorException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                } catch (SensorException | LoggerException | MunicaoInsuficienteException | AlvoInvalidoException e) {
                     return e.getMessage();
                 }
 
@@ -98,7 +99,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
      * @throws AlvoInvalidoException        Se o alvo for inválido (próprio tanque)
      */
     public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente)
-            throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException {
+            throws SensorException, LoggerException, MunicaoInsuficienteException, AlvoInvalidoException {
         verificarGPSAtivo();
 
         Entidade alvo = ambiente.identificarEntidadePosicao(alvoX, alvoY, 0);

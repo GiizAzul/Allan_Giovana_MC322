@@ -1,13 +1,13 @@
 package excecoes.logger;
 
-public class ArquivoInvalidoException extends Exception {
+public class ArquivoInvalidoException extends LoggerException {
         
     public ArquivoInvalidoException() {
-        super("O arquivo está inválido!");
+        super("[ArquivoInvalidoExceptino] O arquivo está inválido!");
     }
 
     public ArquivoInvalidoException(String mensagem) {
-        super(mensagem);
+        super("[ArquivoInvalidoExceptino] " + mensagem);
     }
 
 }

@@ -1,7 +1,10 @@
 package robos.subsistemas.movimento;
 
+import java.util.logging.Logger;
+
 import ambiente.Ambiente;
 import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.logger.LoggerException;
 import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
@@ -26,7 +29,7 @@ public interface ControleMovimento {
      * @param ambiente O ambiente da simulação.
      */
     void mover(RoboTerrestre robo, int deltaX, int deltaY, int velocidade, Ambiente ambiente)
-            throws VelocidadeMaximaException, SensorException, ColisaoException, RoboDestruidoPorBuracoException, MovimentoInvalidoException;
+            throws VelocidadeMaximaException, SensorException, LoggerException, ColisaoException, RoboDestruidoPorBuracoException, MovimentoInvalidoException;
 
     /**
      * Move um robô aéreo para uma nova posição 3D.
@@ -37,8 +40,8 @@ public interface ControleMovimento {
      * @param ambiente O ambiente da simulação.
      */
     void mover(RoboAereo robo, int novoX, int novoY, int novaZ, Ambiente ambiente)
-            throws SensorException, ColisaoException, MovimentoInvalidoException, RoboDestruidoPorBuracoException;
+            throws SensorException, ColisaoException, LoggerException, MovimentoInvalidoException, RoboDestruidoPorBuracoException;
 
-    void mover(Robo robo, int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, RoboDestruidoPorBuracoException, ColisaoException;
+    void mover(Robo robo, int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, LoggerException, RoboDestruidoPorBuracoException, ColisaoException;
 
 }

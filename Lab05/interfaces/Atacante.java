@@ -1,6 +1,7 @@
 package interfaces;
 
 import ambiente.Ambiente;
+import excecoes.logger.LoggerException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.sensor.SensorException;
@@ -24,7 +25,7 @@ public interface Atacante {
      * @throws AlvoInvalidoException Se o alvo for inválido, como si próprio
      */
     String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente)
-    throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException;
+    throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException, LoggerException;
     
     /**
      * Recarrega a munição do robô atacante

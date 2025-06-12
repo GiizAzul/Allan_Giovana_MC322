@@ -3,6 +3,8 @@ package robos.subsistemas;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import excecoes.logger.LoggerException;
 import excecoes.sensor.*;
 import interfaces.Entidade;
 import robos.equipamentos.sensores.*;
@@ -45,8 +47,9 @@ public class GerenciadorSensores {
      * Obtém a posição [X, Y, Z] do robô através do GPS.
      * @return um array de int com as coordenadas.
      * @throws SensorException se o GPS estiver ausente ou inativo.
+     * @throws LoggerException se houver alguma falha no sistema de Logging.
      */
-    public int[] getPosicaoGPS() throws SensorException {
+    public int[] getPosicaoGPS() throws SensorException, LoggerException, LoggerException {
         if (this.gps == null) throw new SensorAusenteException("Robô " + roboPai.getNome() + " não possui GPS.");
         if (!this.gps.isAtivo()) throw new SensorInativoException("GPS do robô " + roboPai.getNome() + " está inativo.");
         return this.gps.acionar();
@@ -55,9 +58,9 @@ public class GerenciadorSensores {
     /**
      * Aciona o radar para identificar entidades próximas.
      * @return Uma lista de entidades detectadas.
-     * @throws SensorException se o Radar estiver ausente ou inativo.
+     * @throws SensorException, LoggerException se o Radar estiver ausente ou inativo.
      */
-    public ArrayList<Entidade> identificarComRadar() throws SensorException {
+    public ArrayList<Entidade> identificarComRadar() throws SensorException, LoggerException, LoggerException {
         if (this.radar == null) throw new SensorAusenteException("Robô " + roboPai.getNome() + " não possui Radar.");
         if (!this.radar.isAtivo()) throw new SensorInativoException("Radar do robô " + roboPai.getNome() + " está inativo.");
         return this.radar.acionar();
@@ -66,9 +69,9 @@ public class GerenciadorSensores {
     /**
      * Obtém a leitura da pressão atmosférica do barômetro.
      * @return a pressão em hPa.
-     * @throws SensorException se o Barômetro estiver ausente ou inativo.
+     * @throws SensorException, LoggerException se o Barômetro estiver ausente ou inativo.
      */
-    public double getPressaoAtmosferica() throws SensorException {
+    public double getPressaoAtmosferica() throws SensorException, LoggerException, LoggerException {
         if (this.barometro == null) throw new SensorAusenteException("Robô " + roboPai.getNome() + " não possui Barômetro.");
         if (!this.barometro.isAtivo()) throw new SensorInativoException("Barômetro do robô " + roboPai.getNome() + " está inativo.");
         return this.barometro.acionar();
@@ -77,9 +80,9 @@ public class GerenciadorSensores {
     /**
      * Aciona o sensor de colisão para robôs terrestres.
      * @return um inteiro indicando o tipo de colisão (0: nenhuma, 1: robô, 2: obstáculo).
-     * @throws SensorException se o sensor de Colisão estiver ausente ou inativo.
+     * @throws SensorException, LoggerException se o sensor de Colisão estiver ausente ou inativo.
      */
-    public int verificarColisao() throws SensorException {
+    public int verificarColisao() throws SensorException, LoggerException, LoggerException {
         if (this.sensorColisao == null) throw new SensorAusenteException("Robô " + roboPai.getNome() + " não possui Sensor de Colisão.");
         if (!this.sensorColisao.isAtivo()) throw new SensorInativoException("Sensor de Colisão do robô " + roboPai.getNome() + " está inativo.");
         return this.sensorColisao.acionar();

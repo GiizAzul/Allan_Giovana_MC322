@@ -1,5 +1,6 @@
 package robos.equipamentos.sensores;
 
+import excecoes.logger.LoggerException;
 import excecoes.sensor.*;
 import utils.Logger;
 
@@ -54,5 +55,5 @@ public abstract class Sensor<T> {
      * 
      * @return Dados coletados pelo sensor
      */
-    abstract T acionar() throws SensorException;
+    abstract T acionar() throws SensorException, LoggerException, LoggerException;
 }

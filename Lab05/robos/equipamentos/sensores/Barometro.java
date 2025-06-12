@@ -1,4 +1,5 @@
 package robos.equipamentos.sensores;
+import excecoes.logger.LoggerException;
 import excecoes.sensor.*;
 import robos.geral.Robo;
 import utils.Logger;
@@ -38,8 +39,11 @@ public class Barometro extends Sensor<Double> {
      * @return Double com a pressão atmosférica em hPa para a altitude informada
      */
     @Override
-    public Double acionar() throws SensorException {
+    public Double acionar() throws SensorException, LoggerException, LoggerException {
         // Leitura da pressão atmosférica em função da altitude
+        this.logger.escreverLogInfo("Sensor de GPS Acionado");
+        
+
         if (robo == null) {
            throw new SensorAusenteException("Robo não possui um barômetro.");
         }

@@ -10,6 +10,7 @@ import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
+import excecoes.logger.LoggerException;
 
 /**
  * Classe que representa um drone de ataque aéreo com capacidades ofensivas.
@@ -97,7 +98,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                 Ambiente ambiente = (Ambiente) argumentos[5];
                 try {
                     return atirar(alvoX, alvoY, alvoZ, nTiros, ambiente);
-                } catch (SensorException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                } catch (SensorException | LoggerException | MunicaoInsuficienteException | AlvoInvalidoException e) {
                     return e.getMessage();
                 }
 
@@ -107,7 +108,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
                 ambiente = (Ambiente) argumentos[3];
                 try {
                     return atirar(robo, nTiros, ambiente);
-                } catch (SensorException | MunicaoInsuficienteException | AlvoInvalidoException e) {
+                } catch (SensorException | LoggerException | MunicaoInsuficienteException | AlvoInvalidoException e) {
                     return e.getMessage();
                 }
 
@@ -130,7 +131,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
      * @throws MunicaoInsuficienteException Se não houver munição suficiente
      * @throws AlvoInvalidoException Se o alvo for inválido (próprio robô)
      */
-    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException {
+    public String atirar(int alvoX, int alvoY, int alvoZ, int nTiros, Ambiente ambiente) throws SensorException, LoggerException, MunicaoInsuficienteException, AlvoInvalidoException {
 
         verificarGPSAtivo();
 
@@ -161,7 +162,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
      * @throws AlvoInvalidoException Se o alvo for inválido
      */
     private String atirar(Robo robo, int nTiros, Ambiente ambiente)
-    throws SensorException, MunicaoInsuficienteException, AlvoInvalidoException {
+    throws SensorException, LoggerException, MunicaoInsuficienteException, AlvoInvalidoException {
         verificarGPSAtivo();
         if (this.municao < nTiros) {
             throw new MunicaoInsuficienteException();

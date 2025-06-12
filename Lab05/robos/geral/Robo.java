@@ -13,6 +13,7 @@ import excecoes.robos.gerais.ColisaoException;
 import excecoes.robos.gerais.MovimentoInvalidoException;
 import excecoes.robos.gerais.RoboDestruidoPorBuracoException;
 import excecoes.sensor.*;
+import excecoes.logger.LoggerException;
 
 /**
  * Classe abstrata que representa um robô com funcionalidades básicas de movimento e
@@ -89,7 +90,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @throws RoboDestruidoPorBuracoException Se o robô cair em um buraco
      * @throws ColisaoException Se houver colisão com outros objetos
      */
-    public void mover(int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, RoboDestruidoPorBuracoException, ColisaoException {
+    public void mover(int deltaX, int deltaY, Ambiente ambiente) throws ForaDosLimitesException, SensorException, LoggerException, RoboDestruidoPorBuracoException, ColisaoException {
         this.controleMovimento.mover(this, deltaX, deltaY, ambiente);
     }
 
@@ -99,7 +100,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return String formatada com nome e posição do robô
      * @throws SensorException Se houver problemas com o GPS
      */
-    public String exibirPosicao() throws SensorException {
+    public String exibirPosicao() throws SensorException, LoggerException {
         verificarGPSAtivo();
 
         int x = this.getX();
@@ -116,7 +117,7 @@ public abstract class Robo implements Entidade, Destrutivel {
         try {
             return exibirPosicao() + "\nSua direção é " + direcao + "\nO robô está "
                     + (estado ? "ligado\n" : "desligado\n");
-        } catch (SensorException e) {
+        } catch (SensorException | LoggerException e) {
             return "Erro ao exibir posição: " + e.getMessage();
         }
     }
@@ -161,7 +162,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Posição X obtida via GPS
      * @throws SensorException Se o GPS estiver inativo ou com problemas
      */
-    public int getX() throws SensorException {
+    public int getX() throws SensorException, LoggerException {
         return this.gerenciadorSensores.getPosicaoGPS()[0];
     }
 
@@ -171,7 +172,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @throws SensorException Se o GPS estiver inativo ou com problemas
      */
     @Override
-    public int getY() throws SensorException {
+    public int getY() throws SensorException, LoggerException {
         return this.gerenciadorSensores.getPosicaoGPS()[1];
     }
 
@@ -180,7 +181,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Posição Z do robô
      * @throws SensorException Se o GPS estiver inativo ou com problemas
      */
-    public int getZ() throws SensorException {
+    public int getZ() throws SensorException, LoggerException {
         verificarGPSAtivo();
         return this.posicaoZ;
     }
@@ -316,7 +317,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Lista vazia na classe base; em subclasses, retorna robôs detectados pelos sensores
      * @throws SensorException Se houver problemas com os sensores
      */
-    public ArrayList<Robo> identificarRobo() throws SensorException {
+    public ArrayList<Robo> identificarRobo() throws SensorException, LoggerException {
         return new ArrayList<Robo>();
     }
 
@@ -327,7 +328,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Lista vazia na classe base; em subclasses, retorna obstáculos detectados pelos sensores
      * @throws SensorException Se houver problemas com os sensores
      */
-    public ArrayList<Obstaculo> identificarObstaculo() throws SensorException {
+    public ArrayList<Obstaculo> identificarObstaculo() throws SensorException, LoggerException {
         return new ArrayList<Obstaculo>();
     }
 
@@ -356,7 +357,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Distância euclidiana calculada
      * @throws SensorException Se houver problemas com o GPS
      */
-    public double distanciaRobo(Robo robo) throws SensorException {
+    public double distanciaRobo(Robo robo) throws SensorException, LoggerException {
         verificarGPSAtivo();
 
         return Math.sqrt(Math.pow(robo.getXInterno() - this.getX(), 2)
@@ -370,7 +371,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @return Distância calculada até a borda mais próxima do obstáculo
      * @throws SensorException Se houver problemas com o GPS
      */
-    public double distanciaObstaculo(Obstaculo obstaculo) throws SensorException {
+    public double distanciaObstaculo(Obstaculo obstaculo) throws SensorException, LoggerException {
         verificarGPSAtivo();
 
         if (getX() <= obstaculo.getX1() && getX() <= obstaculo.getX2()) {
@@ -456,7 +457,7 @@ public abstract class Robo implements Entidade, Destrutivel {
                 Ambiente ambiente = (Ambiente) argumentos[3];
                 try {
                     mover(deltaX, deltaY, ambiente);
-                } catch (SensorException | ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException e) {
+                } catch (SensorException | LoggerException | ForaDosLimitesException | RoboDestruidoPorBuracoException | ColisaoException e) {
                     return "Não foi possível mover o Robô: " + e.getMessage();
                 }
 
