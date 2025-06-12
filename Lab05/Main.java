@@ -12,9 +12,9 @@ import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
 import interfaces.*;
-import excecoes.ambiente.ArquivoInvalidoException;
 import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.logger.ArquivoInvalidoException;
 import excecoes.robos.gerais.RoboDesligadoException;
 
 /**

@@ -1,9 +1,10 @@
 package utils;
-import excecoes.ambiente.ArquivoInvalidoException;
-import excecoes.ambiente.FalhaEscritaLogException;
-
 import java.io.FileWriter;
 import java.util.Formatter;
+
+import excecoes.logger.ArquivoInvalidoException;
+import excecoes.logger.FalhaEscritaLogException;
+
 import java.util.Date;
 
 

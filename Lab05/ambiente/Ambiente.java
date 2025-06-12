@@ -2,8 +2,8 @@ package ambiente;
 
 import java.util.ArrayList;
 
-import excecoes.ambiente.ArquivoInvalidoException;
 import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.logger.ArquivoInvalidoException;
 import excecoes.robos.gerais.ColisaoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;

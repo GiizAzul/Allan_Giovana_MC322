@@ -1,4 +1,4 @@
-package excecoes.ambiente;
+package excecoes.logger;
 
 public class ArquivoInvalidoException extends Exception {
         
