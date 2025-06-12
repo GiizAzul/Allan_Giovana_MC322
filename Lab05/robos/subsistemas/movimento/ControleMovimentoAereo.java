@@ -15,6 +15,7 @@ import robos.geral.Robo;
 import robos.terrestres.RoboTerrestre;
 
 public class ControleMovimentoAereo implements ControleMovimento {
+
     public void mover(RoboAereo robo, int X, int Y, int Z, Ambiente ambiente)
             throws SensorException, LoggerException, ColisaoException, MovimentoInvalidoException {
         int deltaX = X - robo.getX();
@@ -26,15 +27,12 @@ public class ControleMovimentoAereo implements ControleMovimento {
             for (int x = robo.getX() + passoX; x != X + passoX; x += passoX) {
                 Object obj = ambiente.identificarEntidadePosicao(x, robo.getY(), robo.getZ());
                 if (obj != null) {
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, robo.getY(), robo.getZ()));
+
                     if (obj instanceof RoboAereo) {
                         throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o objeto: " +
                                 ((RoboAereo) obj).getNome() + " na posição X:" + x + " Y:" + robo.getY() + " Z:"
                                 + robo.getZ());
-                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        ambiente.removerEntidade(robo);
-                        throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o objeto: "
-                                + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + robo.getY()
-                                + "sendo destruído no processo!");
                     } else {
                         throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o objeto:" +
                                 ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + x + " Y:" + robo.getY()
@@ -42,6 +40,7 @@ public class ControleMovimentoAereo implements ControleMovimento {
                     }
                 }
                 ambiente.moverEntidade(robo, x, robo.getY(), robo.getZ());
+                robo.getLogger().escreverLogInfo(String.format("[MOVIMENTO] %s moveu para posição (%d, %d, %d)", robo.getNome(), x, robo.getY(), robo.getZ()));
                 robo.setPosicaoX(x);
             }
         }
@@ -53,21 +52,20 @@ public class ControleMovimentoAereo implements ControleMovimento {
                 Object obj = ambiente.identificarEntidadePosicao(robo.getX(), y, robo.getZ());
 
                 if (obj != null) {
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), robo.getX(), y, robo.getZ()));
+
                     if (obj instanceof RoboAereo) {
                         throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o objeto: " +
                                 ((RoboAereo) obj).getNome() + " na posição X:" + robo.getX() + " Y:" + y + " Z:"
                                 + robo.getZ());
-                    } else if (((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
-                        ambiente.removerEntidade(robo);
-                        throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o objeto: "
-                                + ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + robo.getX() + " Y:" + y
-                                + "sendo destruído no processo!");
                     } else {
                         throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o objeto:" +
                                 ((Obstaculo) obj).getTipoObstaculo() + " na posição X:" + robo.getX() + " Y:" + y
                                 + " Z:" + robo.getZ());
                     }
                 }
+
+                robo.getLogger().escreverLogInfo(String.format("[MOVIMENTO] %s moveu para posição (%d, %d, %d)", robo.getNome(), robo.getX(), y, robo.getZ()));
 
                 ambiente.moverEntidade(robo, robo.getX(), y, robo.getZ());
                 robo.setPosicaoY(y);
@@ -76,11 +74,14 @@ public class ControleMovimentoAereo implements ControleMovimento {
 
         // Ajusta a altitude final - sobe ou desce conforme necessário
         int h = robo.getZ();
+        robo.getLogger().escreverLogInfo(String.format("[MOVIMENTO] %s moveu-se para z = %d", robo.getNome(), Z));
         if (Z > h) {
             robo.subir(Z - h, ambiente);
         } else {
             robo.descer(h - Z, ambiente);
         }
+
+        robo.getLogger().escreverLogSucesso(String.format("[MOVIMENTO] Robô moveu-se com sucesso até o destino", robo.getNome(), robo.getX(), robo.getY(), robo.getZ()));
     }
 
     public void mover(RoboTerrestre robo, int deltaX, int deltaY, int velocidade, Ambiente ambiente)
@@ -94,6 +95,7 @@ public class ControleMovimentoAereo implements ControleMovimento {
 
         if (robo.getX() + deltaX < 0 || robo.getY() + deltaY < 0 || robo.getX() + deltaX >= ambiente.getTamX()
                 || robo.getY() + deltaY >= ambiente.getTamY()) {
+            robo.getLogger().escreverLogFalha("[MOVIMENTO] Falha no movimento");
             throw new ForaDosLimitesException(
                     "O robô " + robo.getNome() + " tentou se mover para fora dos limites do ambiente");
         }
@@ -107,6 +109,8 @@ public class ControleMovimentoAereo implements ControleMovimento {
             for (int x = robo.getX() + passoX; x != destinoX + passoX; x += passoX) {
                 Object obj = ambiente.identificarEntidadePosicao(x, robo.getY(), robo.getZ());
                 if (obj != null) {
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, robo.getY(), robo.getZ()));
+
                     if (obj instanceof Obstaculo &&
                             ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
@@ -121,6 +125,7 @@ public class ControleMovimentoAereo implements ControleMovimento {
                                         + x + " Y:" + robo.getY());
                     }
                 }
+                robo.getLogger().escreverLogInfo(String.format("[MOVIMENTO] %s moveu para posição (%d, %d, %d)", robo.getNome(), x, robo.getY(), robo.getZ()));
                 robo.setPosicaoX(x); // Atualiza a posição X antes da colisão
             }
         }
@@ -132,6 +137,8 @@ public class ControleMovimentoAereo implements ControleMovimento {
                 Object obj = ambiente.identificarEntidadePosicao(robo.getX(), y, robo.getZ());
 
                 if (obj != null) {
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), robo.getX(), y, robo.getZ()));
+
                     if (obj instanceof Obstaculo &&
                             ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco
@@ -146,10 +153,13 @@ public class ControleMovimentoAereo implements ControleMovimento {
                                         + robo.getX() + " Y:" + y);
                     }
                 }
+                robo.getLogger().escreverLogInfo(String.format("[MOVIMENTO] %s moveu para a posição (%d, %d, %d)", robo.getNome(), robo.getX(), y, robo.getZ()));
+
                 ambiente.moverEntidade(robo, robo.getX(), y, robo.getZ());
                 robo.setPosicaoY(y);
-                ; // Atualiza a posição Y antes da colisão
+                // Atualiza a posição Y antes da colisão
             }
         }
+        robo.getLogger().escreverLogSucesso(String.format("[MOVIMENTO] Robô moveu-se com sucesso até o destino", robo.getNome(), robo.getX(), robo.getY(), robo.getZ()));
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
+import utils.Logger;
 import robos.equipamentos.sensores.*;
 import robos.subsistemas.GerenciadorSensores;
 import robos.subsistemas.movimento.ControleMovimento;
@@ -38,6 +39,8 @@ public abstract class Robo implements Entidade, Destrutivel {
     protected GerenciadorSensores gerenciadorSensores;
     protected ControleMovimento controleMovimento;
 
+    protected Logger logger;
+
     // Acessível somente para subclasses
     protected boolean visivel = true; // Indica se o robô está visível para outros robôs
 
@@ -69,6 +72,7 @@ public abstract class Robo implements Entidade, Destrutivel {
         this.controleMovimento = controleMovimento;
         this.gerenciadorSensores = new GerenciadorSensores(this);
         this.gerenciadorSensores.adicionarSensor(new GPS(this, ambiente.getLogger()));
+        this.logger = ambiente.getLogger();
     }
 
     /**
@@ -308,6 +312,10 @@ public abstract class Robo implements Entidade, Destrutivel {
         } else {
             this.integridade = integridade;
         }
+    }
+
+    public Logger getLogger() {
+        return this.logger;
     }
 
     /**
