@@ -46,6 +46,12 @@ public class Colisao extends Sensor<Integer> {
     @Override
     public Integer acionar() throws SensorException, LoggerException, LoggerException {
         // Faz as verificações necessárias antes de acionar o sensor
+        this.logger.escreverLogInfo("[SENSOR][COLISAO] Acionado");
+
+        if (robo == null || ambiente == null || this.isAtivo() == false) {
+            this.logger.escreverLogFalha("[SENSOR][COLISAO] Falha no sensor de Colisão");
+        }
+
         if (robo == null) {
            throw new SensorAusenteException("Robo não possui um sensor de colisão.");
         } 
@@ -68,6 +74,7 @@ public class Colisao extends Sensor<Integer> {
             if (entidade.getTipo() == TipoEntidade.ROBO){
                 Robo colRobo = (Robo) entidade;
                 if (colRobo != this.robo && colRobo.getXInterno() == posX && colRobo.getYInterno() == posY) {
+                    this.logger.escreverLogAviso("[SENSOR][COLISAO] Colisão c/ Robô Detectada");
                     this.ultimoRoboColidido = colRobo;
                     return 1; // Colisão com outro robô
                 }
@@ -76,10 +83,12 @@ public class Colisao extends Sensor<Integer> {
                 if (obstaculo.getX1() <= this.robo.getXInterno() && obstaculo.getX2() >= posX && 
                     obstaculo.getY1() <= posY && obstaculo.getY2() >= posY) {
                     this.ultimoObstaculoColidido = obstaculo;
+                    this.logger.escreverLogAviso("[SENSOR][COLISAO] Colisão c/ Obstáculo Detectada");
                     return 2; // Colisão com obstáculo
                 }
             }
         }
+        this.logger.escreverLogSucesso("[SENSOR][COLISAO] Colisões não foram detectadas!");
         return 0; // Sem colisão
     }
 
