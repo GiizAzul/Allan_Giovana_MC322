@@ -36,10 +36,10 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @param ambiente Ambiente onde o robô opera
      */
     public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente) {
-        super(n, d, m, x, y, h, vel, new ControleMovimentoAereo());
+        super(n, d, ambiente, m, x, y, h, vel, new ControleMovimentoAereo());
         this.altitudeMaxima = hmax;
-        super.gerenciadorSensores.adicionarSensor(new Barometro(this));
-        super.gerenciadorSensores.adicionarSensor(new Radar(this, ambiente, 100, 30));
+        super.gerenciadorSensores.adicionarSensor(new Barometro(this, ambiente.getLogger()));
+        super.gerenciadorSensores.adicionarSensor(new Radar(this, ambiente, 100, 30, ambiente.getLogger()));
   
     }
 
@@ -59,10 +59,10 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
      * @param ang_radar Ângulo de abertura do radar em graus
      */
     public RoboAereo(String n, String d, MateriaisRobo m, int x, int y, int vel, int h, int hmax, Ambiente ambiente, float alc_radar, float ang_radar) {
-        super(n, d, m, x, y, h, vel, new ControleMovimentoAereo());
+        super(n, d, ambiente, m, x, y, h, vel, new ControleMovimentoAereo());
         this.altitudeMaxima = hmax;
-        super.gerenciadorSensores.adicionarSensor(new Barometro(this));
-        super.gerenciadorSensores.adicionarSensor(new Radar(this, ambiente, alc_radar, ang_radar));
+        super.gerenciadorSensores.adicionarSensor(new Barometro(this, ambiente.getLogger()));
+        super.gerenciadorSensores.adicionarSensor(new Radar(this, ambiente, alc_radar, ang_radar, ambiente.getLogger()));
     }
     
     /**

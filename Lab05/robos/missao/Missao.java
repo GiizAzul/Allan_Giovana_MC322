@@ -4,5 +4,5 @@ import ambiente.Ambiente;
 import robos.geral.Robo;
 
 public interface Missao {
-    String executar ( Robo r , Ambiente a ) ;
+    String executar (Robo r , Ambiente a) ;
 }

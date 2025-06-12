@@ -12,6 +12,7 @@ import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
 import interfaces.*;
+import excecoes.ambiente.ArquivoInvalidoException;
 import excecoes.ambiente.ErroComunicacaoException;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.gerais.RoboDesligadoException;
@@ -29,7 +30,7 @@ public class Main {
      * @throws ErroComunicacaoException Se houver problemas na comunicação entre robôs
      * @throws RoboDesligadoException Se tentar operar robô desligado
      */
-    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException {
+    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException, ArquivoInvalidoException {
         Scanner scanner = new Scanner(System.in);
         CentralComunicacao central = new CentralComunicacao();
         System.out.println("Bem vindo ao Simulador de Robôs!");

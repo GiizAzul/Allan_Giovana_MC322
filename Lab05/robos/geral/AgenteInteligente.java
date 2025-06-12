@@ -7,6 +7,24 @@ import robos.subsistemas.movimento.ControleMovimento;
 public abstract class AgenteInteligente extends Robo {
     protected Missao missao;
 
+    /**
+     * Construtor da classe AgenteInteligente
+     * @param nome
+     * @param direcao
+     * @param material
+     * @param posicaoX
+     * @param posicaoY
+     * @param posicaoZ
+     * @param velocidade
+     * @param controleMovimento - Interface que compila todos os formatos de movimentação dos Robos
+     */
+
+    public AgenteInteligente(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY,
+            int posicaoZ, int velocidade, ControleMovimento controleMovimento) {
+        super(nome, direcao, ambiente, material, posicaoX, posicaoY, posicaoZ, velocidade, controleMovimento);
+
+    }
+
     public void definirMissao(Missao m) {
         this.missao = m;
     }
@@ -16,11 +34,5 @@ public abstract class AgenteInteligente extends Robo {
     }
 
     public abstract String executarMissao(Ambiente a);
-
-    public AgenteInteligente(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY,
-            int posicaoZ, int velocidade, ControleMovimento controleMovimento) {
-        super(nome, direcao, material, posicaoX, posicaoY, posicaoZ, velocidade, controleMovimento);
-
-    }
 
 }

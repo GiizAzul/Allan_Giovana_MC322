@@ -1,6 +1,8 @@
 package robos.equipamentos.sensores;
 
 import excecoes.sensor.*;
+import utils.Logger;
+
 
 /**
  * Classe abstrata genérica que representa um sensor básico para robôs.
@@ -12,10 +14,14 @@ public abstract class Sensor<T> {
     /** Indica se o sensor está ativo ou não */
     private boolean ativo;
 
+    /** Logger do sistema */
+    protected Logger logger;
+
     /**
      * Construtor padrão. Inicializa o sensor como ativo.
      */
-    public Sensor() { 
+    public Sensor(Logger logger) {
+        this.logger = logger; 
         this.ativo = true;
     }
 

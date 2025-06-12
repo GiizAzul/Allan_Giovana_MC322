@@ -1,6 +1,7 @@
 package robos.equipamentos.sensores;
 import excecoes.sensor.*;
 import robos.geral.Robo;
+import utils.Logger;
 
 /**
  * Classe que implementa um sensor de GPS para robôs.
@@ -15,8 +16,8 @@ public class GPS extends Sensor<int[]> {
      * Construtor padrão do GPS.
      * Inicializa um GPS sem vínculo a um robô específico.
      */
-    public GPS() {
-        super();
+    public GPS(Logger logger) {
+        super(logger);
     }
 
     /**
@@ -24,8 +25,8 @@ public class GPS extends Sensor<int[]> {
      * 
      * @param robo Robô ao qual o GPS será vinculado
      */
-    public GPS(Robo robo) {
-        super();
+    public GPS(Robo robo, Logger logger) {
+        super(logger);
         this.robo = robo;
     }
 

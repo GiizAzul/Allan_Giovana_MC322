@@ -52,7 +52,7 @@ public abstract class Robo implements Entidade, Destrutivel {
      * @param velocidade Velocidade inicial do robô
      * @param controleMovimento 
      */
-    public Robo(String nome, String direcao, MateriaisRobo material, int posicaoX, int posicaoY, int posicaoZ,
+    public Robo(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int posicaoZ,
             int velocidade, ControleMovimento controleMovimento) {
         this.id = ++cont_robo;
         this.nome = nome;
@@ -67,7 +67,7 @@ public abstract class Robo implements Entidade, Destrutivel {
         this.tipo = TipoEntidade.ROBO;
         this.controleMovimento = controleMovimento;
         this.gerenciadorSensores = new GerenciadorSensores(this);
-        this.gerenciadorSensores.adicionarSensor(new GPS(this));
+        this.gerenciadorSensores.adicionarSensor(new GPS(this, ambiente.getLogger()));
     }
 
     /**

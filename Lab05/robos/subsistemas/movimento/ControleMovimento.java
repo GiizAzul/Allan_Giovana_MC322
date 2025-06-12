@@ -1,4 +1,3 @@
-// Crie um novo pacote: robos.subsistemas
 package robos.subsistemas.movimento;
 
 import ambiente.Ambiente;

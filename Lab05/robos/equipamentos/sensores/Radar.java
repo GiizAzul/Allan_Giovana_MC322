@@ -6,6 +6,7 @@ import ambiente.Obstaculo;
 import interfaces.Entidade;
 import interfaces.TipoEntidade;
 import robos.geral.Robo;
+import utils.Logger;
 import robos.aereos.RoboAereo;
 import excecoes.sensor.*;;
 
@@ -30,8 +31,8 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
      * @param raioAlcance Alcance máximo do radar em unidades de distância
      * @param anguloAlcance Ângulo de abertura vertical do radar em graus
      */
-    public Radar(RoboAereo roboAir, Ambiente ambienteSensor, float raioAlcance, float anguloAlcance) {
-        super();
+    public Radar(RoboAereo roboAir, Ambiente ambienteSensor, float raioAlcance, float anguloAlcance, Logger logger) {
+        super(logger);
         this.raioAlcance = raioAlcance;
         this.anguloAlcance = anguloAlcance;
         this.ambiente = ambienteSensor;

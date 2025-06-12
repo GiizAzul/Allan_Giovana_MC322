@@ -1,6 +1,7 @@
 package robos.equipamentos.sensores;
 import java.util.ArrayList;
 import robos.terrestres.RoboTerrestre;
+import utils.Logger;
 import robos.geral.Robo;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
@@ -26,8 +27,8 @@ public class Colisao extends Sensor<Integer> {
      * @param robo Robô terrestre ao qual o sensor será acoplado
      * @param ambiente Ambiente onde o sensor operará e detectará colisões
      */
-    public Colisao(RoboTerrestre robo, Ambiente ambiente) {
-        super();
+    public Colisao(RoboTerrestre robo, Ambiente ambiente, Logger logger) {
+        super(logger);
         this.robo = robo;
         this.ambiente = ambiente;
     }

@@ -1,6 +1,7 @@
 package robos.equipamentos.sensores;
 import excecoes.sensor.*;
 import robos.geral.Robo;
+import utils.Logger;
 
 public class Barometro extends Sensor<Double> {
     private double pressaoAtmosferica; // em hPa
@@ -14,8 +15,8 @@ public class Barometro extends Sensor<Double> {
      * Inicializa o barômetro com a pressão atmosférica padrão ao nível do mar (1013.25 hPa).
      * Esta pressão pode variar dependendo da altitude e condições climáticas.
      */
-    public Barometro(Robo robo) {
-        super();
+    public Barometro(Robo robo, Logger logger) {
+        super(logger);
         this.robo = robo;
         this.pressaoAtmosferica = 1013.25; // Pressão atmosférica padrão ao nível do mar
     }
@@ -24,8 +25,8 @@ public class Barometro extends Sensor<Double> {
      * Construtor default para a classe Barômetro.
      * Inicializa o barômetro com a pressão atmosférica padrão ao nível do mar (1013.25 hPa).
      */
-    public Barometro() {
-        super();
+    public Barometro(Logger logger) {
+        super(logger);
         this.pressaoAtmosferica = 1013.25; // Pressão atmosférica padrão ao nível do mar
     }
 

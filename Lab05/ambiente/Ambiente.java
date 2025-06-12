@@ -2,6 +2,7 @@ package ambiente;
 
 import java.util.ArrayList;
 
+import excecoes.ambiente.ArquivoInvalidoException;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.robos.gerais.ColisaoException;
 import robos.aereos.DroneAtaque;
@@ -10,6 +11,7 @@ import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
 import robos.terrestres.TanqueGuerra;
+import utils.Logger;
 import interfaces.*;
 
 /**
@@ -28,18 +30,22 @@ public class Ambiente {
     // Mapa 3D para controle de ocupação do espaço
     private TipoEntidade[][][] mapa;
 
+    // Logger geral do sistema
+    private Logger logger;
+
     /**
      * Construtor que inicializa o ambiente com as dimensões especificadas
      * @param tamX Tamanho do ambiente no eixo X
      * @param tamY Tamanho do ambiente no eixo Y
      * @param tamZ Tamanho do ambiente no eixo Z (altura)
      */
-    public Ambiente(int tamX, int tamY, int tamZ) {
+    public Ambiente(int tamX, int tamY, int tamZ) throws ArquivoInvalidoException {
         this.tamX = tamX;
         this.tamY = tamY;
         this.tamZ = tamZ;
         entidades = new ArrayList<Entidade>();
         mapa = new TipoEntidade[tamY][tamX][tamZ];
+        this.logger = new Logger("LogSistemaRobos.txt");
         this.inicializarMapa();
     }
 
@@ -231,6 +237,15 @@ public class Ambiente {
      */
     public int getTamZ() {
         return tamZ;
+    }
+
+    /**
+     * Retorna o Logger utilizado para registro das atividades do sistema
+     * @return Logger do ambiente
+     */
+
+    public Logger getLogger() {
+        return this.logger;
     }
 
     /**

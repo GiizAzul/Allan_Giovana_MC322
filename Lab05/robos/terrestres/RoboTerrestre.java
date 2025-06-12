@@ -31,9 +31,9 @@ public class RoboTerrestre extends AgenteInteligente {
      * @param velocidadeMaxima Velocidade máxima do robô
      */
     public RoboTerrestre(String nome, String direcao, Ambiente ambiente, MateriaisRobo material, int posicaoX, int posicaoY, int velocidade, int velocidadeMaxima) {
-        super(nome, direcao, material, posicaoX, posicaoY, 0, velocidade, new ControleMovimentoTerrestre());
+        super(nome, direcao, ambiente, material, posicaoX, posicaoY, 0, velocidade, new ControleMovimentoTerrestre());
         this.velocidadeMaxima = velocidadeMaxima;
-        super.gerenciadorSensores.adicionarSensor(new Colisao(this, ambiente));
+        super.gerenciadorSensores.adicionarSensor(new Colisao(this, ambiente, ambiente.getLogger()));
     }
 
     /**
