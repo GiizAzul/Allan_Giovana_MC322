@@ -41,18 +41,22 @@ public class Barometro extends Sensor<Double> {
     @Override
     public Double acionar() throws SensorException, LoggerException, LoggerException {
         // Leitura da pressão atmosférica em função da altitude
-        this.logger.escreverLogInfo("Sensor de GPS Acionado");
+        this.logger.escreverLogInfo("[SENSOR][BARÔMETRO] Acionado");
         
 
         if (robo == null) {
-           throw new SensorAusenteException("Robo não possui um barômetro.");
+            this.logger.escreverLogFalha("[SENSOR][BARÔMETRO] Falha no Barômetro");
+            throw new SensorAusenteException("Robo não possui um barômetro.");
         }
         if (this.isAtivo() == false) {
-           throw new SensorInativoException("Barômetro está inativo.");
+            this.logger.escreverLogFalha("[SENSOR][BARÔMETRO] Falha no Barômetro");
+            throw new SensorInativoException("Barômetro está inativo.");
         }   
 
         double alt = robo.getZInterno();
         this.pressaoAtmosferica = 1013.25 * Math.pow(1 - (0.0065 * alt) / 288.15, 5.25588);
+        this.logger.escreverLogSucesso(String.format("[SENSOR][BARÔMETRO] Ativado com êxito. Pressão: %f", pressaoAtmosferica));
+
         return this.pressaoAtmosferica;
     }
     
