@@ -52,10 +52,14 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
     @Override
     public ArrayList<Entidade> acionar() throws SensorException, LoggerException, LoggerException {
         // Verifica as condições necessárias antes de acionar o sensor
+        this.logger.escreverLogInfo("[SENSOR][RADAR] Acionado");
+
         if (robo == null) {
+            this.logger.escreverLogFalha("[SENSOR][RADAR] Falha no Radar");
             throw new SensorAusenteException("Robo não possui um sensor de radar.");
         }
         if (ambiente == null) {
+            this.logger.escreverLogFalha("[SENSOR][RADAR] Falha no Radar");
             throw new SensorAusenteException("Radar não está associado a um ambiente.");
         }
         
@@ -68,15 +72,19 @@ public class Radar extends Sensor<ArrayList<Entidade>> {
                 Obstaculo obstaculo = (Obstaculo) entidade;
                 if (verificacaoObstaculo(obstaculo)) {
                     resultado.add(obstaculo);
+                    this.logger.escreverLogInfo("[SENSOR][RADAR] Obstáculo Encontrado");
                 }
             } else if (entidade.getTipo() == TipoEntidade.ROBO){
                 Robo roboAmbiente = (Robo) entidade;
                 if (roboAmbiente != robo && verificacaoRobo(roboAmbiente)) {
+                    this.logger.escreverLogInfo("[SENSOR][RADAR] Robô Encontrado");
                     resultado.add(roboAmbiente);
                 }
 
             }
         }
+        this.logger.escreverLogSucesso("[SENSOR][RADAR] Ativado com sucesso!");
+
         return resultado;
     }
 
