@@ -1,7 +1,5 @@
 package robos.subsistemas.movimento;
 
-import java.util.logging.Logger;
-
 import ambiente.Ambiente;
 import excecoes.ambiente.ForaDosLimitesException;
 import excecoes.logger.LoggerException;

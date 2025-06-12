@@ -41,20 +41,25 @@ public class GPS extends Sensor<int[]> {
     @Override
     public int[] acionar() throws SensorException, LoggerException, LoggerException {
         // Verifica as condições necessárias antes de acionar o sensor
+        this.logger.escreverLogInfo("[SENSOR][GPS] Acionado");
+
         if (robo == null) {
-           throw new SensorAusenteException("Robo não possui um sensor de GPS.");
+            this.logger.escreverLogFalha("[SENSOR][GPS] Falha no GPS");
+            throw new SensorAusenteException("Robo não possui um sensor de GPS.");
         } 
         
         if (this.isAtivo() == false) {
-           throw new SensorInativoException("GPS está inativo.");
+            this.logger.escreverLogFalha("[SENSOR][GPS] Falha no GPS");
+            throw new SensorInativoException("GPS está inativo.");
         } 
 
         // Acessa diretamente as posições internas do robô
-        return new int[] {
-            this.robo.getXInterno(), 
-            this.robo.getYInterno(),
-            0 // Z é por padrão 0 para Robos
-        };
+        // Z é, por padrão, 0 para Robos.
+        int[] resposta = {this.robo.getXInterno(), this.robo.getYInterno(), 0};
+
+        this.logger.escreverLogSucesso(String.format("[SENSOR][GPS] Ativado com sucesso! Dados [%d, %d, %d]", resposta[0], resposta[1], resposta[2]));
+
+        return resposta;
     }
     
     /**
