@@ -81,7 +81,7 @@ public class ControleMovimentoAereo implements ControleMovimento {
             robo.descer(h - Z, ambiente);
         }
 
-        robo.getLogger().escreverLogSucesso(String.format("[MOVIMENTO] Robô moveu-se com sucesso até o destino", robo.getNome(), robo.getX(), robo.getY(), robo.getZ()));
+        robo.getLogger().escreverLogSucesso(String.format("[MOVIMENTO] %s moveu-se com sucesso até o destino - (%d, %d, %d)", robo.getNome(), robo.getX(), robo.getY(), robo.getZ()));
     }
 
     public void mover(RoboTerrestre robo, int deltaX, int deltaY, int velocidade, Ambiente ambiente)
@@ -160,6 +160,6 @@ public class ControleMovimentoAereo implements ControleMovimento {
                 // Atualiza a posição Y antes da colisão
             }
         }
-        robo.getLogger().escreverLogSucesso(String.format("[MOVIMENTO] Robô moveu-se com sucesso até o destino", robo.getNome(), robo.getX(), robo.getY(), robo.getZ()));
+        robo.getLogger().escreverLogSucesso(String.format("[MOVIMENTO] %s moveu-se com sucesso até o destino - (%d, %d, %d)", robo.getNome(), robo.getX(), robo.getY(), robo.getZ()));
     }
 }
