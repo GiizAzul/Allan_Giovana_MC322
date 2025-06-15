@@ -94,6 +94,8 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
         for (int z = getZ() + passo; z != altitudeAlvo + passo; z += passo) {
             Object obj = ambiente.identificarEntidadePosicao(getX(), getY(), z);
             if (obj != null) {
+                this.getLogger().escreverLogAviso("[MOVIMENTO] Obstáculo detectado durante o movimento!");
+                
                 if (obj instanceof Robo) {
                     throw new ColisaoException(((Robo) obj).getNome() + " na posição X:" + getX() +
                             " Y:" + getY() + " Z:" + z);
@@ -220,6 +222,13 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
                 robosEncontrados.add((Robo) objectEnc);
             }
         }
+
+        String resultado = "[ROBOS] Lista de Robôs encontrado:";
+        for (Robo roboEncontrado : robosEncontrados) {
+            resultado += roboEncontrado.getNome() + ", ";
+        }
+        this.getLogger().escreverLogSucesso(resultado);
+
         return robosEncontrados;
     }
 
@@ -237,6 +246,13 @@ public class RoboAereo extends AgenteInteligente implements Identificantes {
                 obstaculosEncontrados.add((Obstaculo) objectEnc);
             }
         }
+
+        String resultado = "[OBSTACULOS] Lista de obstáculos encontrados:\n";
+        for (Obstaculo obstaculo : obstaculosEncontrados) {
+            resultado += "- " + obstaculo.getDescricao() + "\n";
+        }
+        this.getLogger().escreverLogSucesso(resultado);
+
         return obstaculosEncontrados;
     }
 

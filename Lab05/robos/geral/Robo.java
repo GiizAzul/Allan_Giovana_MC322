@@ -314,6 +314,10 @@ public abstract class Robo implements Entidade, Destrutivel {
         }
     }
 
+    /**
+     * Obtém o objeto Logger do sistema
+     * @return Logger - Objeto com função de log das missões
+     */
     public Logger getLogger() {
         return this.logger;
     }
