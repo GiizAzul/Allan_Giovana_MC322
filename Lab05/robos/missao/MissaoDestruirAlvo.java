@@ -20,6 +20,7 @@ public class MissaoDestruirAlvo implements Missao {
     public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         // Verifica se o robô é realmente um TanqueGuerra para usar suas funções específicas
         if (robo instanceof TanqueGuerra) {
+            logger.ativarLogger();
             TanqueGuerra tanque = (TanqueGuerra) robo;
             String resultado = "MISSÃO: Disparando contra (" + alvoX + ", " + alvoY + ")\n";
             try {

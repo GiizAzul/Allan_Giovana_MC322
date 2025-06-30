@@ -14,8 +14,7 @@ public class Logger {
     Date dataAtual;
 
     public Logger(String nomeLog) throws ArquivoInvalidoException {
-        // Por padrão o logger está desativo, ele é ativado quando uma missão é iniciada!
-        this.ativo = 1;
+        this.ativo = 0;
 
         try {
             this.logFile = new Formatter(new FileWriter(nomeLog));

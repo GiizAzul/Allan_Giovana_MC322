@@ -22,6 +22,7 @@ public class MissaoEntregarPacote implements Missao {
     @Override
     public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         if (robo instanceof Correios) {
+            logger.ativarLogger();
             Correios correio = (Correios) robo;
             String resultado="MISSÃO: Entregar pacote " + idPacote+"\n";
             try {

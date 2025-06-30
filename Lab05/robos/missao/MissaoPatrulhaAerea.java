@@ -25,6 +25,7 @@ public class MissaoPatrulhaAerea implements Missao {
     public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         this.central=ambiente.getCentral();
         if (robo instanceof DroneVigilancia) {
+            logger.ativarLogger();
             DroneVigilancia drone = (DroneVigilancia) robo;
             String resultado ="MISSÃO: Patrulha Aérea.\n";
             List<Robo> robosDetectados = new ArrayList<>();

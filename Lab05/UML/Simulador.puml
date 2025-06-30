@@ -9,6 +9,7 @@ skinparam class {
     FontName Arial
     AttributeFontSize 11
     FontStyle bold
+    AttributeIconSize 0 
 }
 
 skinparam class<<Geral>> {
@@ -23,10 +24,20 @@ skinparam class<<Robo>> {
     BackgroundColor #E8F5E9
 }
 
+skinparam class<<Missao>> {
+    BackgroundColor #B7E8F9
+}
+
+skinparam class<<SubSistema>> {
+    BackgroundColor #FFCDD2
+}
+
 interface Destrutivel <<Robo>>
 interface Atacante <<Robo>>
 interface Comunicavel <<Robo>>
 interface Identificantes <<Robo>>
+
+interface Missao <<Missao>>
 
 enum TipoObstaculo <<Geral>>
 enum MateriaisRobo <<Robo>>
@@ -34,6 +45,7 @@ enum MateriaisRobo <<Robo>>
 class Ambiente <<Geral>>
 class CentralComunicacao <<Geral>>
 class Obstaculo <<Geral>>
+class Logger <<Geral>>
 
 abstract class Sensor <<Sensor>>
 class GPS <<Sensor>>
@@ -76,6 +88,10 @@ interface Comunicavel {
 interface Identificantes {
     + identificarObstaculo(): ArrayList<Obstaculo>
     + identificarRobo(): ArrayList<Robo>
+}
+
+interface Missao {
+    + executar(r: Robo, a: Ambiente, logger: Logger): String
 }
 
 ' Enumerações
@@ -149,6 +165,21 @@ class Obstaculo {
     - tipo: final TipoObstaculo
     - integridade: int
     - indestrutivel: boolean
+}
+
+class Logger{
+    - ativo: int
+    - logFile: Formatter
+    - dataAtual: Date
+    --
+    + ativarLogger(): void
+    + desativarLogger(): void
+    + escreverLog(mensagem: String, tipoMensagem: String): void 
+    + escreverLogAviso(mensagem: String): void
+    + escreverLogFalha(mensagem: String): void
+    + escreverLogSucesso(mensagem: String): void
+    + escreverLogInfo(mensagem: String): void
+    + fecharLog(): void
 }
 
 ' Sensores
@@ -283,9 +314,128 @@ class DroneVigilancia {
     + executarTarefa(argumentos: Object...): String
 }
 
+'Missoes
+class MissaoAtaqueCoordenado <<Missao>> {
+    - alvoX: int
+    - alvoY: int
+    - altitudeAtaque: int
+    - nTiros: int
+    --
+    + executar(robo: Robo, ambiente: Ambiente, logger: Logger): String
+}
+
+class MissaoPatrulhaAerea <<Missao>> {
+    - waypoints: List<int[]>
+    - base: Comunicavel
+    - central: CentralComunicacao
+    --
+    + executar(robo: Robo, ambiente: Ambiente, logger: Logger): String
+}
+
+class MissaoEntregarPacote <<Missao>> {
+    - idPacote: String
+    - destinoX: int
+    - destinoY: int
+    - peso: float
+    --
+    + executar(robo: Robo, ambiente: Ambiente, logger: Logger): String
+}
+
+class MissaoDestruirAlvo <<Missao>> {
+    - alvoX: int
+    - alvoY: int
+    - nTiros: int
+    --
+    + executar(robo: Robo, ambiente: Ambiente, logger: Logger): String
+}
+
+
+class ModuloComunicacao <<SubSistema>> {
+    - roboPai: Robo
+    --
+    + ModuloComunicacao(roboPai: Robo)
+    + enviarMensagem(destinatario: Comunicavel, mensagem: String, central: CentralComunicacao): String
+    + receberMensagem(remetente: Comunicavel, mensagem: String): String
+}
+
+class GerenciadorSensores <<SubSistema>> {
+    - roboPai: Robo
+    - listaSensores: List<Sensor>
+    - gps: GPS
+    - radar: Radar
+    - barometro: Barometro
+    - sensorColisao: Colisao
+    --
+    + GerenciadorSensores(roboPai: Robo)
+    + adicionarSensor(sensor: Sensor): void
+    + getPosicaoGPS(): int[]
+    + identificarComRadar(): ArrayList<Entidade>
+    + getPressaoAtmosferica(): double
+    + verificarColisao(): int
+    + getGPS(): GPS
+    + getRadar(): Radar
+    + getBarometro(): Barometro
+    + getSensorColisao(): Colisao
+}
+
+
+
+interface ControleMovimento <<SubSistema>> {
+    + mover(RoboTerrestre, int, int, int, Ambiente)
+    + mover(RoboAereo, int, int, int, Ambiente)
+    + mover(Robo, int, int, Ambiente)
+}
+
+class ControleMovimentoTerrestre <<SubSistema>> {
+    + mover(RoboTerrestre, int, int, int, Ambiente)
+    + mover(RoboAereo, int, int, int, Ambiente)
+    + mover(Robo, int, int, Ambiente)
+}
+
+class ControleMovimentoAereo <<SubSistema>> {
+    + mover(RoboAereo, int, int, int, Ambiente)
+    + mover(RoboTerrestre, int, int, int, Ambiente)
+    + mover(Robo, int, int, Ambiente)
+}
+
+abstract class AgenteInteligente <<Robo>> {
+    - missao: Missao
+    --
+    + definirMissao(m: Missao): void
+    + temMissao(): boolean
+    + executarMissao(a: Ambiente): String
+}
+
+Robo <|-- AgenteInteligente
+
+
+
+ControleMovimento <|.. ControleMovimentoTerrestre
+ControleMovimento <|.. ControleMovimentoAereo
+
+
+
+Robo --> ModuloComunicacao
+Robo --> GerenciadorSensores
+Robo --> ControleMovimento
+RoboTerrestre --> ControleMovimentoTerrestre
+RoboAereo --> ControleMovimentoAereo
+
+Missao <|.. MissaoAtaqueCoordenado
+Missao <|.. MissaoPatrulhaAerea
+Missao <|.. MissaoEntregarPacote
+Missao <|.. MissaoDestruirAlvo
+
+MissaoPatrulhaAerea --> CentralComunicacao
+MissaoPatrulhaAerea --> DroneVigilancia
+MissaoEntregarPacote --> Correios
+MissaoDestruirAlvo --> TanqueGuerra
+MissaoAtaqueCoordenado --> DroneAtaque
+
+
 ' Relações de herança
-Robo <|-- RoboTerrestre
-Robo <|-- RoboAereo
+AgenteInteligente <|-- RoboTerrestre
+AgenteInteligente <|-- RoboAereo
 Sensor <|-- GPS
 Sensor <|-- Barometro
 Sensor <|-- Radar
