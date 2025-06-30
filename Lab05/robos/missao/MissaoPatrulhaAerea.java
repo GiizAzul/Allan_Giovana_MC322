@@ -23,6 +23,7 @@ public class MissaoPatrulhaAerea implements Missao {
 
     @Override
     public String executar(Robo robo, Ambiente ambiente, Logger logger) {
+        this.central=ambiente.getCentral();
         if (robo instanceof DroneVigilancia) {
             DroneVigilancia drone = (DroneVigilancia) robo;
             String resultado ="MISSÃO: Patrulha Aérea.\n";

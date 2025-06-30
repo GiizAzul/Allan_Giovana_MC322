@@ -32,7 +32,6 @@ public class Main {
      */
     public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException, ArquivoInvalidoException {
         Scanner scanner = new Scanner(System.in);
-        CentralComunicacao central = new CentralComunicacao();
         System.out.println("Bem vindo ao Simulador de Robôs!");
         System.out.println(
                 "Gostaria de utilizar nosso modo padrão com ambiente e entidades padrão ou o modo de criação livre?\n1 - Modo Padrão\n2 - Modo Criação Livre");
@@ -66,7 +65,7 @@ public class Main {
             ArrayList<Entidade> listaEntidades = null;
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
 
-            menu(scanner, ambiente, central, listaEntidades, listaRobo, 4, false);
+            menu(scanner, ambiente, ambiente.getCentral(), listaEntidades, listaRobo, 4, false);
 
         } else if (modo == 2) {
             System.out.println("Crie um ambiente 3D com as dimensões:");
@@ -89,7 +88,7 @@ public class Main {
             ArrayList<Entidade> listaEntidades = null;
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
 
-            menu(scanner, ambiente, central, listaEntidades, listaRobo, 7, true, atributos);
+            menu(scanner, ambiente, ambiente.getCentral(), listaEntidades, listaRobo, 7, true, atributos);
 
         } else {
             System.err.println("Opção inválida! Por favor, escolha 1 ou 2.");

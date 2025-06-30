@@ -15,6 +15,7 @@ import robos.aereos.DroneVigilancia;
 import robos.geral.MateriaisRobo;
 import robos.geral.Robo;
 import robos.missao.MissaoAtaqueCoordenado;
+import robos.missao.MissaoPatrulhaAerea;
 
 
 public class TestRoboAereo extends TestBase {
@@ -200,7 +201,6 @@ public class TestRoboAereo extends TestBase {
         // Teste de munição insuficiente
         drone.definirMissao(new MissaoAtaqueCoordenado(7,7,0,300));
         resultado = drone.executarMissao(ambiente);
-        System.out.println(resultado);
         verificar("Deve identificar munição insuficiente", resultado.contains("Municao insuficiente para realizar o disparo"));
 
         // Teste de alvo fora de alcance
@@ -218,8 +218,8 @@ public class TestRoboAereo extends TestBase {
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
         DroneVigilancia drone = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV1", "Norte", 
-                                                                    MateriaisRobo.PLASTICO, 
-                                                                    10, 10, 2, 5, 8, 5, 50.0f, 60.0f, 160.0f);
+                                                                MateriaisRobo.PLASTICO, 
+                                                                10, 10, 2, 5, 8, 5, 50.0f, 60.0f, 160.0f);
         adicionarEntidadeTest(drone, ambiente);
 
         // Teste de varredura de área
@@ -244,13 +244,36 @@ public class TestRoboAereo extends TestBase {
         resultado = drone.executarTarefa("identificar");
         verificar("Deve identificar objetos próximos", 
                  resultado.contains("Robô encontrado") || resultado.contains("Obstáculo encontrado"));
+
+        // ===== Teste da MissaoPatrulhaAerea =====
+        System.out.println("\n== Teste da MissaoPatrulhaAerea ==");
+
+        // Criar waypoints para patrulha
+        java.util.List<int[]> waypoints = new java.util.ArrayList<>();
+        waypoints.add(new int[]{10, 10, 2});
+        waypoints.add(new int[]{12, 12, 2});
+        waypoints.add(new int[]{14, 14, 2});
+
+        // Base receptora pode ser o próprio drone para simplificar o teste
+        MissaoPatrulhaAerea missaoPatrulha = new robos.missao.MissaoPatrulhaAerea(waypoints, drone);
+
+        // Definir a missão no drone
+        drone.definirMissao(missaoPatrulha);
+
+        // Executar a missão
+        resultado = drone.executarMissao(ambiente);
+        String historico = ambiente.getCentral().exibirMensagens();
+
+        verificar("Missão de patrulha deve ser executada com sucesso", resultado.contains("MISSÃO: Patrulha Aérea"));
+        verificar("Missão deve detectar robôs na patrulha", historico.contains("T1"));
+        verificar("Missão deve enviar relatório para a base", resultado.contains("Relatório enviado para a base"));
     }
 
     private static void testarComunicacaoDroneVigilancia() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Comunicação do DroneVigilancia ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
-        CentralComunicacao central = new CentralComunicacao();
+        CentralComunicacao central = ambiente.getCentral();
         
         DroneVigilancia drone1 = (DroneVigilancia) ambiente.criarRobo(2, 2, "DV1", "Norte", 
                                                                      MateriaisRobo.PLASTICO, 

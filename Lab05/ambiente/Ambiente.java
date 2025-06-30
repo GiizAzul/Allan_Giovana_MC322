@@ -33,6 +33,8 @@ public class Ambiente {
     // Logger geral do sistema
     private Logger logger;
 
+    private CentralComunicacao central;
+
     /**
      * Construtor que inicializa o ambiente com as dimensões especificadas
      * @param tamX Tamanho do ambiente no eixo X
@@ -47,6 +49,7 @@ public class Ambiente {
         mapa = new TipoEntidade[tamY][tamX][tamZ];
         this.logger = new Logger("LogSistemaRobos.txt");
         this.inicializarMapa();
+        this.central=new CentralComunicacao();
     }
 
     /**
@@ -237,6 +240,10 @@ public class Ambiente {
      */
     public int getTamZ() {
         return tamZ;
+    }
+
+    public CentralComunicacao getCentral(){
+        return central;
     }
 
     /**
