@@ -66,6 +66,7 @@ public class Main {
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
 
             menu(scanner, ambiente, ambiente.getCentral(), listaEntidades, listaRobo, 4, false);
+            ambiente.getLogger().fecharLog();
 
         } else if (modo == 2) {
             System.out.println("Crie um ambiente 3D com as dimensões:");
@@ -89,6 +90,7 @@ public class Main {
             ArrayList<Robo> listaRobo = new ArrayList<Robo>();
 
             menu(scanner, ambiente, ambiente.getCentral(), listaEntidades, listaRobo, 7, true, atributos);
+            ambiente.getLogger().fecharLog();
 
         } else {
             System.err.println("Opção inválida! Por favor, escolha 1 ou 2.");
