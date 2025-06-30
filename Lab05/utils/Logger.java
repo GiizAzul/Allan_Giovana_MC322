@@ -14,7 +14,7 @@ public class Logger {
     Date dataAtual;
 
     public Logger(String nomeLog) throws ArquivoInvalidoException {
-        this.ativo = 0;
+        this.ativo = 1;
 
         try {
             this.logFile = new Formatter(new FileWriter(nomeLog));
