@@ -14,8 +14,8 @@ O repositório é um projeto de Programação Orientada a Objetos que implementa
 - **Lab01**: Implementação inicial com classes básicas para ambiente e robô simples
 - **Lab02**: Expansão do sistema com introdução de hierarquia de classes para diferentes tipos de robôs (terrestres e aéreos)
 - **Lab03**: Versão com organização em pacotes, sistema de sensores, obstáculos detalhados , testes unitários e diagrama UML
-- **Lab04**: Versão atualizada com sistema de comunicação entre robôs, tratamento de exceções, e visualização do ambiente
-
+- **Lab04**: Versão atualizada com sistema de comunicação entre robôs, tratamento de exceções e visualização do ambiente
+- **Lab05**: Introdução de um sistema de log, missões para robôs e refatoração com subsistemas.
 
 
 ## Como Iniciar
@@ -42,7 +42,7 @@ Para verificar se todas as funcionalidades estão operando corretamente **(Imple
 ### Guia de Uso
 Cada um dos Lab's possuem um conjunto de funcionalidades que podem ser exploradas após a execução do script `start.sh`. Um lab sempre possui todas as funcionalidades do anterior, podendo haver algumas alterações entre elas, de modo que cada lab é uma crescente de desenvolvimento em relação ao anterior.
 
-No Lab04, você pode escolher entre dois modos de execução:
+No Lab04 e Lab05, você pode escolher entre dois modos de execução:
 1. **Modo Padrão**: Ambiente 10x10x10 pré-configurado com 4 robôs (um de cada tipo) e 3 obstáculos
 2. **Modo Livre**: Permite criar um ambiente personalizado e adicionar robôs/obstáculos manualmente
 
@@ -69,7 +69,7 @@ Todos esses arquivos são executados ao executar o arquivo `test.sh`
 
 ## Diagrama de Classes
 O sistema completo é representado pelo diagrama de classes, mostrando as relações entre as diferentes classes de robôs, sensores, obstáculos e ambiente.
-![Imagem do diagrama de classes](./Lab04/UML/Simulador%20de%20Robôs.png)
+![Imagem do diagrama de classes](./Lab05/UML/Simulador%20de%20Robôs.png)
 
 ## Funcionalidades dos Componentes
 
@@ -190,6 +190,30 @@ Sistema que gerencia a comunicação entre os robôs:
 - Robôs precisam estar ligados para se comunicar
 - Apenas robôs com interface `Comunicavel`
 
+### Sistema de Log
+Introdução de um sistema de log robusto para registrar eventos e operações do simulador.
+-`Logger`: Classe utilitária para escrita de logs em arquivo.
+-Permite diferentes níveis de log: INFO, WARNING, ERROR, SUCCESS, FAILURE.
+-Exceções específicas para tratamento de erros de log: `ArquivoInvalidoException`, `FalhaEscritaLogException`, `LoggerException`.
+
+### Missões para Robôs
+Implementação de um sistema de missões, onde robôs podem receber e executar tarefas complexas.
+-`Missao`: Interface base para todas as missões.
+-`AgenteInteligente`: Nova classe abstrata que estende `Robo` e adiciona a capacidade de definir e executar missões.
+-**Missões específicas implementadas**:
+  -`MissaoAtaqueCoordenado`: Para `DroneAtaque`, permite atacar coordenadas específicas.
+  -`MissaoEntregarPacote`: Para `Correios`, gerencia o carregamento e entrega de pacotes.
+  -`MissaoPatrulhaAerea`: Para `DroneVigilancia`, define uma rota de patrulha e relata robôs detectados.
+  -`MissaoDestruirAlvo`: Para `TanqueGuerra`, permite atacar alvos específicos.
+
+### Refatoração com Subsistemas
+Organização interna das funcionalidades dos robôs em subsistemas, promovendo maior modularidade e encapsulamento.
+-`GerenciadorSensores`: Centraliza a lógica de acesso e controle de todos os sensores de um robô (GPS, Radar, Barômetro, Colisão).
+-`ControleMovimento`: Interface que define o contrato para diferentes tipos de controle de movimento (aéreo e terrestre).
+  -`ControleMovimentoAereo`: Implementa a lógica de movimento 3D para robôs aéreos.
+  -`ControleMovimentoTerrestre`: Implementa a lógica de movimento 2D para robôs terrestres.
+-`ModuloComunicacao`: Encapsula a lógica de envio e recebimento de mensagens para robôs `Comunicavel`.
+
 ### **Interfaces do Software**
 
 #### 1. `Entidade`
@@ -240,12 +264,13 @@ Sistema que gerencia a comunicação entre os robôs:
 Entidade
  └── Destrutivel
       └── Robo (base)
-          ├── RoboAereo + Identificantes
-          │    ├── DroneAtaque + Atacante
-          │    └── DroneVigilancia + Comunicavel
-          └── RoboTerrestre
-               ├── TanqueGuerra + Atacante
-               └── Correios + Comunicavel
+          └── AgenteInteligente
+               ├── RoboAereo + Identificantes
+               │    ├── DroneAtaque + Atacante
+               │    └── DroneVigilancia + Comunicavel
+               └── RoboTerrestre
+                    ├── TanqueGuerra + Atacante
+                    └── Correios + Comunicavel
 ```
 
 ### Exceções do Software
@@ -277,3 +302,9 @@ Entidade
 * `SensorException` — Erros gerais de sensores (ex: GPS)
 * `SensorInativoException` — GPS inativo (`verificarGPSAtivo()`)
 * `SensorAusenteException` — Sensor não instalado ou falha na inicialização
+
+#### 5. Logger (`excecoes.logger`)
+
+* `ArquivoInvalidoException` — Problemas na abertura ou criação do arquivo de log.
+* `FalhaEscritaLogException` — Erro durante a escrita no arquivo de log.
+* `LoggerException` — Erro geral relacionado ao sistema de log.
