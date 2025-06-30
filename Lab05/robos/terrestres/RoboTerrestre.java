@@ -115,7 +115,9 @@ public class RoboTerrestre extends AgenteInteligente {
                 Ambiente ambiente = (Ambiente) argumentos[4];
                 try {
                     mover(deltaX, deltaY, velocidade, ambiente);
-                } catch (VelocidadeMaximaException | LoggerException | SensorException | ColisaoException e) {
+                    System.out.println("movi");
+
+                } catch (Exception e) {
                     return "Não foi possível mover o robô, erro: " + e.getMessage();
                 }
                 return "";

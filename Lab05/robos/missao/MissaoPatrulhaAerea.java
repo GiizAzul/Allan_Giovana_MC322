@@ -6,6 +6,8 @@ import ambiente.CentralComunicacao;
 import interfaces.Comunicavel;
 import robos.aereos.DroneVigilancia;
 import robos.geral.Robo;
+import utils.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +22,15 @@ public class MissaoPatrulhaAerea implements Missao {
     }
 
     @Override
-    public String executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         if (robo instanceof DroneVigilancia) {
             DroneVigilancia drone = (DroneVigilancia) robo;
-            System.out.println("MISSÃO: Patrulha Aérea.");
+            String resultado ="MISSÃO: Patrulha Aérea.\n";
             List<Robo> robosDetectados = new ArrayList<>();
 
             try {
                 for (int[] waypoint : waypoints) {
-                    System.out.println("Movendo para waypoint: (" + waypoint[0] + ", " + waypoint[1] + ", " + waypoint[2] + ")");
+                    resultado+="Movendo para waypoint: (" + waypoint[0] + ", " + waypoint[1] + ", " + waypoint[2] + ")\n";
                     drone.mover(waypoint[0], waypoint[1], waypoint[2], ambiente);
                     
                     ArrayList<Robo> encontradosNaArea = drone.identificarRobo();
@@ -45,12 +47,19 @@ public class MissaoPatrulhaAerea implements Missao {
                 }
                 
                 drone.enviarMensagem(base, relatorio, central);
-                System.out.println("Relatório enviado para a base.");
+                resultado+="Relatório enviado para a base.";
+                logger.escreverLogSucesso(resultado);
 
             } catch (Exception e) {
-                System.err.println("Falha na missão de patrulha: " + e.getMessage());
+                resultado+="Falha na missão de patrulha: " + e.getMessage();
+                try{
+                    logger.escreverLogFalha(resultado);
+                } catch(Exception ex){
+                    resultado+="";
+                }
             }
+            return resultado;
         }
-        return null;
+        return "Missão PatrulhaAerea só pode ser executada por um Drone de Vigilancia";
     }
 }

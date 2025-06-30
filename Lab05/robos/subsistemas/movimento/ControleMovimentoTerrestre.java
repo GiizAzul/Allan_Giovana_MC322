@@ -44,13 +44,14 @@ public class ControleMovimentoTerrestre implements ControleMovimento {
                 robo.getLogger().escreverLogInfo(String.format("[MOVIMENTO] %s moveu para posição (%d, %d, %d)", robo.getNome(), x, robo.getYInterno(), robo.getZInterno()));
                 detectado = robo.getSensorColisao().acionar();
                 if (detectado == 1) {
+                    
                     ambiente.moverEntidade(robo, x - passoX, robo.getYInterno(), robo.getZInterno());
                     robo.setPosicaoX(x - passoX); // Corrige a posição do robô
-                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, posicaoY, robo.getZInterno()));
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, robo.getYInterno(), robo.getZInterno()));
                     throw new ColisaoException("O robô " + robo.getNome() + " colidiu com outro robô na posição X:" + x
-                            + " Y:" + posicaoY);
+                            + " Y:" + robo.getYInterno());
                 } else if (detectado == 2) {
-                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, posicaoY, robo.getZInterno()));
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, robo.getYInterno(), robo.getZInterno()));
 
                     if (robo.getSensorColisao().getUltimoObstaculoColidido()
                             .getTipoObstaculo() == TipoObstaculo.BURACO) {
@@ -65,7 +66,7 @@ public class ControleMovimentoTerrestre implements ControleMovimento {
                                 + robo.getSensorColisao().getUltimoObstaculoColidido().getTipoObstaculo()
                                 + " na posição X:" + x
                                 + " Y:"
-                                + posicaoY);
+                                + robo.getYInterno());
                     }
                 }
             }
@@ -83,14 +84,15 @@ public class ControleMovimentoTerrestre implements ControleMovimento {
                 if (detectado == 1) {
                     ambiente.moverEntidade(robo, robo.getXInterno(), y - passoY, robo.getZInterno());
                     robo.setPosicaoY(y - passoY); // Corrige a posição do robô
-                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), posicaoX, y, robo.getZInterno()));
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), robo.getXInterno(), y, robo.getZInterno()));
                     throw new ColisaoException("O robô " + robo.getNome() + " colidiu com outro robô na posição X:"
-                            + posicaoX + " Y:" + y);
+                            + robo.getXInterno() + " Y:" + y);
                 } else if (detectado == 2) {
-                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), posicaoX, y, robo.getZInterno()));
-
+                    
+                    robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), robo.getXInterno(), y, robo.getZInterno()));
+                    
                     if (robo.getSensorColisao().getUltimoObstaculoColidido()
-                            .getTipoObstaculo() == TipoObstaculo.BURACO) {
+                    .getTipoObstaculo() == TipoObstaculo.BURACO) {
                         ambiente.moverEntidade(robo, robo.getXInterno(), y - passoY, robo.getZInterno());
                         robo.setPosicaoY(y - passoY); // Corrige a posição do robô
                         ambiente.removerEntidade(robo);
@@ -102,7 +104,7 @@ public class ControleMovimentoTerrestre implements ControleMovimento {
                         throw new ColisaoException("O robô " + robo.getNome() + " colidiu com o obstáculo: "
                                 + robo.getSensorColisao().getUltimoObstaculoColidido().getTipoObstaculo()
                                 + " na posição X:"
-                                + posicaoX
+                                + robo.getXInterno()
                                 + " Y:" + y);
                     }
                 }
@@ -137,7 +139,6 @@ public class ControleMovimentoTerrestre implements ControleMovimento {
                 Object obj = ambiente.identificarEntidadePosicao(x, robo.getY(), robo.getZ());
                 if (obj != null) {
                     robo.getLogger().escreverLogFalha(String.format("[MOVIMENTO] %s colidiu na posição (%d, %d, %d)", robo.getNome(), x, robo.getY(), robo.getZ()));
-
                     if (obj instanceof Obstaculo &&
                             ((Obstaculo) obj).getTipoObstaculo() == TipoObstaculo.BURACO) {
                         // Tratamento especial para buraco

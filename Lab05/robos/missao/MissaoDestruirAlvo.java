@@ -3,6 +3,7 @@ package robos.missao;
 import ambiente.Ambiente;
 import robos.geral.Robo;
 import robos.terrestres.TanqueGuerra;
+import utils.Logger;
 
 public class MissaoDestruirAlvo implements Missao {
     private int alvoX;
@@ -16,7 +17,7 @@ public class MissaoDestruirAlvo implements Missao {
     }
 
     @Override
-    public String executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         // Verifica se o robô é realmente um TanqueGuerra para usar suas funções específicas
         if (robo instanceof TanqueGuerra) {
             TanqueGuerra tanque = (TanqueGuerra) robo;
@@ -24,9 +25,14 @@ public class MissaoDestruirAlvo implements Missao {
             try {
                 // Utiliza o método já existente no TanqueGuerra
                 resultado += tanque.executarTarefa("atirar", alvoX, alvoY, nTiros, ambiente);
-                
+                logger.escreverLogSucesso(resultado);
             } catch (Exception e) {
                 resultado+="\nFalha ao executar a missão de destruição: " + e.getMessage();
+                try{
+                    logger.escreverLogFalha(resultado);
+                } catch(Exception ex){
+                    resultado+="";
+                }
             }
             return resultado;
         } else {

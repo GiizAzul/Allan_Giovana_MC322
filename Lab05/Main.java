@@ -208,9 +208,8 @@ public class Main {
                     int vel = scanner.nextInt();
                     limparTerminal();
                     try {
-                        roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
-                                coordenadas[1] - roboSelecionado.getY(), vel, ambiente);
-                        System.out.println(roboEscolhido.exibirPosicao());
+                        System.out.println(roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                                coordenadas[1] - roboSelecionado.getY(), vel, ambiente));
                     } catch (Exception e) {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }
@@ -304,8 +303,8 @@ public class Main {
                     int vel = scanner.nextInt();
                     limparTerminal();
                     try {
-                        roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
-                                coordenadas[1] - roboSelecionado.getY(), vel, ambiente);
+                        System.out.println(roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                                coordenadas[1] - roboSelecionado.getY(), vel, ambiente));
                     } catch (Exception e) {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }
@@ -412,10 +411,9 @@ public class Main {
                     int nAlt = scanner.nextInt();
                     limparTerminal();
                     try {
-                        roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                        System.out.println(roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
                                 coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
-                                ambiente);
-                        System.out.println(roboEscolhido.exibirPosicao());
+                                ambiente));
                     } catch (Exception e) {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }
@@ -485,10 +483,9 @@ public class Main {
                     int nAlt = scanner.nextInt();
                     limparTerminal();
                     try {
-                        roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
+                        System.out.println(roboEscolhido.executarTarefa("mover", coordenadas[0] - roboSelecionado.getX(),
                                 coordenadas[1] - roboSelecionado.getY(), nAlt - roboSelecionado.getZ(),
-                                ambiente);
-                        System.out.println(roboEscolhido.exibirPosicao());
+                                ambiente));
                     } catch (Exception e) {
                         System.out.println("Não foi possível mover o robô, erro: " + e.getMessage());
                     }

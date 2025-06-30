@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
+import excecoes.logger.ArquivoInvalidoException;
 import robos.aereos.DroneAtaque;
 import robos.aereos.DroneVigilancia;
 import robos.geral.Robo;
@@ -13,11 +14,11 @@ import interfaces.Entidade;
 
 public class TestAmbiente extends TestBase {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ArquivoInvalidoException {
         executarTestes();
     }
     
-    public static void executarTestes() {
+    public static void executarTestes() throws ArquivoInvalidoException {
         System.out.println("Iniciando testes da classe Ambiente...");
         
         testarCriacaoAmbiente();
@@ -30,7 +31,7 @@ public class TestAmbiente extends TestBase {
         System.out.println("\nTodos os testes foram concluídos!");
     }
     
-    private static void testarCriacaoAmbiente() {
+    private static void testarCriacaoAmbiente() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Criação de Ambiente ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -40,7 +41,7 @@ public class TestAmbiente extends TestBase {
         verificar("Dimensão Z deve ser 5", ambiente.getTamZ() == 5);
     }
     
-    private static void testarVerificacaoLimites() {
+    private static void testarVerificacaoLimites() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Verificação de Limites ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -52,7 +53,7 @@ public class TestAmbiente extends TestBase {
         verificar("Posição (5,5,6) deve estar fora dos limites", !ambiente.dentroDosLimites(5, 5, 6));
     }
     
-    private static void testarCriacaoERobos() {
+    private static void testarCriacaoERobos() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Criação de Robôs ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -70,7 +71,7 @@ public class TestAmbiente extends TestBase {
         verificar("DroneVigilancia deve ser criado com sucesso", droneVigilancia != null && droneVigilancia instanceof DroneVigilancia);
     }
     
-    private static void testarAdicaoEntidades() {
+    private static void testarAdicaoEntidades() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Adição de Entidades ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -87,7 +88,7 @@ public class TestAmbiente extends TestBase {
         verificar("Ambiente deve conter a parede", entidades.contains(parede));
     }
     
-    private static void testarVerificacaoOcupacao() {
+    private static void testarVerificacaoOcupacao() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Verificação de Ocupação ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -103,7 +104,7 @@ public class TestAmbiente extends TestBase {
         }
     }
     
-    private static void testarVisualizacaoAmbiente() {
+    private static void testarVisualizacaoAmbiente() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Visualização do Ambiente ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);

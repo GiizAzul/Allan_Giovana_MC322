@@ -231,7 +231,7 @@ public class DroneAtaque extends RoboAereo implements Atacante {
     public String executarMissao(Ambiente a) {
         if (temMissao()) {
             String resultado = "Drone de Ataque " + getNome() + " iniciando execução da missão...\n";
-            resultado+=missao.executar(this, a);
+            resultado+=missao.executar(this, a, this.getLogger());
             resultado+="\nDrone de Ataque " + getNome() + " finalizou a missão.";
             return resultado;
         } else {

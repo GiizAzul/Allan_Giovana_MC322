@@ -283,7 +283,7 @@ public class Correios extends RoboTerrestre implements Comunicavel {
     public String executarMissao(Ambiente a) {
         if (temMissao()) {
             String resultado = "Correio " + getNome() + " iniciando execução da missão...\n";
-            resultado+=missao.executar(this, a);
+            resultado+=missao.executar(this, a, this.getLogger());
             resultado+="\nCorreio " + getNome() + " finalizou a missão.";
             return resultado;
         } else {

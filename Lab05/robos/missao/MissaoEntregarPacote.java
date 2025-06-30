@@ -4,6 +4,7 @@ package robos.missao;
 import ambiente.Ambiente;
 import robos.geral.Robo;
 import robos.terrestres.Correios;
+import utils.Logger;
 
 public class MissaoEntregarPacote implements Missao {
     private String idPacote;
@@ -19,7 +20,7 @@ public class MissaoEntregarPacote implements Missao {
     }
 
     @Override
-    public String executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         if (robo instanceof Correios) {
             Correios correio = (Correios) robo;
             String resultado="MISSÃO: Entregar pacote " + idPacote+"\n";
@@ -27,8 +28,14 @@ public class MissaoEntregarPacote implements Missao {
                 correio.executarTarefa("carregar", idPacote, peso);
                 resultado+=correio.executarTarefa("entregar", idPacote, destinoX, destinoY, ambiente);
                 resultado+="\nMissão de entrega concluída.";
+                logger.escreverLogSucesso(resultado);
             } catch (Exception e) {
                 resultado+= "Falha na missão de entrega: " + e.getMessage();
+                try{
+                    logger.escreverLogFalha(resultado);
+                } catch(Exception ex){
+                    resultado+="";
+                }
             }
             return resultado;
         } else {

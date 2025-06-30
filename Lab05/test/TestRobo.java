@@ -2,6 +2,8 @@ import ambiente.Ambiente;
 import ambiente.Obstaculo;
 import ambiente.TipoObstaculo;
 import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.logger.ArquivoInvalidoException;
+import excecoes.logger.LoggerException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
@@ -13,7 +15,7 @@ import robos.geral.Robo;
 
 public class TestRobo extends TestBase {
     
-    public static void main(String[] args) throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    public static void main(String[] args) throws SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException, LoggerException {
         executarTestes();
     }
     
@@ -33,7 +35,7 @@ public class TestRobo extends TestBase {
         System.out.println("\nTodos os testes foram concluídos!");
     }
     
-    private static void testarConstrutor() {
+    private static void testarConstrutor() throws ArquivoInvalidoException {
         System.out.println("\n== Teste do Construtor ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -65,7 +67,7 @@ public class TestRobo extends TestBase {
         verificar("Movimento deve ser bloqueado por obstáculo", robo.getX() == 3 && robo.getY() == 4);
     }
     
-    private static void testarIntegridade() {
+    private static void testarIntegridade() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Integridade ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);
@@ -76,7 +78,7 @@ public class TestRobo extends TestBase {
         verificar("Integridade após dano deve ser 50", robo.getIntegridade() == 50);
     }
     
-    private static void testarDirecao() {
+    private static void testarDirecao() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Direção ==");
         
         Ambiente ambiente = new Ambiente(10, 10, 5);

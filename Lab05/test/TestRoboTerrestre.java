@@ -1,5 +1,7 @@
 import ambiente.*;
 import excecoes.ambiente.*;
+import excecoes.logger.ArquivoInvalidoException;
+import excecoes.logger.LoggerException;
 import excecoes.robos.especificos.*;
 import excecoes.robos.gerais.*;
 import excecoes.sensor.SensorException;
@@ -9,11 +11,11 @@ import robos.terrestres.*;
 
 public class TestRoboTerrestre extends TestBase {
 
-    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    public static void main(String[] args) throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException, LoggerException {
         executarTestes();
     }
 
-    public static void executarTestes() throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    public static void executarTestes() throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException, LoggerException {
         System.out.println("Iniciando testes da classe RoboTerrestre...");
 
         testarConstrutor();
@@ -32,7 +34,7 @@ public class TestRoboTerrestre extends TestBase {
         System.out.println("\nTodos os testes para RoboTerrestre foram concluídos!");
     }
 
-    private static void testarConstrutor() {
+    private static void testarConstrutor() throws ArquivoInvalidoException {
         System.out.println("\n== Teste do Construtor ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -230,7 +232,7 @@ public class TestRoboTerrestre extends TestBase {
 
     }
 
-    private static void testarEspecificidadesCorreios() throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException {
+    private static void testarEspecificidadesCorreios() throws ErroComunicacaoException, RoboDesligadoException, SensorException, AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, MovimentoInvalidoException, ArquivoInvalidoException {
         System.out.println("\n== Teste de Especificidades do Correios ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);
@@ -373,7 +375,7 @@ public class TestRoboTerrestre extends TestBase {
         verificar("Posição não deve ser negativa", robo.getX() >= 0 && robo.getY() >= 0);
     }
 
-    private static void testarIntegridadeRobo() {
+    private static void testarIntegridadeRobo() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Integridade do Robô ==");
 
         Ambiente ambiente = new Ambiente(20, 20, 10);

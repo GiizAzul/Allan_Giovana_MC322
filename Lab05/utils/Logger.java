@@ -15,7 +15,7 @@ public class Logger {
 
     public Logger(String nomeLog) throws ArquivoInvalidoException {
         // Por padrão o logger está desativo, ele é ativado quando uma missão é iniciada!
-        this.ativo = 0;
+        this.ativo = 1;
 
         try {
             this.logFile = new Formatter(new FileWriter(nomeLog));
@@ -27,7 +27,7 @@ public class Logger {
 
     protected void escreverLog(String mensagem, String tipoMensagem) throws FalhaEscritaLogException {
         try {
-            if (this.ativo == 1) this.logFile.format("[%s] %s %s", tipoMensagem, this.dataAtual, mensagem);
+            if (this.ativo == 1) this.logFile.format("[%s] %s %s\n", tipoMensagem, this.dataAtual, mensagem);
         } catch (Exception e) {
             throw new FalhaEscritaLogException();
         }

@@ -163,7 +163,7 @@ public class TanqueGuerra extends RoboTerrestre implements Atacante {
     public String executarMissao(Ambiente a) {
         if (temMissao()) {
             String resultado = "Tanque " + getNome() + " iniciando execução da missão...\n";
-            resultado += missao.executar(this, a);
+            resultado += missao.executar(this, a, this.getLogger());
             resultado+="\nTanque " + getNome() + " finalizou a missão.";
             return resultado;
         } else {

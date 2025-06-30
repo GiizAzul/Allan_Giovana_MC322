@@ -1,9 +1,11 @@
 package robos.missao;
 
+
 // No pacote de missoes
 import ambiente.Ambiente;
 import robos.aereos.DroneAtaque;
 import robos.geral.Robo;
+import utils.Logger;
 
 public class MissaoAtaqueCoordenado implements Missao {
     private int alvoX;
@@ -19,8 +21,9 @@ public class MissaoAtaqueCoordenado implements Missao {
     }
 
     @Override
-    public String executar(Robo robo, Ambiente ambiente) {
+    public String executar(Robo robo, Ambiente ambiente, Logger logger) {
         if (robo instanceof DroneAtaque) {
+            logger.ativarLogger();
             DroneAtaque drone = (DroneAtaque) robo;
             String resultado = "MISSÃO: Ataque aéreo coordenado.\n";
             try {
@@ -31,8 +34,15 @@ public class MissaoAtaqueCoordenado implements Missao {
                 resultado += drone.atirar(alvoX, alvoY, altitudeAtaque, nTiros, ambiente);
                 resultado += "\nMissão de ataque aéreo concluída.";
 
+                logger.escreverLogSucesso(resultado);
+
             } catch (Exception e) {
                 resultado += "Falha na missão de ataque: " + e.getMessage();
+                try{
+                    logger.escreverLogFalha(resultado);
+                } catch(Exception ex){
+                    resultado+="";
+                }
             }
             return resultado;
         } else {

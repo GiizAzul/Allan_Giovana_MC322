@@ -1,6 +1,8 @@
 import ambiente.Ambiente;
 import ambiente.CentralComunicacao;
 import excecoes.ambiente.ForaDosLimitesException;
+import excecoes.logger.ArquivoInvalidoException;
+import excecoes.logger.LoggerException;
 import excecoes.robos.especificos.AlvoInvalidoException;
 import excecoes.robos.especificos.MunicaoInsuficienteException;
 import excecoes.robos.gerais.ColisaoException;
@@ -17,11 +19,11 @@ import robos.missao.MissaoAtaqueCoordenado;
 
 public class TestRoboAereo extends TestBase {
     
-    public static void main(String[] args) throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException {
+    public static void main(String[] args) throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException, LoggerException {
         executarTestes();
     }
     
-    public static void executarTestes() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException {
+    public static void executarTestes() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException, LoggerException {
         System.out.println("Iniciando testes da classe RoboAereo...");
         
         testarConstrutor();
@@ -39,7 +41,7 @@ public class TestRoboAereo extends TestBase {
         System.out.println("\nTodos os testes foram concluídos!");
     }
     
-    private static void testarConstrutor() {
+    private static void testarConstrutor() throws ArquivoInvalidoException {
         System.out.println("\n== Teste do Construtor ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -152,7 +154,7 @@ public class TestRoboAereo extends TestBase {
         verificar("Exibição deve incluir posição Z", posicao.contains("3"));
     }
     
-    private static void testarBarometro() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException {
+    private static void testarBarometro() throws AlvoInvalidoException, MunicaoInsuficienteException, ForaDosLimitesException, RoboDestruidoPorBuracoException, ColisaoException, SensorException, MovimentoInvalidoException, LoggerException {
         System.out.println("\n== Teste do Barômetro ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
@@ -244,7 +246,7 @@ public class TestRoboAereo extends TestBase {
                  resultado.contains("Robô encontrado") || resultado.contains("Obstáculo encontrado"));
     }
 
-    private static void testarComunicacaoDroneVigilancia() {
+    private static void testarComunicacaoDroneVigilancia() throws ArquivoInvalidoException {
         System.out.println("\n== Teste de Comunicação do DroneVigilancia ==");
         
         Ambiente ambiente = new Ambiente(50, 50, 100);
